@@ -1,0 +1,6 @@
+pytest>=7.0
+pandas>=2.0
+matplotlib>=3.7
+plotly>=5.0
+# networkx: usar SOMENTE dentro de tests/, como oraculo
+networkx>=3.0
