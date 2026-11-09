@@ -11,7 +11,13 @@ import networkx as nx
 import pytest
 
 
-CASOS = json.loads((Path(__file__).parent / 'fixtures' / 'p2_casos_sinteticos.json').read_text(encoding='utf-8'))['casos']
+# Os casos T02_* ja sao testados contra src/graphs/graph.py em tests/test_graph.py;
+# aqui ficam so os casos dos algoritmos (T11-T15), ate existir algorithms.py.
+CASOS = [
+    caso
+    for caso in json.loads((Path(__file__).parent / 'fixtures' / 'p2_casos_sinteticos.json').read_text(encoding='utf-8'))['casos']
+    if not caso['id'].startswith('T02')
+]
 
 
 def grafo_referencia(caso):

@@ -1,7 +1,7 @@
 {
   "versao": 1,
   "finalidade": "Sugestões de testes sintéticos para P2. Não são resultados dos mapas/dataset nem executam a implementação do grupo.",
-  "observacao_api": "O plano não define assinaturas dos métodos. Adaptar os testes à API combinada entre Artur, Ricardo e Luca.",
+  "observacao_api": "Casos T02_* testados contra src/graphs/graph.py (Graph.adicionar_vertice, adicionar_arco, arcos_saindo, arcos, transposto) em tests/test_graph.py. Casos T11-T15 aguardam algorithms.py.",
   "casos": [
     {
       "id": "T02_ordem_direcao_metadados",
