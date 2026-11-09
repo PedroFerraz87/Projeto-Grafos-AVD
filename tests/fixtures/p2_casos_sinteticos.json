@@ -1,0 +1,743 @@
+{
+  "versao": 1,
+  "finalidade": "Sugestões de testes sintéticos para P2. Não são resultados dos mapas/dataset nem executam a implementação do grupo.",
+  "observacao_api": "O plano não define assinaturas dos métodos. Adaptar os testes à API combinada entre Artur, Ricardo e Luca.",
+  "casos": [
+    {
+      "id": "T02_ordem_direcao_metadados",
+      "vertices": [
+        "S",
+        "N",
+        "L",
+        "SUL",
+        "O",
+        "I"
+      ],
+      "arestas": [
+        {
+          "origem": "S",
+          "destino": "N",
+          "peso": 1,
+          "metadados": {
+            "movimento": "N",
+            "casa_destino": "."
+          }
+        },
+        {
+          "origem": "S",
+          "destino": "L",
+          "peso": 3,
+          "metadados": {
+            "movimento": "L",
+            "casa_destino": ","
+          }
+        },
+        {
+          "origem": "S",
+          "destino": "SUL",
+          "peso": 5,
+          "metadados": {
+            "movimento": "S",
+            "casa_destino": "~"
+          }
+        },
+        {
+          "origem": "S",
+          "destino": "O",
+          "peso": -4,
+          "metadados": {
+            "movimento": "O",
+            "casa_destino": "+"
+          }
+        }
+      ],
+      "expectativas": {
+        "adjacencias": {
+          "S": [
+            "N",
+            "L",
+            "SUL",
+            "O"
+          ],
+          "N": [],
+          "L": [],
+          "SUL": [],
+          "O": [],
+          "I": []
+        },
+        "transposto": [
+          {
+            "origem": "N",
+            "destino": "S",
+            "peso": 1,
+            "metadados": {
+              "movimento": "N",
+              "casa_destino": "."
+            }
+          },
+          {
+            "origem": "L",
+            "destino": "S",
+            "peso": 3,
+            "metadados": {
+              "movimento": "L",
+              "casa_destino": ","
+            }
+          },
+          {
+            "origem": "SUL",
+            "destino": "S",
+            "peso": 5,
+            "metadados": {
+              "movimento": "S",
+              "casa_destino": "~"
+            }
+          },
+          {
+            "origem": "O",
+            "destino": "S",
+            "peso": -4,
+            "metadados": {
+              "movimento": "O",
+              "casa_destino": "+"
+            }
+          }
+        ],
+        "bfs": {
+          "fonte": "S",
+          "distancias_finitas": {
+            "S": 0,
+            "N": 1,
+            "L": 1,
+            "SUL": 1,
+            "O": 1
+          },
+          "inalcancaveis": [
+            "I"
+          ]
+        },
+        "dijkstra": {
+          "fonte": "S",
+          "recusa": true
+        }
+      }
+    },
+    {
+      "id": "T02_vertices_isolados",
+      "vertices": [
+        "S",
+        "T"
+      ],
+      "arestas": [],
+      "expectativas": {
+        "adjacencias": {
+          "S": [],
+          "T": []
+        },
+        "transposto": [],
+        "bfs": {
+          "fonte": "S",
+          "distancias_finitas": {
+            "S": 0
+          },
+          "inalcancaveis": [
+            "T"
+          ]
+        },
+        "dijkstra": {
+          "fonte": "S",
+          "recusa": false,
+          "distancias_finitas": {
+            "S": 0
+          },
+          "inalcancaveis": [
+            "T"
+          ]
+        }
+      }
+    },
+    {
+      "id": "T11_passos_diferem_de_custo",
+      "vertices": [
+        "S",
+        "A",
+        "B",
+        "T",
+        "I"
+      ],
+      "arestas": [
+        {
+          "origem": "S",
+          "destino": "A",
+          "peso": 4,
+          "metadados": {}
+        },
+        {
+          "origem": "S",
+          "destino": "B",
+          "peso": 1,
+          "metadados": {}
+        },
+        {
+          "origem": "B",
+          "destino": "A",
+          "peso": 2,
+          "metadados": {}
+        },
+        {
+          "origem": "A",
+          "destino": "T",
+          "peso": 1,
+          "metadados": {}
+        },
+        {
+          "origem": "B",
+          "destino": "T",
+          "peso": 7,
+          "metadados": {}
+        }
+      ],
+      "expectativas": {
+        "bfs": {
+          "fonte": "S",
+          "distancias_finitas": {
+            "S": 0,
+            "A": 1,
+            "B": 1,
+            "T": 2
+          },
+          "inalcancaveis": [
+            "I"
+          ],
+          "destino": "T",
+          "caminho": [
+            "S",
+            "A",
+            "T"
+          ]
+        },
+        "dijkstra": {
+          "fonte": "S",
+          "recusa": false,
+          "distancias_finitas": {
+            "S": 0,
+            "A": 3,
+            "B": 1,
+            "T": 4
+          },
+          "inalcancaveis": [
+            "I"
+          ],
+          "destino": "T",
+          "caminho": [
+            "S",
+            "B",
+            "A",
+            "T"
+          ]
+        }
+      }
+    },
+    {
+      "id": "T12_quatro_classes",
+      "vertices": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "arestas": [
+        {
+          "origem": "A",
+          "destino": "B",
+          "peso": 1,
+          "metadados": {}
+        },
+        {
+          "origem": "A",
+          "destino": "C",
+          "peso": 1,
+          "metadados": {}
+        },
+        {
+          "origem": "A",
+          "destino": "D",
+          "peso": 1,
+          "metadados": {}
+        },
+        {
+          "origem": "B",
+          "destino": "C",
+          "peso": 1,
+          "metadados": {}
+        },
+        {
+          "origem": "C",
+          "destino": "A",
+          "peso": 1,
+          "metadados": {}
+        },
+        {
+          "origem": "D",
+          "destino": "C",
+          "peso": 1,
+          "metadados": {}
+        }
+      ],
+      "expectativas": {
+        "dfs": {
+          "fonte": "A",
+          "ordem": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "classes": {
+            "arvore": [
+              [
+                "A",
+                "B"
+              ],
+              [
+                "B",
+                "C"
+              ],
+              [
+                "A",
+                "D"
+              ]
+            ],
+            "retorno": [
+              [
+                "C",
+                "A"
+              ]
+            ],
+            "avanco": [
+              [
+                "A",
+                "C"
+              ]
+            ],
+            "cruzamento": [
+              [
+                "D",
+                "C"
+              ]
+            ]
+          },
+          "possui_ciclo": true
+        }
+      }
+    },
+    {
+      "id": "T12_sem_ciclo_na_componente_alcancavel",
+      "vertices": [
+        "S",
+        "T",
+        "X",
+        "Y"
+      ],
+      "arestas": [
+        {
+          "origem": "S",
+          "destino": "T",
+          "peso": 1,
+          "metadados": {}
+        },
+        {
+          "origem": "X",
+          "destino": "Y",
+          "peso": 1,
+          "metadados": {}
+        },
+        {
+          "origem": "Y",
+          "destino": "X",
+          "peso": 1,
+          "metadados": {}
+        }
+      ],
+      "expectativas": {
+        "dfs": {
+          "fonte": "S",
+          "ordem": [
+            "S",
+            "T"
+          ],
+          "classes": {
+            "arvore": [
+              [
+                "S",
+                "T"
+              ]
+            ],
+            "retorno": [],
+            "avanco": [],
+            "cruzamento": []
+          },
+          "possui_ciclo": false
+        }
+      }
+    },
+    {
+      "id": "T13_zero_e_rejeicao_global",
+      "vertices": [
+        "S",
+        "A",
+        "T",
+        "X",
+        "Y"
+      ],
+      "arestas": [
+        {
+          "origem": "S",
+          "destino": "A",
+          "peso": 0,
+          "metadados": {}
+        },
+        {
+          "origem": "A",
+          "destino": "T",
+          "peso": 2,
+          "metadados": {}
+        },
+        {
+          "origem": "X",
+          "destino": "Y",
+          "peso": -1,
+          "metadados": {}
+        }
+      ],
+      "expectativas": {
+        "bfs": {
+          "fonte": "S",
+          "distancias_finitas": {
+            "S": 0,
+            "A": 1,
+            "T": 2
+          },
+          "inalcancaveis": [
+            "X",
+            "Y"
+          ]
+        },
+        "dijkstra": {
+          "fonte": "S",
+          "recusa": true
+        }
+      }
+    },
+    {
+      "id": "T14_negativos_sem_ciclo",
+      "vertices": [
+        "S",
+        "A",
+        "B",
+        "T",
+        "I"
+      ],
+      "arestas": [
+        {
+          "origem": "S",
+          "destino": "A",
+          "peso": 4,
+          "metadados": {}
+        },
+        {
+          "origem": "S",
+          "destino": "B",
+          "peso": 5,
+          "metadados": {}
+        },
+        {
+          "origem": "A",
+          "destino": "B",
+          "peso": -2,
+          "metadados": {}
+        },
+        {
+          "origem": "A",
+          "destino": "T",
+          "peso": 6,
+          "metadados": {}
+        },
+        {
+          "origem": "B",
+          "destino": "T",
+          "peso": 3,
+          "metadados": {}
+        }
+      ],
+      "expectativas": {
+        "bellman_ford": {
+          "fonte": "S",
+          "distancias_finitas": {
+            "S": 0,
+            "A": 4,
+            "B": 2,
+            "T": 5
+          },
+          "inalcancaveis": [
+            "I"
+          ],
+          "afetados": [],
+          "ciclo_negativo_alcancavel": false,
+          "destino": "T",
+          "caminho": [
+            "S",
+            "A",
+            "B",
+            "T"
+          ]
+        },
+        "dijkstra": {
+          "fonte": "S",
+          "recusa": true
+        }
+      }
+    },
+    {
+      "id": "T14_ciclo_negativo_alcancavel",
+      "vertices": [
+        "S",
+        "A",
+        "B",
+        "T",
+        "I"
+      ],
+      "arestas": [
+        {
+          "origem": "S",
+          "destino": "A",
+          "peso": 1,
+          "metadados": {}
+        },
+        {
+          "origem": "A",
+          "destino": "B",
+          "peso": -3,
+          "metadados": {}
+        },
+        {
+          "origem": "B",
+          "destino": "A",
+          "peso": 1,
+          "metadados": {}
+        },
+        {
+          "origem": "B",
+          "destino": "T",
+          "peso": 2,
+          "metadados": {}
+        }
+      ],
+      "expectativas": {
+        "bellman_ford": {
+          "fonte": "S",
+          "distancias_finitas": {
+            "S": 0
+          },
+          "inalcancaveis": [
+            "I"
+          ],
+          "afetados": [
+            "A",
+            "B",
+            "T"
+          ],
+          "ciclo_negativo_alcancavel": true,
+          "ciclo_exemplo": [
+            "A",
+            "B",
+            "A"
+          ],
+          "custo_ciclo_exemplo": -2
+        }
+      }
+    },
+    {
+      "id": "T14_ciclo_negativo_inalcancavel",
+      "vertices": [
+        "S",
+        "T",
+        "X",
+        "Y"
+      ],
+      "arestas": [
+        {
+          "origem": "S",
+          "destino": "T",
+          "peso": 5,
+          "metadados": {}
+        },
+        {
+          "origem": "X",
+          "destino": "Y",
+          "peso": -3,
+          "metadados": {}
+        },
+        {
+          "origem": "Y",
+          "destino": "X",
+          "peso": 1,
+          "metadados": {}
+        }
+      ],
+      "expectativas": {
+        "bellman_ford": {
+          "fonte": "S",
+          "distancias_finitas": {
+            "S": 0,
+            "T": 5
+          },
+          "inalcancaveis": [
+            "X",
+            "Y"
+          ],
+          "afetados": [],
+          "ciclo_negativo_alcancavel": false
+        },
+        "dijkstra": {
+          "fonte": "S",
+          "recusa": true
+        }
+      }
+    },
+    {
+      "id": "T14_ciclo_nao_afeta_destino_finito",
+      "vertices": [
+        "S",
+        "T",
+        "A",
+        "B"
+      ],
+      "arestas": [
+        {
+          "origem": "S",
+          "destino": "T",
+          "peso": 4,
+          "metadados": {}
+        },
+        {
+          "origem": "S",
+          "destino": "A",
+          "peso": 1,
+          "metadados": {}
+        },
+        {
+          "origem": "A",
+          "destino": "B",
+          "peso": -3,
+          "metadados": {}
+        },
+        {
+          "origem": "B",
+          "destino": "A",
+          "peso": 1,
+          "metadados": {}
+        }
+      ],
+      "expectativas": {
+        "bellman_ford": {
+          "fonte": "S",
+          "distancias_finitas": {
+            "S": 0,
+            "T": 4
+          },
+          "inalcancaveis": [],
+          "afetados": [
+            "A",
+            "B"
+          ],
+          "ciclo_negativo_alcancavel": true,
+          "destino": "T",
+          "caminho": [
+            "S",
+            "T"
+          ],
+          "ciclo_exemplo": [
+            "A",
+            "B",
+            "A"
+          ],
+          "custo_ciclo_exemplo": -2
+        }
+      }
+    },
+    {
+      "id": "T15_armadilha_tem_saida_mas_nao_alcanca_alvo",
+      "vertices": [
+        "S",
+        "A",
+        "B",
+        "G",
+        "ALVO",
+        "I"
+      ],
+      "arestas": [
+        {
+          "origem": "S",
+          "destino": "G",
+          "peso": 1,
+          "metadados": {}
+        },
+        {
+          "origem": "G",
+          "destino": "ALVO",
+          "peso": 0,
+          "metadados": {}
+        },
+        {
+          "origem": "S",
+          "destino": "A",
+          "peso": 1,
+          "metadados": {}
+        },
+        {
+          "origem": "A",
+          "destino": "B",
+          "peso": 1,
+          "metadados": {}
+        },
+        {
+          "origem": "B",
+          "destino": "A",
+          "peso": 1,
+          "metadados": {}
+        }
+      ],
+      "expectativas": {
+        "bfs": {
+          "fonte": "S",
+          "distancias_finitas": {
+            "S": 0,
+            "G": 1,
+            "ALVO": 2,
+            "A": 1,
+            "B": 2
+          },
+          "inalcancaveis": [
+            "I"
+          ]
+        },
+        "armadilhas": {
+          "fonte": "S",
+          "alvo": "ALVO",
+          "estados_fisicos": [
+            "S",
+            "A",
+            "B",
+            "G"
+          ],
+          "esperado": [
+            "A",
+            "B"
+          ],
+          "observacao": "I não é armadilha alcançável; ALVO virtual não é estado físico."
+        }
+      }
+    }
+  ]
+}
