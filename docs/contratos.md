@@ -1,18 +1,5 @@
 # Contratos de dados — `out/parte1` e `out/parte2`
 
-**Tarefa:** T03 (Sprint 0) · **Responsável:** Luca Albuquerque · **Revisor:** Pedro Ferraz
-
-Este documento fixa o formato de todos os arquivos CSV/JSON gerados em `out/parte1/` e
-`out/parte2/`, o formato do rótulo de estado e o formato do percurso em JSON. Ele existe para
-que as cinco frentes trabalhem em paralelo a partir de 11/11: quem **produz** um arquivo
-escreve exatamente estas colunas/chaves, e quem **consome** (métricas, figuras, interativo,
-relatório) pode começar com dados de exemplo neste formato antes de o código real existir.
-
-Qualquer mudança de coluna ou chave deve ser feita **primeiro aqui**, no mesmo commit (ou
-antes) do código que a altera, e avisada ao grupo.
-
----
-
 ## 1. Convenções gerais
 
 ### 1.1 CSV
@@ -103,10 +90,6 @@ Exemplos:
 A **camada** de um estado é a sua string `chaves` (camada `""` = nenhuma chave). Nos
 arquivos, a camada vazia é escrita como `-` para não ser confundida com campo ausente.
 
-Quem gera o rótulo é `estados.py` (P1); todos os outros módulos só leem/comparam a string e
-**não** devem reconstruí-la por conta própria. Se for preciso decompor, usar uma única
-função auxiliar de `estados.py`.
-
 ---
 
 ## 3. `out/parte1/`
@@ -163,12 +146,7 @@ m05_bonus,DIJKSTRA,G_est,recusado_peso_negativo,,,,,,,arco com peso -4
 m07_impossivel,BFS,G_est,sem_caminho,,,40,98,39,0.20,ALVO inalcançável
 ```
 
-*(valores ilustrativos, não são resultados)*
-
-### 3.3 Percurso em JSON — `percurso_m03.json` (T22) e qualquer `percurso_<mapa>.json`
-
-É o formato consumido pelas figuras (T28) e pelo labirinto interativo (T20/T31). O
-interativo deve aceitar qualquer arquivo neste formato, de qualquer mapa.
+### 3.3 Percurso em JSON — qualquer `percurso_<mapa>.json`
 
 ```json
 {
@@ -245,10 +223,7 @@ Cada item de `percurso`:
 Quando um passo dispara mais de um evento, usa-se o mais importante na ordem
 `chegada > chave > porta > bonus > fonte > esteira`.
 
-### 3.4 `ciclo_negativo_m06.json` — produtor: P1 (T22)
-
-Ciclo negativo extraído pelo Bellman-Ford (o mesmo formato serve para o `G_pos` do m05 em
-T24, gravado como `ciclo_negativo_m05_gpos.json`).
+### 3.4 
 
 ```json
 {
@@ -273,8 +248,6 @@ T24, gravado como `ciclo_negativo_m05_gpos.json`).
 }
 ```
 
-*(estados e pesos ilustrativos)*
-
 | Chave | Tipo | Descrição |
 |---|---|---|
 | `ciclo` | lista de str | ciclo **fechado**: o primeiro rótulo se repete no fim; pode começar em qualquer estado do ciclo |
@@ -285,7 +258,7 @@ T24, gravado como `ciclo_negativo_m05_gpos.json`).
 
 Sem ciclo: `ciclo_encontrado: false`, `ciclo` e `arcos` vazios, `custo_ciclo: null`.
 
-### 3.5 `armadilhas_m04.csv` e `armadilhas_m07.csv` — produtor: P1/P2 (T15 + T22)
+### 3.5
 
 Estados alcançáveis a partir de `S` que **não** alcançam `ALVO` (busca reversa no
 transposto). Uma linha por estado, ordenada por `linha`, `coluna`, `chaves`.
@@ -302,7 +275,7 @@ transposto). Uma linha por estado, ordenada por `linha`, `coluna`, `chaves`.
 O total e o percentual de armadilhas sobre os estados alcançáveis vão em
 `metricas_global.json` (`armadilhas` e `pct_armadilhas`), não neste CSV.
 
-### 3.6 `dfs_classificacao.csv` — produtor: P1/P2 (T12 + T22)
+### 3.6 
 
 Uma linha por arco examinado pela DFS a partir de `S`, na ordem em que foi examinado.
 
@@ -317,7 +290,7 @@ Uma linha por arco examinado pela DFS a partir de `S`, na ordem em que foi exami
 Convenção do relógio: começa em 1 e é incrementado a cada descoberta e a cada finalização
 (CLRS). O resumo por classe (contagens e `possui_ciclo`) vai em `metricas_global.json`.
 
-### 3.7 `metricas_global.json` — produtor: P3 (T23)
+### 3.7 
 
 Um objeto por mapa, na chave com o nome do mapa.
 
@@ -350,8 +323,6 @@ Um objeto por mapa, na chave com o nome do mapa.
 }
 ```
 
-*(valores ilustrativos)*
-
 | Chave | Descrição |
 |---|---|
 | `ordem` / `tamanho` | `|V|` (com `ALVO`) e `|A|` |
@@ -364,7 +335,7 @@ Um objeto por mapa, na chave com o nome do mapa.
 | `camadas` / `arcos_entre_camadas` | quantidade de conjuntos de chaves distintos e arcos cuja camada muda |
 | `ranking_grau` | os 10 estados de maior grau total, em ordem decrescente (obrigatório no `m08`, opcional nos demais) |
 
-### 3.8 `camadas.json` — produtor: P3 (T23); consumido pela figura em camadas (T30)
+### 3.8
 
 ```json
 {
@@ -380,7 +351,7 @@ Um objeto por mapa, na chave com o nome do mapa.
 }
 ```
 
-### 3.9 `graus_<mapa>.csv` — produtor: P3 (T23)
+### 3.9 
 
 Uma linha por estado, na ordem de inserção dos vértices no `Graph`.
 
@@ -392,7 +363,7 @@ Uma linha por estado, na ordem de inserção dos vértices no `Graph`.
 | `grau_entrada`, `grau_saida`, `grau_total` | int | graus em `G_est` |
 | `beco` | bool | `grau_saida` = 0 e não é `ALVO` |
 
-### 3.10 `multiplicidade_m08.csv` — produtor: P3 (T23); consumido pelo heatmap (T30)
+### 3.10 
 
 Uma linha por casa não-parede da grade, ordenada por `linha`, `coluna`.
 
@@ -402,7 +373,7 @@ Uma linha por casa não-parede da grade, ordenada por `linha`, `coluna`.
 | `simbolo` | str | caractere da casa |
 | `multiplicidade` | int | quantos estados de `G_est` estão nessa casa (0 se inalcançável) |
 
-### 3.11 `comparacao_modelagem.csv` — produtor: P3 (T24)
+### 3.11 
 
 Uma linha por (mapa, modelagem), para `m02`, `m03`, `m04` (e `m05` em `G_pos`, para a prova
 do ciclo negativo).
@@ -432,7 +403,7 @@ do ciclo negativo).
 ## 4. `out/parte2/`
 
 Dataset: `data/dataset_parte2/soc-sign-bitcoinalpha.csv`, sem cabeçalho, colunas
-`origem,destino,nota,timestamp` (nota inteira de −10 a +10, timestamp em segundos Unix). O
+`origem,destino,nota,timestamp`. O
 arco vai de quem **avalia** (`origem`) para quem é **avaliado** (`destino`). Os vértices são
 os ids numéricos do dataset convertidos para `int`.
 
@@ -440,9 +411,9 @@ os ids numéricos do dataset convertidos para `int`.
 
 Todo resultado da Parte 2 indica o `recorte` usado: `10`, `50` ou `100` (percentual das
 avaliações). O critério de corte (ex.: primeiras N avaliações por `timestamp`) é decidido no
-leitor (T18) e registrado em `parte2_report.json` → `dataset.criterio_recorte`.
+leitor e registrado em `parte2_report.json` → `dataset.criterio_recorte`.
 
-### 4.2 `parte2_report.json` — produtor: P4 (T26), com casos de P2 (T25)
+### 4.2 
 
 ```json
 {
@@ -492,8 +463,6 @@ leitor (T18) e registrado em `parte2_report.json` → `dataset.criterio_recorte`
 }
 ```
 
-*(números ilustrativos, exceto os totais do dataset que constam no plano)*
-
 Regras:
 
 - `bfs` e `dfs`: uma entrada por fonte (3 fontes) e recorte usado.
@@ -503,7 +472,7 @@ Regras:
   `com_ciclo_negativo`); `ciclo` é fechado (primeiro id repetido no fim).
 - Caminhos e ciclos são listas de ids `int`.
 
-### 4.3 `benchmark_parte2.csv` — produtor: P4 (T26); consumido pelos gráficos (T32)
+### 4.3 
 
 Uma linha por execução medida (5 execuções × algoritmos × 3 recortes).
 
@@ -516,14 +485,6 @@ Uma linha por execução medida (5 execuções × algoritmos × 3 recortes).
 | `fonte` | int | vértice de partida usado |
 | `tempo_ms` | número | tempo medido (sem leitura do arquivo nem construção do grafo) |
 
-### 4.4 Visualizações AVD
-
-As 4 exploratórias e as 2 explanatórias são gravadas em `out/parte2/` com o padrão
-`exp<N>_<assunto>.png` (`exp1_...` a `exp4_...`) e `expl<N>_<assunto>.png`
-(`expl1_...`, `expl2_...`). Se uma visualização precisar de uma tabela intermediária, ela vai
-ao lado com o mesmo prefixo e extensão `.csv`.
-
----
 
 ## 5. Quem produz e quem consome
 
@@ -539,14 +500,3 @@ ao lado com o mesmo prefixo e extensão `.csv`.
 | `comparacao_modelagem.csv` | P3 (T24) | relatório |
 | `parte2_report.json`, `benchmark_parte2.csv` | P4 (T26), P2 (T25) | P4/P5 (T32), relatório |
 
-## 6. Pontos a confirmar na revisão
-
-- Conferir com o enunciado os nomes exatos dos arquivos obrigatórios; os que **não** são
-  citados no plano e foram propostos aqui são `multiplicidade_m08.csv`,
-  `benchmark_parte2.csv`, `ciclo_negativo_m05_gpos.json` e o padrão de nomes das
-  visualizações AVD.
-- Os custos de cada tipo de casa (`.`, `,`, `~`, esteiras, `+`, `*`) **não** são definidos aqui:
-  seguem o enunciado e são implementados em `estados.py` (P1). Este documento só fixa onde o
-  peso aparece.
-- Critério de recorte e transformação de pesos da Parte 2 ficam com P4/P2 (T18, T25); aqui só
-  se fixa onde eles são registrados.
