@@ -94,7 +94,7 @@ arquivos, a camada vazia é escrita como `-` para não ser confundida com campo 
 
 ## 3. `out/parte1/`
 
-### 3.1 `arestas_<mapa>.csv` — produtor: P1 (T10)
+### 3.1
 
 Um arquivo por mapa (inclusive `m08`), uma linha por arco de `G_est`, na ordem de inserção
 (BFS de exploração a partir de `S`, vizinhos em `N, L, S, O`). Inclui os arcos até `ALVO`.
@@ -120,7 +120,7 @@ origem,destino,peso,movimento,simbolo_destino,via_esteira,camada_origem,camada_d
 (1,11)|a|{},ALVO,0,-,,false,a,
 ```
 
-### 3.2 `solucoes.csv` — produtor: P1 (T22, via `solve.py`/`cli.py`)
+### 3.2 
 
 Uma linha por par (mapa, algoritmo) executado, ordenada por `mapa` e depois por
 `BFS, DFS, DIJKSTRA, BELLMAN_FORD`.
