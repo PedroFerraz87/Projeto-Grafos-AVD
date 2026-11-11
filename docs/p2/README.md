@@ -28,7 +28,7 @@ Uma esteira ou uma porta pertence às regras de estados do P1. O grafo genérico
 - tests/test_casos_referencia_p2.py: conferência das expectativas usando NetworkX, exclusivamente em tests/.
 - docs/p2/CASOS_TESTE.md: explicação dos 11 cenários.
 - docs/p2/AGENDA_ARTUR.md: tarefas e dependências do plano.
-- docs/p2/REGISTRO_APOIO_IA.md: apoio efetivamente utilizado.
+- [Declaração coletiva de uso de IA](../../README.md#uso-de-ia).
 
 ## Executar a conferência dos exemplos
 
