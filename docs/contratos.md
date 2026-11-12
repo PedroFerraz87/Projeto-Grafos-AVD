@@ -1,5 +1,10 @@
 # Contratos de dados — `out/parte1` e `out/parte2`
 
+> **Regra de prioridade:** onde este documento e o enunciado divergirem, vale o enunciado
+> (`Projeto_Final_TEORIADOSGRAFOS262-1.pdf`). As colunas exigidas pelo enunciado vêm sempre
+> primeiro, com o nome e a ordem do enunciado; colunas extras do grupo vêm depois delas.
+> Os números que aparecem nos exemplos são ilustrativos (zeros ou `<n>`), não resultados dos mapas.
+
 ## 1. Convenções gerais
 
 ### 1.1 CSV
@@ -9,12 +14,12 @@
 | Codificação | UTF-8, sem BOM |
 | Separador | vírgula (`,`) |
 | Fim de linha | `\n` |
-| Cabeçalho | obrigatório, na primeira linha, com os nomes exatos deste documento e na mesma ordem |
+| Cabeçalho | obrigatório, na primeira linha, com os nomes exatos deste documento e na mesma ordem (colunas do enunciado primeiro, extras depois) |
 | Decimais | ponto (`.`), sem separador de milhar |
 | Booleanos | `true` / `false` (minúsculos) |
 | Valor ausente / não se aplica | campo vazio |
 | Infinito (sem caminho) | campo vazio na coluna numérica + `status` explicando o motivo |
-| Texto com vírgula ou aspas | entre aspas duplas, aspas internas duplicadas (padrão do módulo `csv` do Python) |
+| Texto com vírgula ou aspas | entre aspas duplas, aspas internas duplicadas (padrão do módulo `csv` do Python). Como todo rótulo de estado tem vírgula, ele sempre sai entre aspas |
 | Ordem das linhas | a indicada em cada arquivo; quando não indicada, a ordem de geração (determinística) |
 
 ### 1.2 JSON
@@ -50,7 +55,8 @@
 
 ## 2. Rótulo de estado
 
-Todo estado do `G_est` é identificado, em **todos** os arquivos, por uma string única:
+Todo estado do `G_est` é identificado, em **todos** os arquivos, pelo rótulo obrigatório do
+enunciado (Seção 1 da Parte 1):
 
 ```
 (l,c)|chaves|{bonus}
@@ -59,11 +65,12 @@ Todo estado do `G_est` é identificado, em **todos** os arquivos, por uma string
 | Parte | Conteúdo | Regras |
 |---|---|---|
 | `(l,c)` | posição atual | sem espaços: `(3,12)` |
-| `chaves` | chaves já coletadas | letras minúsculas em **ordem alfabética**, concatenadas; vazio se nenhuma |
-| `{bonus}` | posições de bônus (`+`) **já consumidos** | lista de `(l,c)` em ordem crescente de linha e depois coluna, separadas por vírgula, sem espaços; `{}` se nenhum |
+| `chaves` | chaves já coletadas | letras minúsculas em **ordem alfabética**, concatenadas; **`-` se nenhuma** |
+| `{bonus}` | bônus (`+`) **já consumidos** | **índices** dos bônus, numerados a partir de 0 em ordem de leitura do mapa (linha, depois coluna), em ordem crescente, separados por vírgula, sem espaços; `{}` se nenhum. Ex.: `{0,2}` |
 
-Com a opção **fonte consumível** ligada, acrescenta-se um quarto campo com as fontes (`*`)
-já consumidas, no mesmo formato do campo de bônus:
+Com a opção `--fonte-consumivel` ligada, acrescenta-se um quarto campo com as fontes (`*`)
+já consumidas, numeradas do mesmo jeito (índices a partir de 0, em ordem de leitura). Essa
+extensão é decisão do grupo, já que o enunciado só define as três partes:
 
 ```
 (l,c)|chaves|{bonus}|{fontes}
@@ -72,7 +79,7 @@ já consumidas, no mesmo formato do campo de bônus:
 Sem a opção, o quarto campo **não aparece** (o rótulo continua com três partes).
 
 **Nó alvo:** o nó virtual que recebe um arco de custo 0 de cada estado sobre `G` tem rótulo
-exatamente `ALVO`.
+exatamente `ALVO`. Ele **não entra nas métricas** (ordem, tamanho, densidade, graus, camadas).
 
 **Grafo de posições (`G_pos`):** o rótulo é só `(l,c)`.
 
@@ -80,21 +87,20 @@ Exemplos:
 
 | Situação | Rótulo |
 |---|---|
-| Início de qualquer mapa fornecido | `(1,1)||{}` |
-| m02, em `(3,11)` depois de pegar `a` | `(3,11)|a|{}` |
-| m03, com `a` e `c`, nenhum bônus | `(6,7)|ac|{}` |
-| m05, depois de consumir o bônus em `(3,2)` | `(3,3)||{(3,2)}` |
-| m06 com fonte consumível, após usar `(3,5)` | `(3,6)||{}|{(3,5)}` |
+| Início de qualquer mapa fornecido (exemplo do enunciado para o m02) | `(1,1)\|-\|{}` |
+| m02, ao entrar na casa da chave `a` em `(3,11)` | `(3,11)\|a\|{}` |
+| Formato com duas chaves e dois bônus consumidos (exemplo do enunciado) | `(3,5)\|ab\|{0,2}` |
+| m05, ao entrar no bônus de índice 0, em `(3,2)` | `(3,2)\|-\|{0}` |
+| m06 com fonte consumível, ao entrar na fonte de índice 0, em `(3,5)` | `(3,5)\|-\|{}\|{0}` |
 | Nó virtual de chegada | `ALVO` |
 
-A **camada** de um estado é a sua string `chaves` (camada `""` = nenhuma chave). Nos
-arquivos, a camada vazia é escrita como `-` para não ser confundida com campo ausente.
+A **camada** de um estado é a sua parte `chaves`; a camada sem chaves é `-`.
 
 ---
 
 ## 3. `out/parte1/`
 
-### 3.1
+### 3.1 `arestas_<mapa>.csv`
 
 Um arquivo por mapa (inclusive `m08`), uma linha por arco de `G_est`, na ordem de inserção
 (BFS de exploração a partir de `S`, vizinhos em `N, L, S, O`). Inclui os arcos até `ALVO`.
@@ -103,70 +109,77 @@ Um arquivo por mapa (inclusive `m08`), uma linha por arco de `G_est`, na ordem d
 |---|---|---|
 | `origem` | str | rótulo do estado de origem |
 | `destino` | str | rótulo do estado de destino (ou `ALVO`) |
-| `peso` | número | custo do arco (pode ser negativo, ex.: bônus) |
 | `movimento` | str | `N`, `L`, `S`, `O` ou `-` (arco até `ALVO`) |
-| `simbolo_destino` | str | caractere da casa onde o movimento termina (`.`, `,`, `~`, `a`, `A`, `+`, `*`, `G`, ...); vazio para `ALVO` |
-| `via_esteira` | bool | `true` se o arco inclui deslocamento forçado por esteira |
-| `camada_origem` | str | chaves da origem (`-` se nenhuma) |
-| `camada_destino` | str | chaves do destino (`-` se nenhuma; vazio para `ALVO`) |
+| `casa_destino` | str | caractere da casa onde o movimento termina (`.`, `,`, `~`, `a`, `A`, `+`, `*`, `G`, ...); vazio para `ALVO` |
+| `peso` | número | custo do arco (pode ser negativo: bônus e fonte) |
+| `via_esteira` | bool | *extra:* `true` se o arco sai de uma esteira |
+| `camada_origem` | str | *extra:* chaves da origem (`-` se nenhuma) |
+| `camada_destino` | str | *extra:* chaves do destino (`-` se nenhuma; vazio para `ALVO`) |
 
-Exemplo:
+As cinco primeiras colunas são as do enunciado, na mesma ordem. Exemplo (as três primeiras
+linhas de dados são as do próprio enunciado):
 
 ```csv
-origem,destino,peso,movimento,simbolo_destino,via_esteira,camada_origem,camada_destino
-(1,1)||{},(1,2)||{},1,L,.,false,-,-
-(1,1)||{},(2,1)||{},1,S,.,false,-,-
-(1,10)|a|{},(1,11)|a|{},1,L,G,false,a,a
-(1,11)|a|{},ALVO,0,-,,false,a,
+origem,destino,movimento,casa_destino,peso,via_esteira,camada_origem,camada_destino
+"(1,1)|-|{}","(2,1)|-|{}",S,.,1,false,-,-
+"(3,10)|-|{}","(3,11)|a|{}",L,a,1,false,-,a
+"(1,5)|a|{}","(1,6)|a|{}",L,A,1,false,a,a
+"(1,11)|a|{}",ALVO,-,,0,false,a,
 ```
 
-### 3.2 
+### 3.2 `solucoes.csv`
 
-Uma linha por par (mapa, algoritmo) executado, ordenada por `mapa` e depois por
-`BFS, DFS, DIJKSTRA, BELLMAN_FORD`.
+BFS, Dijkstra e Bellman-Ford em `G_est`, em todos os mapas (m01 a m08 e os mapas do grupo).
+Uma linha por par (mapa, algoritmo), ordenada por `mapa` e depois por
+`BFS, DIJKSTRA, BELLMAN_FORD`. A DFS tem arquivo próprio (3.6).
 
 | Coluna | Tipo | Descrição |
 |---|---|---|
 | `mapa` | str | nome do mapa (seção 1.3) |
-| `algoritmo` | str | `BFS`, `DFS`, `DIJKSTRA`, `BELLMAN_FORD` |
-| `modelagem` | str | `G_est` ou `G_pos` |
-| `status` | str | `ok`, `sem_caminho`, `recusado_peso_negativo`, `ciclo_negativo` |
-| `passos` | int | número de movimentos do caminho encontrado, sem contar o arco até `ALVO`; vazio se não houver caminho |
-| `custo` | número | soma dos pesos do caminho; vazio se não houver caminho ou mínimo indefinido |
-| `ordem` | int | número de estados de `G_est` (inclui `ALVO`) |
-| `tamanho` | int | número de arcos de `G_est` |
-| `estados_visitados` | int | estados efetivamente alcançados pelo algoritmo a partir de `S` |
-| `tempo_ms` | número | tempo da execução do algoritmo (sem leitura nem construção do grafo) |
-| `observacao` | str | texto curto, ex.: motivo da recusa do Dijkstra |
+| `algoritmo` | str | `BFS`, `DIJKSTRA`, `BELLMAN_FORD` |
+| `passos` | int | número de movimentos até `ALVO`, sem contar o arco virtual até `ALVO`; vazio se não houver caminho |
+| `custo` | número | soma dos pesos do caminho; vazio se não houver caminho, recusa ou ciclo negativo |
+| `status` | str | exatamente um de `OK`, `RECUSA`, `CICLO_NEGATIVO`, `SEM_SOLUCAO` (valores do enunciado) |
+| `caminho` | str | rótulos do caminho, do estado inicial ao último estado antes de `ALVO`, separados por ` > `; vazio se não houver |
+| `ordem` | int | *extra:* `\|V\|` de `G_est`, sem `ALVO` |
+| `tamanho` | int | *extra:* `\|E\|` de `G_est`, sem os arcos até `ALVO` |
+| `estados_visitados` | int | *extra:* estados alcançados pelo algoritmo a partir de `S` |
+| `tempo_ms` | número | *extra:* tempo do algoritmo (sem leitura nem construção do grafo) |
+| `observacao` | str | *extra:* texto curto, ex.: motivo da recusa do Dijkstra |
+
+`RECUSA` = Dijkstra diante de arco negativo; `CICLO_NEGATIVO` = Bellman-Ford encontrou ciclo
+negativo que alcança `ALVO`; `SEM_SOLUCAO` = `ALVO` inalcançável.
 
 ```csv
-mapa,algoritmo,modelagem,status,passos,custo,ordem,tamanho,estados_visitados,tempo_ms,observacao
-m02_uma_chave,BFS,G_est,ok,24,24,61,151,60,0.41,
-m05_bonus,DIJKSTRA,G_est,recusado_peso_negativo,,,,,,,arco com peso -4
-m07_impossivel,BFS,G_est,sem_caminho,,,40,98,39,0.20,ALVO inalcançável
+mapa,algoritmo,passos,custo,status,caminho,ordem,tamanho,estados_visitados,tempo_ms,observacao
+m02_uma_chave,BFS,<n>,<n>,OK,"(1,1)|-|{} > (2,1)|-|{} > ...",<n>,<n>,<n>,<n>,
+m05_bonus,DIJKSTRA,,,RECUSA,,<n>,<n>,,,arco com peso negativo
+m07_impossivel,BFS,,,SEM_SOLUCAO,,<n>,<n>,<n>,<n>,ALVO inalcançável
 ```
 
-### 3.3 Percurso em JSON — qualquer `percurso_<mapa>.json`
+### 3.3 Percurso em JSON — `percurso_m03.json` (e qualquer `percurso_<mapa>.json`)
+
+Caminho de menor custo, estado a estado. Valores ilustrativos:
 
 ```json
 {
   "mapa": "m03_tres_chaves",
-  "algoritmo": "BFS",
+  "algoritmo": "DIJKSTRA",
   "modelagem": "G_est",
   "opcoes": { "fonte_consumivel": false, "porta_como": "parede" },
   "grade": [
     "#################",
     "#S.....A....b...#"
   ],
-  "inicio": "(1,1)||{}",
+  "inicio": "(1,1)|-|{}",
   "fim": "ALVO",
   "encontrou": true,
-  "passos": 2,
-  "custo": 2,
+  "passos": 0,
+  "custo": 0,
   "percurso": [
     {
       "passo": 0,
-      "estado": "(1,1)||{}",
+      "estado": "(1,1)|-|{}",
       "linha": 1,
       "coluna": 1,
       "chaves": "",
@@ -179,7 +192,7 @@ m07_impossivel,BFS,G_est,sem_caminho,,,40,98,39,0.20,ALVO inalcançável
     },
     {
       "passo": 1,
-      "estado": "(1,2)||{}",
+      "estado": "(1,2)|-|{}",
       "linha": 1,
       "coluna": 2,
       "chaves": "",
@@ -203,7 +216,7 @@ m07_impossivel,BFS,G_est,sem_caminho,,,40,98,39,0.20,ALVO inalcançável
 | `fim` | str | `ALVO` |
 | `encontrou` | bool | `false` → `percurso` vazio, `passos` e `custo` `null` |
 | `passos`, `custo` | int / número / `null` | iguais aos de `solucoes.csv` |
-| `percurso` | lista | um item por estado visitado no caminho, do início ao último estado físico antes de `ALVO` (o arco até `ALVO` não aparece) |
+| `percurso` | lista | um item por estado do caminho, do início ao último estado físico antes de `ALVO` (o arco até `ALVO` não aparece) |
 
 Cada item de `percurso`:
 
@@ -213,7 +226,7 @@ Cada item de `percurso`:
 | `estado` | str | rótulo completo |
 | `linha`, `coluna` | int | posição (repete a do rótulo, para não precisar decompor a string) |
 | `chaves` | str | chaves no estado, em ordem alfabética (`""` se nenhuma) |
-| `bonus` | lista de `[l, c]` | bônus já consumidos |
+| `bonus` | lista de int | índices dos bônus já consumidos (os mesmos do rótulo) |
 | `camada` | str | igual a `chaves`, com `-` para vazio |
 | `movimento` | str / `null` | movimento que levou a este estado (`null` no passo 0) |
 | `peso` | número | peso do arco que levou a este estado (0 no passo 0) |
@@ -223,7 +236,10 @@ Cada item de `percurso`:
 Quando um passo dispara mais de um evento, usa-se o mais importante na ordem
 `chegada > chave > porta > bonus > fonte > esteira`.
 
-### 3.4 
+### 3.4 `ciclo_negativo_m06.json`
+
+Ciclo negativo encontrado pelo Bellman-Ford, exibido como sequência de estados e custo.
+Estrutura (rótulos e pesos são marcadores, não o resultado do m06):
 
 ```json
 {
@@ -231,14 +247,14 @@ Quando um passo dispara mais de um evento, usa-se o mais importante na ordem
   "modelagem": "G_est",
   "algoritmo": "BELLMAN_FORD",
   "opcoes": { "fonte_consumivel": false },
-  "fonte": "(1,1)||{}",
+  "fonte": "(1,1)|-|{}",
   "ciclo_encontrado": true,
-  "ciclo": ["(3,5)||{}", "(3,4)||{}", "(3,5)||{}"],
+  "ciclo": ["<estado X>", "<estado Y>", "<estado X>"],
   "arcos": [
-    { "origem": "(3,5)||{}", "destino": "(3,4)||{}", "peso": 1, "movimento": "O" },
-    { "origem": "(3,4)||{}", "destino": "(3,5)||{}", "peso": -5, "movimento": "L" }
+    { "origem": "<estado X>", "destino": "<estado Y>", "peso": 0, "movimento": "-" },
+    { "origem": "<estado Y>", "destino": "<estado X>", "peso": 0, "movimento": "-" }
   ],
-  "custo_ciclo": -4,
+  "custo_ciclo": 0,
   "afeta_alvo": true,
   "correcao": {
     "aplicada": false,
@@ -254,14 +270,14 @@ Quando um passo dispara mais de um evento, usa-se o mais importante na ordem
 | `arcos` | lista | os arcos do ciclo, na ordem, com o peso de cada um |
 | `custo_ciclo` | número | soma dos pesos de `arcos` (< 0) |
 | `afeta_alvo` | bool | o ciclo alcança `ALVO` (o mínimo até `ALVO` fica indefinido) |
-| `correcao` | objeto | preenchido na correção do m06 (P3): `aplicada`, texto curto e o custo mínimo obtido depois dela |
+| `correcao` | objeto | preenchido com `--fonte-consumivel` (correção do m06, P3): `aplicada`, texto curto e o custo mínimo finito obtido depois dela |
 
 Sem ciclo: `ciclo_encontrado: false`, `ciclo` e `arcos` vazios, `custo_ciclo: null`.
 
-### 3.5
+### 3.5 `armadilhas_m04.csv` e `armadilhas_m07.csv`
 
-Estados alcançáveis a partir de `S` que **não** alcançam `ALVO` (busca reversa no
-transposto). Uma linha por estado, ordenada por `linha`, `coluna`, `chaves`.
+Estados alcançáveis a partir de `S` dos quais `ALVO` é inalcançável (busca a partir de `ALVO`
+no transposto). Uma linha por estado, ordenada por `linha`, `coluna`, `chaves`.
 
 | Coluna | Tipo | Descrição |
 |---|---|---|
@@ -275,49 +291,59 @@ transposto). Uma linha por estado, ordenada por `linha`, `coluna`, `chaves`.
 O total e o percentual de armadilhas sobre os estados alcançáveis vão em
 `metricas_global.json` (`armadilhas` e `pct_armadilhas`), não neste CSV.
 
-### 3.6 
+### 3.6 `dfs_classificacao.csv`
 
-Uma linha por arco examinado pela DFS a partir de `S`, na ordem em que foi examinado.
+DFS a partir do estado inicial, vizinhos em `N, L, S, O`. **Uma linha por mapa** com a
+contagem de arcos de cada classe, como no enunciado.
 
 | Coluna | Tipo | Descrição |
 |---|---|---|
 | `mapa` | str | nome do mapa |
-| `origem`, `destino` | str | rótulos |
-| `classe` | str | `arvore`, `retorno`, `avanco` ou `cruzamento` |
-| `d_origem`, `f_origem` | int | tempos de descoberta/finalização da origem |
-| `d_destino`, `f_destino` | int | tempos de descoberta/finalização do destino |
+| `arvore` | int | arcos de árvore |
+| `retorno` | int | arcos de retorno |
+| `avanco` | int | arcos de avanço |
+| `cruzamento` | int | arcos de cruzamento |
+| `possui_ciclo` | bool | *extra:* `true` se houver arco de retorno |
 
-Convenção do relógio: começa em 1 e é incrementado a cada descoberta e a cada finalização
-(CLRS). O resumo por classe (contagens e `possui_ciclo`) vai em `metricas_global.json`.
+```csv
+mapa,arvore,retorno,avanco,cruzamento,possui_ciclo
+m02_uma_chave,<n>,<n>,<n>,<n>,true
+```
 
-### 3.7 
+Opcional, para depuração e para o relatório: `dfs_arcos_<mapa>.csv`, uma linha por arco
+examinado (`origem,destino,classe,d_origem,f_origem,d_destino,f_destino`). Convenção do relógio:
+começa em 1 e é incrementado a cada descoberta e a cada finalização (CLRS).
 
-Um objeto por mapa, na chave com o nome do mapa.
+### 3.7 `metricas_global.json`
+
+Um objeto por mapa, com `G_pos` e `G_est` lado a lado (o enunciado pede ordem, tamanho e
+densidade dos dois, além do teto teórico e da taxa de ocupação). `ALVO` e seus arcos
+**não são contados**.
 
 ```json
 {
   "gerado_em": "2026-11-18T20:00:00",
   "mapas": {
     "m02_uma_chave": {
-      "modelagem": "G_est",
-      "ordem": 61,
-      "tamanho": 151,
-      "densidade": 0.0412,
-      "estados_fisicos": 30,
-      "teto_teorico_estados": 60,
-      "ocupacao_teto": 1.0,
-      "grau_saida": { "min": 0, "max": 4, "medio": 2.48 },
-      "grau_entrada": { "min": 0, "max": 4, "medio": 2.48 },
-      "becos": 4,
-      "multiplicidade": { "max": 2, "media": 2.0 },
-      "camadas": 2,
-      "arcos_entre_camadas": 1,
-      "armadilhas": 0,
-      "pct_armadilhas": 0.0,
-      "dfs": { "arvore": 60, "retorno": 70, "avanco": 0, "cruzamento": 21, "possui_ciclo": true },
-      "ranking_grau": [
-        { "estado": "(1,5)||{}", "grau_entrada": 4, "grau_saida": 4 }
-      ]
+      "G_pos": { "ordem": 0, "tamanho": 0, "densidade": 0.0 },
+      "G_est": {
+        "ordem": 0,
+        "tamanho": 0,
+        "densidade": 0.0,
+        "teto_teorico": 0,
+        "taxa_ocupacao": 0.0,
+        "grau_saida": { "min": 0, "max": 0, "medio": 0.0 },
+        "grau_entrada": { "min": 0, "max": 0, "medio": 0.0 },
+        "maior_grau_saida": { "estado": "(l,c)|-|{}", "grau": 0 },
+        "maior_grau_entrada": { "estado": "(l,c)|-|{}", "grau": 0 },
+        "becos": 0,
+        "multiplicidade": { "max": 0, "casas_no_max": 0, "media": 0.0 },
+        "camadas": 0,
+        "arcos_entre_camadas": 0,
+        "armadilhas": 0,
+        "pct_armadilhas": 0.0,
+        "dfs": { "arvore": 0, "retorno": 0, "avanco": 0, "cruzamento": 0, "possui_ciclo": false }
+      }
     }
   }
 }
@@ -325,45 +351,49 @@ Um objeto por mapa, na chave com o nome do mapa.
 
 | Chave | Descrição |
 |---|---|
-| `ordem` / `tamanho` | `|V|` (com `ALVO`) e `|A|` |
-| `densidade` | densidade dirigida `|A| / (|V| · (|V| − 1))` |
-| `estados_fisicos` | casas não-parede alcançadas (posições distintas entre os estados) |
-| `teto_teorico_estados` | casas livres × combinações possíveis de chaves (× bônus/fontes, quando houver) |
-| `ocupacao_teto` | `ordem` sem `ALVO` ÷ `teto_teorico_estados` |
-| `becos` | estados com `grau_saida` = 0, excluindo `ALVO` |
-| `multiplicidade` | número de estados por casa física (máximo e média) |
+| `ordem` / `tamanho` | `\|V\|` e `\|E\|`, sem `ALVO` nem os arcos até ele |
+| `densidade` | densidade dirigida `\|E\| / (\|V\| · (\|V\| − 1))`; 0 se `\|V\| < 2` |
+| `teto_teorico` | casas livres × 2^(nº de chaves) × 2^(nº de bônus) (fórmula do enunciado) |
+| `taxa_ocupacao` | `ordem` de `G_est` ÷ `teto_teorico` |
+| `maior_grau_saida` / `maior_grau_entrada` | estado com maior grau; desempate pela ordem de leitura do rótulo |
+| `becos` | estados com grau de saída 0 que não estão em `G` (ex.: esteira apontando para a parede) |
+| `multiplicidade` | estados de `G_est` por casa: máximo, quantas casas o atingem e média |
 | `camadas` / `arcos_entre_camadas` | quantidade de conjuntos de chaves distintos e arcos cuja camada muda |
-| `ranking_grau` | os 10 estados de maior grau total, em ordem decrescente (obrigatório no `m08`, opcional nos demais) |
 
-### 3.8
+### 3.8 `camadas.json`
+
+Métricas por camada (subgrafo induzido pelos estados com o mesmo conjunto de chaves), por mapa,
+e os arcos entre camadas com as casas que os geram.
 
 ```json
 {
   "m02_uma_chave": {
     "camadas": [
-      { "camada": "-", "chaves": "", "estados": 30, "arcos_internos": 74 },
-      { "camada": "a", "chaves": "a", "estados": 30, "arcos_internos": 74 }
+      { "camada": "-", "ordem": 0, "tamanho": 0, "densidade": 0.0 },
+      { "camada": "a", "ordem": 0, "tamanho": 0, "densidade": 0.0 }
     ],
     "arcos_entre_camadas": [
-      { "de": "-", "para": "a", "quantidade": 1 }
+      { "de": "-", "para": "a", "quantidade": 0, "casas": [[0, 0]] }
     ]
   }
 }
 ```
 
-### 3.9 
+### 3.9 `graus_<mapa>.csv`
 
-Uma linha por estado, na ordem de inserção dos vértices no `Graph`.
+Uma linha por estado (sem `ALVO`), na ordem de inserção dos vértices no `Graph`. Os arcos até
+`ALVO` não entram nos graus, por isso um estado sobre `G` tem grau de saída 0 e **não** é beco.
 
 | Coluna | Tipo | Descrição |
 |---|---|---|
 | `estado` | str | rótulo |
-| `linha`, `coluna` | int | posição (vazio para `ALVO`) |
-| `camada` | str | chaves (`-` se nenhuma) |
-| `grau_entrada`, `grau_saida`, `grau_total` | int | graus em `G_est` |
-| `beco` | bool | `grau_saida` = 0 e não é `ALVO` |
+| `grau_entrada` | int | grau de entrada em `G_est` |
+| `grau_saida` | int | grau de saída em `G_est` |
+| `linha`, `coluna` | int | *extra:* posição |
+| `camada` | str | *extra:* chaves (`-` se nenhuma) |
+| `beco` | bool | *extra:* `grau_saida` = 0 e o estado não está em `G` |
 
-### 3.10 
+### 3.10 `multiplicidade_m08.csv` (extra, base do heatmap)
 
 Uma linha por casa não-parede da grade, ordenada por `linha`, `coluna`.
 
@@ -373,22 +403,21 @@ Uma linha por casa não-parede da grade, ordenada por `linha`, `coluna`.
 | `simbolo` | str | caractere da casa |
 | `multiplicidade` | int | quantos estados de `G_est` estão nessa casa (0 se inalcançável) |
 
-### 3.11 
+### 3.11 `comparacao_modelagem.csv`
 
-Uma linha por (mapa, modelagem), para `m02`, `m03`, `m04` (e `m05` em `G_pos`, para a prova
-do ciclo negativo).
+BFS em passos de `S` até `G` nas três modelagens, para `m02`, `m03` e `m04`.
 
 | Coluna | Tipo | Descrição |
 |---|---|---|
 | `mapa` | str | nome do mapa |
-| `modelagem` | str | `G_pos` ou `G_est` |
-| `opcao_porta` | str | `parede` ou `chao` (só `G_pos`; vazio em `G_est`) |
-| `ordem`, `tamanho` | int | tamanho do grafo |
-| `alcanca_alvo` | bool | existe caminho até `G` |
-| `passos_bfs` | int | passos do caminho do BFS (vazio se não houver) |
-| `custo_minimo` | número | custo mínimo (vazio se não houver ou se houver ciclo negativo) |
-| `solucao_valida` | bool | o caminho respeita as regras do jogo (ex.: não atravessa porta sem chave) |
-| `observacao` | str | texto curto |
+| `abordagem` | str | `pos_porta_chao` (G_pos, porta como chão), `pos_porta_parede` (G_pos, porta como parede) ou `estados` (G_est) |
+| `passos` | int | passos do BFS até `G`; vazio se não chegar |
+| `caminho_valido` | bool | o caminho respeita as regras do jogo (ex.: não atravessa porta sem a chave); `false` se não houver caminho |
+| `observacao` | str | texto curto (ex.: "atravessa porta trancada", "não alcança G") |
+
+O ciclo negativo do m05 em `G_pos` (bônus −4 fixo) e a ausência dele em `G_est` vão no
+relatório; se o grupo quiser um arquivo, usar `ciclo_negativo_m05_pos.json` com a mesma
+estrutura da seção 3.4.
 
 ### 3.12 Arquivos não tabulares
 
@@ -442,13 +471,13 @@ leitor e registrado em `parte2_report.json` → `dataset.criterio_recorte`.
       "possui_ciclo": true }
   ],
   "dijkstra": [
-    { "origem": 1, "destino": 2, "recorte": 100, "status": "ok",
+    { "origem": 1, "destino": 2, "recorte": 100, "status": "OK",
       "custo": 0, "passos": 0, "caminho": [1, 2] }
   ],
   "bellman_ford": [
-    { "caso": "sem_ciclo_negativo", "fonte": 1, "recorte": 100, "status": "ok",
+    { "caso": "sem_ciclo_negativo", "fonte": 1, "recorte": 100, "status": "OK",
       "ciclo": [], "custo_ciclo": null },
-    { "caso": "com_ciclo_negativo", "fonte": 1, "recorte": 100, "status": "ciclo_negativo",
+    { "caso": "com_ciclo_negativo", "fonte": 1, "recorte": 100, "status": "CICLO_NEGATIVO",
       "ciclo": [1, 2, 1], "custo_ciclo": -1 }
   ],
   "benchmark": {
@@ -466,8 +495,8 @@ leitor e registrado em `parte2_report.json` → `dataset.criterio_recorte`.
 Regras:
 
 - `bfs` e `dfs`: uma entrada por fonte (3 fontes) e recorte usado.
-- `dijkstra`: uma entrada por par (5 pares). `status` ∈ `ok`, `sem_caminho`,
-  `recusado_peso_negativo`; sem caminho → `custo`, `passos` `null` e `caminho` vazio.
+- `dijkstra`: uma entrada por par (5 pares). `status` ∈ `OK`, `SEM_SOLUCAO`,
+  `RECUSA` (mesmos valores de `solucoes.csv`); sem caminho → `custo`, `passos` `null` e `caminho` vazio.
 - `bellman_ford`: pelo menos os dois casos obrigatórios (`sem_ciclo_negativo` e
   `com_ciclo_negativo`); `ciclo` é fechado (primeiro id repetido no fim).
 - Caminhos e ciclos são listas de ids `int`.
