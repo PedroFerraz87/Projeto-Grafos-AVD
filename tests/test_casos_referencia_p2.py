@@ -1,4 +1,5 @@
 # [IA] OpenAI Codex - conferência dos casos sintéticos sugeridos para o P2.
+# [IA] OpenAI Codex - ampliação dos casos de referência da Sprint 1.
 """Valida SOMENTE expectativas das fixtures com NetworkX como oráculo.
 
 Não importa graph.py/algorithms.py nem comprova sua implementação. Os testes
@@ -45,6 +46,8 @@ def test_expectativas_sinteticas_conferidas_com_oraculo(caso):
         paths = nx.single_source_shortest_path(graph, query['fonte'])
         assert {node: len(path)-1 for node, path in paths.items()} == query['distancias_finitas']
         assert set(graph) - set(paths) == set(query['inalcancaveis'])
+        if 'pais' in query:
+            assert {node: path[-2] for node, path in paths.items() if len(path) > 1} == query['pais']
         if 'caminho' in query:
             assert paths[query['destino']] == query['caminho']
     if 'dfs' in expected:
@@ -69,6 +72,14 @@ def test_expectativas_sinteticas_conferidas_com_oraculo(caso):
                 classes[kind].add((u, v))
         assert classes == {kind: set(map(tuple, pairs)) for kind, pairs in query['classes'].items()}
         assert bool(classes['retorno']) == query['possui_ciclo']
+        if 'tempos' in query:
+            eventos = list(nx.dfs_labeled_edges(graph, query['fonte']))
+            carimbos = [(v, label) for _, v, label in eventos if label in {'forward', 'reverse'}]
+            descobertas = {v: t for t, (v, label) in enumerate(carimbos, 1) if label == 'forward'}
+            finais = {v: t for t, (v, label) in enumerate(carimbos, 1) if label == 'reverse'}
+            assert {v: [descobertas[v], finais[v]] for v in order} == query['tempos']
+            arcos = [[u, v] for u, v, label in eventos if label == 'nontree' or (label == 'forward' and u != v)]
+            assert arcos == query['arcos_examinados']
     if 'dijkstra' in expected:
         query = expected['dijkstra']
         negative = any(edge['peso'] < 0 for edge in caso['arestas'])
@@ -93,8 +104,11 @@ def test_expectativas_sinteticas_conferidas_com_oraculo(caso):
         assert affected == set(query['afetados'])
         assert bool(affected) == query['ciclo_negativo_alcancavel']
         assert set(graph) - reachable == set(query['inalcancaveis'])
-        finite_graph = graph.subgraph(set(graph) - affected)
-        lengths, paths = nx.single_source_bellman_ford(finite_graph, source)
+        if source in affected:
+            lengths, paths = {}, {}
+        else:
+            finite_graph = graph.subgraph(set(graph) - affected)
+            lengths, paths = nx.single_source_bellman_ford(finite_graph, source)
         assert lengths == query['distancias_finitas']
         if 'caminho' in query:
             assert paths[query['destino']] == query['caminho']

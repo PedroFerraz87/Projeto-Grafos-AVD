@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Labirinto interativo — demonstração</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: #172033;
+      background: #f3f6fb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    h1 {
+      margin-bottom: 0.35rem;
+    }
+
+    .intro,
+    .status {
+      color: #48566e;
+    }
+
+    .panel {
+      margin-top: 1.5rem;
+      padding: 1.25rem;
+      border: 1px solid #d8e0ec;
+      border-radius: 0.8rem;
+      background: white;
+      box-shadow: 0 0.4rem 1.5rem #182b4910;
+    }
+
+    .legend,
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem 1rem;
+    }
+
+    .legend {
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .swatch {
+      width: 1rem;
+      height: 1rem;
+      border: 1px solid #aeb9ca;
+      border-radius: 0.2rem;
+      background: white;
+    }
+
+    .swatch.wall {
+      border-color: #29364d;
+      background: #29364d;
+    }
+
+    .swatch.path {
+      border-color: #a9d8bd;
+      background: #d9f3e3;
+    }
+
+    .swatch.player {
+      border-color: #2463eb;
+      background: #2463eb;
+    }
+
+    .maze {
+      display: grid;
+      grid-template-columns: repeat(10, minmax(1.7rem, 3rem));
+      justify-content: center;
+      gap: 3px;
+      overflow-x: auto;
+    }
+
+    .cell {
+      display: grid;
+      aspect-ratio: 1;
+      place-items: center;
+      border-radius: 0.25rem;
+      background: #fff;
+      font-size: clamp(0.75rem, 3vw, 1.1rem);
+      font-weight: 700;
+    }
+
+    .cell.wall {
+      color: white;
+      background: #29364d;
+    }
+
+    .cell.trail {
+      background: #d9f3e3;
+    }
+
+    .cell.player {
+      color: white;
+      border-radius: 50%;
+      background: #2463eb;
+    }
+
+    .cell.start,
+    .cell.goal {
+      color: #172033;
+      background: #ffe7a3;
+    }
+
+    .cell.player.start,
+    .cell.player.goal {
+      color: white;
+      background: #2463eb;
+    }
+
+    .controls {
+      margin-top: 1.25rem;
+    }
+
+    button {
+      min-height: 2.5rem;
+      padding: 0.45rem 0.85rem;
+      border: 1px solid #b9c5d6;
+      border-radius: 0.45rem;
+      background: #fff;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #edf3ff;
+    }
+
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid #8bb2ff;
+      outline-offset: 2px;
+    }
+
+    .speed-control {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    input[type="range"] {
+      width: min(12rem, 45vw);
+    }
+
+    .status {
+      min-height: 1.5em;
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding: 1rem 0.5rem;
+      }
+
+      .panel {
+        padding: 0.85rem 0.5rem;
+      }
+
+      .maze {
+        grid-template-columns: repeat(10, minmax(1.45rem, 2.3rem));
+        gap: 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Labirinto interativo</h1>
+    <p class="intro">Protótipo T20 com um mapa e percurso de demonstração.</p>
+
+    <section class="panel" aria-label="Demonstração do percurso">
+      <div class="legend" aria-label="Legenda">
+        <span class="legend-item"><span class="swatch wall" aria-hidden="true"></span>Parede</span>
+        <span class="legend-item"><span class="swatch path" aria-hidden="true"></span>Percurso</span>
+        <span class="legend-item"><span class="swatch player" aria-hidden="true"></span>Posição atual</span>
+      </div>
+
+      <div id="maze" class="maze" role="grid" aria-label="Labirinto de demonstração"></div>
+
+      <div class="controls">
+        <button id="play-pause" type="button">Iniciar</button>
+        <button id="restart" type="button">Reiniciar</button>
+        <label class="speed-control" for="speed">
+          Velocidade
+          <input id="speed" type="range" min="200" max="1200" step="100" value="700">
+          <span id="speed-value">700 ms/passo</span>
+        </label>
+      </div>
+      <p id="status" class="status" role="status" aria-live="polite">Pronto para iniciar.</p>
+    </section>
+  </main>
+
+  <script id="labyrinth-data" type="application/json">
+  {
+    "mapa": "demonstracao",
+    "grade": [
+      "##########",
+      "#S...#..G#",
+      "#.#..#...#",
+      "#.#......#",
+      "#..####..#",
+      "#........#",
+      "##########"
+    ],
+    "percurso": [[1,1], [1,2], [1,3], [1,4], [2,4], [3,4], [3,5], [3,6], [3,7], [2,7], [1,7], [1,8]]
+  }
+  </script>
+  <script>
+    "use strict";
+
+    const data = JSON.parse(document.getElementById("labyrinth-data").textContent);
+    const mazeElement = document.getElementById("maze");
+    const playPauseButton = document.getElementById("play-pause");
+    const restartButton = document.getElementById("restart");
+    const speedInput = document.getElementById("speed");
+    const speedValue = document.getElementById("speed-value");
+    const statusElement = document.getElementById("status");
+    const cells = new Map();
+    let stepIndex = 0;
+    let timerId = null;
+
+    function coordinateKey(row, column) {
+      return `${row},${column}`;
+    }
+
+    function validateData() {
+      if (!Array.isArray(data.grade) || data.grade.length === 0) {
+        throw new Error("A grade de demonstração está vazia.");
+      }
+
+      const width = data.grade[0].length;
+      if (!data.grade.every((row) => row.length === width)) {
+        throw new Error("Todas as linhas do labirinto devem ter a mesma largura.");
+      }
+
+      if (!Array.isArray(data.percurso) || data.percurso.length === 0) {
+        throw new Error("O percurso de demonstração está vazio.");
+      }
+
+      data.percurso.forEach(([row, column], index) => {
+        const symbol = data.grade[row]?.[column];
+        if (symbol === undefined || symbol === "#") {
+          throw new Error(`O passo ${index + 1} do percurso está fora da grade ou em uma parede.`);
+        }
+
+        if (index > 0) {
+          const [previousRow, previousColumn] = data.percurso[index - 1];
+          const distance = Math.abs(row - previousRow) + Math.abs(column - previousColumn);
+          if (distance !== 1) {
+            throw new Error(`O passo ${index + 1} não é adjacente ao passo anterior.`);
+          }
+        }
+      });
+    }
+
+    function renderMaze() {
+      mazeElement.style.gridTemplateColumns = `repeat(${data.grade[0].length}, minmax(1.7rem, 3rem))`;
+      data.grade.forEach((row, rowIndex) => {
+        [...row].forEach((symbol, columnIndex) => {
+          const cell = document.createElement("div");
+          const key = coordinateKey(rowIndex, columnIndex);
+          cell.className = "cell";
+          cell.setAttribute("role", "gridcell");
+
+          if (symbol === "#") {
+            cell.classList.add("wall");
+            cell.setAttribute("aria-label", "Parede");
+          } else {
+            if (symbol === "S") {
+              cell.classList.add("start");
+              cell.setAttribute("aria-label", "Início");
+            } else if (symbol === "G") {
+              cell.classList.add("goal");
+              cell.setAttribute("aria-label", "Objetivo");
+            } else {
+              cell.setAttribute("aria-label", "Caminho livre");
+            }
+            cell.textContent = symbol === "." ? "" : symbol;
+            cells.set(key, cell);
+          }
+
+          mazeElement.appendChild(cell);
+        });
+      });
+      updatePosition();
+    }
+
+    function updatePosition() {
+      cells.forEach((cell) => cell.classList.remove("trail", "player"));
+      data.percurso.slice(0, stepIndex).forEach(([row, column]) => {
+        cells.get(coordinateKey(row, column))?.classList.add("trail");
+      });
+
+      const [row, column] = data.percurso[stepIndex];
+      const currentCell = cells.get(coordinateKey(row, column));
+      currentCell.classList.add("player");
+      currentCell.setAttribute("aria-label", `Posição atual, linha ${row}, coluna ${column}`);
+      statusElement.textContent = stepIndex === data.percurso.length - 1
+        ? `Percurso concluído: ${stepIndex} passos.`
+        : `Passo ${stepIndex} de ${data.percurso.length - 1}.`;
+    }
+
+    function stopPlayback() {
+      if (timerId !== null) {
+        window.clearTimeout(timerId);
+        timerId = null;
+      }
+      playPauseButton.textContent = "Continuar";
+    }
+
+    function scheduleNextStep() {
+      timerId = window.setTimeout(() => {
+        stepIndex += 1;
+        updatePosition();
+
+        if (stepIndex === data.percurso.length - 1) {
+          timerId = null;
+          playPauseButton.textContent = "Iniciar novamente";
+          return;
+        }
+        scheduleNextStep();
+      }, Number(speedInput.value));
+    }
+
+    function startPlayback() {
+      if (stepIndex === data.percurso.length - 1) {
+        stepIndex = 0;
+        updatePosition();
+      }
+      playPauseButton.textContent = "Pausar";
+      statusElement.textContent = `Executando a partir do passo ${stepIndex}.`;
+      scheduleNextStep();
+    }
+
+    playPauseButton.addEventListener("click", () => {
+      if (timerId !== null) {
+        stopPlayback();
+        statusElement.textContent = `Pausado no passo ${stepIndex}.`;
+      } else {
+        startPlayback();
+      }
+    });
+
+    restartButton.addEventListener("click", () => {
+      stopPlayback();
+      stepIndex = 0;
+      updatePosition();
+      playPauseButton.textContent = "Iniciar";
+      statusElement.textContent = "Percurso reiniciado.";
+    });
+
+    speedInput.addEventListener("input", () => {
+      speedValue.textContent = `${speedInput.value} ms/passo`;
+      if (timerId !== null) {
+        window.clearTimeout(timerId);
+        scheduleNextStep();
+      }
+    });
+
+    validateData();
+    renderMaze();
+  </script>
+</body>
+</html>

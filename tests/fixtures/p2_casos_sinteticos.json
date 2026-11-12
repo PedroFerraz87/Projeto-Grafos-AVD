@@ -206,6 +206,11 @@
             "B": 1,
             "T": 2
           },
+        "pais": {
+          "A": "S",
+          "B": "S",
+          "T": "A"
+        },
           "inalcancaveis": [
             "I"
           ],
@@ -293,6 +298,20 @@
             "C",
             "D"
           ],
+        "tempos": {
+          "A": [1, 8],
+          "B": [2, 5],
+          "C": [3, 4],
+          "D": [6, 7]
+        },
+        "arcos_examinados": [
+          ["A", "B"],
+          ["B", "C"],
+          ["C", "A"],
+          ["A", "C"],
+          ["A", "D"],
+          ["D", "C"]
+        ],
           "classes": {
             "arvore": [
               [
@@ -426,6 +445,25 @@
         "dijkstra": {
           "fonte": "S",
           "recusa": true
+        }
+      }
+    },
+    {
+      "id": "T13_aceita_peso_zero",
+      "vertices": ["S", "A", "T", "I"],
+      "arestas": [
+        {"origem": "S", "destino": "T", "peso": 3, "metadados": {}},
+        {"origem": "S", "destino": "A", "peso": 0, "metadados": {}},
+        {"origem": "A", "destino": "T", "peso": 2, "metadados": {}}
+      ],
+      "expectativas": {
+        "dijkstra": {
+          "fonte": "S",
+          "recusa": false,
+          "distancias_finitas": {"S": 0, "A": 0, "T": 2},
+          "inalcancaveis": ["I"],
+          "destino": "T",
+          "caminho": ["S", "A", "T"]
         }
       }
     },
@@ -667,6 +705,25 @@
       }
     },
     {
+      "id": "T14_fonte_afetada_por_laco_negativo",
+      "vertices": ["S", "T", "I"],
+      "arestas": [
+        {"origem": "S", "destino": "S", "peso": -1, "metadados": {}},
+        {"origem": "S", "destino": "T", "peso": 2, "metadados": {}}
+      ],
+      "expectativas": {
+        "bellman_ford": {
+          "fonte": "S",
+          "distancias_finitas": {},
+          "inalcancaveis": ["I"],
+          "ciclo_negativo_alcancavel": true,
+          "afetados": ["S", "T"],
+          "ciclo_exemplo": ["S", "S"],
+          "custo_ciclo_exemplo": -1
+        }
+      }
+    },
+    {
       "id": "T15_armadilha_tem_saida_mas_nao_alcanca_alvo",
       "vertices": [
         "S",
@@ -729,7 +786,8 @@
             "S",
             "A",
             "B",
-            "G"
+          "G",
+          "I"
           ],
           "esperado": [
             "A",
