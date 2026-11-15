@@ -5,6 +5,10 @@ O resultado é a grade como lista de strings, sem comentários; as coordenadas
 (l,c) do restante do projeto são base 0 sobre essa grade (docs/contratos.md).
 """
 
+import pandas as pd
+
+from src.graphs.graph import Graph
+
 # chão, parede, início, saída, lama, água, chaves, portas, esteiras, bônus, fonte
 SIMBOLOS = set("#.SG,~abcdABCD><^v+*")
 
@@ -46,3 +50,53 @@ def ler_mapa(caminho):
     if "G" not in texto:
         raise MapaInvalido(f"{caminho}: o mapa não tem nenhum G")
     return grade
+
+##Parte 02 - Victor
+
+COLUNAS_DATASET = ["origem", "destino", "nota", "timestamp"]
+
+
+class DatasetInvalido(ValueError):
+    pass
+
+def ler_dataset(caminho, recorte=100):
+    """Lê o dataset Bitcoin Alpha e devolve um grafo.
+
+    O recorte pode ser 10, 50 ou 100.
+    Os dados são ordenados pelo timestamp antes do recorte.
+    """
+
+    # Verifica se o recorte é válido
+    if recorte not in (10, 50, 100):
+        raise DatasetInvalido("O recorte deve ser 10, 50 ou 100.")
+
+    # Lê o CSV sem cabeçalho
+    df = pd.read_csv(caminho, header=None)
+
+    # Verifica a quantidade de colunas
+    if df.shape[1] != 4:
+        raise DatasetInvalido("O dataset deve ter 4 colunas.")
+
+    # Coloca os nomes nas colunas
+    df.columns = COLUNAS_DATASET
+
+    # Ordena pelo timestamp
+    df = df.sort_values("timestamp", kind="stable")
+
+    # Aplica o recorte
+    quantidade = int(len(df) * recorte / 100)
+    df = df.head(quantidade)
+
+    # Cria o grafo vazio
+    grafo = Graph()
+
+    # Adiciona as avaliações como arcos
+    for linha in df.itertuples(index=False):
+        grafo.adicionar_arco(
+            int(linha.origem),
+            int(linha.destino),
+            int(linha.nota),
+            {"timestamp": int(linha.timestamp)}
+        )
+
+    return grafo
