@@ -17,7 +17,7 @@ def test_bfs_escolhe_menos_arcos_e_preserva_a_ordem():
     resultado = algorithms.bfs(grafo, 'S')
 
     assert resultado.distancias == {'S': 0, 'A': 1, 'B': 1, 'T': 2}
-    assert resultado.pais == {'A': 'S', 'B': 'S', 'T': 'A'}
+    assert resultado.pais() == {'A': 'S', 'B': 'S', 'T': 'A'}
     assert resultado.caminho_ate('T') == ['S', 'A', 'T']
     assert resultado.caminho_ate('S') == ['S']
     assert resultado.caminho_ate('I') == []
