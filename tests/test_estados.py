@@ -1,14 +1,16 @@
 # Testes obrigatorios de estados (tarefa T10 do plano).
 # [IA] Claude (Anthropic) - testes do G_pos (T08) gerados a pedido do grupo; revisar e declarar.
+import csv
 from pathlib import Path
 
 import pytest
 
 from src.graphs.algorithms import bellman_ford
-from src.graphs.estados import construir_g_est, construir_g_pos
+from src.graphs.estados import construir_g_est, construir_g_pos, exportar_arestas, exportar_todos, nome_curto
 from src.graphs.io import ler_mapa
 
-MAPAS = Path(__file__).parent.parent / "data" / "mapas"
+RAIZ = Path(__file__).parent.parent
+MAPAS = RAIZ / "data" / "mapas"
 
 
 def alcancaveis(g, origem):
@@ -244,3 +246,114 @@ def test_g_est_dos_mapas_fornecidos(mapa, fonte_consumivel):
     assert g.vertices()[0].startswith("(1,1)|-|{}")
     assert "ALVO" in g and g.arcos_saindo("ALVO") == []
     assert len(set(g.vertices())) == len(g)
+
+
+# ---------- T10: arestas_<mapa>.csv ----------
+
+CABECALHO = "origem,destino,movimento,casa_destino,peso,via_esteira,camada_origem,camada_destino"
+
+ARCOS_ESPERADOS = {"m01": 47, "m02": 75, "m03": 467, "m04": 67, "m05": 444, "m06": 47, "m07": 38, "m08": 6365}
+
+
+def exportar(tmp_path, mapa):
+    g = construir_g_est(ler_mapa(mapa))
+    caminho = tmp_path / "arestas.csv"
+    exportar_arestas(g, caminho)
+    return g, caminho
+
+
+def linhas_csv(caminho):
+    with open(caminho, encoding="utf-8", newline="") as arquivo:
+        return list(csv.DictReader(arquivo))
+
+
+@pytest.mark.parametrize("arquivo, esperado", [
+    ("m03_tres_chaves.txt", "m03"), ("m08_grande.txt", "m08"), ("m1.txt", "m1"),
+    ("meu_mapa.txt", "meu_mapa"), ("data/mapas/m05_bonus.txt", "m05"),
+])
+def test_nome_curto(arquivo, esperado):
+    assert nome_curto(arquivo) == esperado
+
+
+def test_csv_formato_do_contrato(tmp_path):
+    _, caminho = exportar(tmp_path, MAPAS / "m02_uma_chave.txt")
+    bruto = caminho.read_bytes()
+    assert not bruto.startswith(b"\xef\xbb\xbf") and b"\r" not in bruto  # UTF-8 sem BOM, fim de linha \n
+    linhas = bruto.decode("utf-8").split("\n")
+    assert linhas[0] == CABECALHO
+    assert linhas[1] == '"(1,1)|-|{}","(1,2)|-|{}",L,.,1,false,-,-'  # rótulo sempre entre aspas
+    assert linhas[-1] == ""  # termina com \n
+
+
+def test_csv_uma_linha_por_arco_na_ordem_de_insercao(tmp_path):
+    g, caminho = exportar(tmp_path, MAPAS / "m02_uma_chave.txt")
+    assert [(r["origem"], r["destino"]) for r in linhas_csv(caminho)] == [(a.origem, a.destino) for a in g.arcos()]
+
+
+def test_csv_linhas_do_exemplo_do_contrato(tmp_path):
+    _, caminho = exportar(tmp_path, MAPAS / "m02_uma_chave.txt")
+    linhas = caminho.read_text(encoding="utf-8").split("\n")
+    for exemplo in ['"(1,1)|-|{}","(2,1)|-|{}",S,.,1,false,-,-',
+                    '"(3,10)|-|{}","(3,11)|a|{}",L,a,1,false,-,a',
+                    '"(1,5)|a|{}","(1,6)|a|{}",L,A,1,false,a,a',
+                    '"(1,11)|a|{}",ALVO,-,,0,false,a,']:
+        assert exemplo in linhas
+
+
+def test_csv_m02_tem_os_39_estados_do_T04(tmp_path):
+    _, caminho = exportar(tmp_path, MAPAS / "m02_uma_chave.txt")
+    linhas = linhas_csv(caminho)
+    estados = {r["origem"] for r in linhas} | {r["destino"] for r in linhas if r["destino"] != "ALVO"}
+    assert len(estados) == 39 and len(linhas) == 75
+    assert [r["destino"] for r in linhas].count("ALVO") == 1
+
+
+def test_csv_mapa_minimo_troca_de_camada_e_esteira_para_parede(tmp_path):
+    _, caminho = exportar(tmp_path, MINIMO)
+    linhas = linhas_csv(caminho)
+    assert len(linhas) == 17
+    troca = [r for r in linhas if r["camada_origem"] != r["camada_destino"] and r["destino"] != "ALVO"]
+    assert [(r["origem"], r["destino"], r["casa_destino"]) for r in troca] == [("(1,2)|-|{}", "(1,3)|a|{}", "a")]
+    # (3,1) é uma esteira apontando para parede: o estado existe, mas nenhum arco sai dele
+    assert {r["origem"] for r in linhas}.isdisjoint({"(3,1)|-|{}", "(3,1)|a|{}"})
+    assert {"(3,1)|-|{}", "(3,1)|a|{}"} <= {r["destino"] for r in linhas}
+
+
+def test_csv_via_esteira_e_pesos_especiais(tmp_path):
+    assert any(r["via_esteira"] == "true" for r in linhas_csv(exportar(tmp_path, MAPAS / "m04_esteiras.txt")[1]))
+    assert all(r["via_esteira"] == "false" for r in linhas_csv(exportar(tmp_path, MAPAS / "m02_uma_chave.txt")[1]))
+    assert "-4" in {r["peso"] for r in linhas_csv(exportar(tmp_path, MAPAS / "m05_bonus.txt")[1])}
+    assert "-2" in {r["peso"] for r in linhas_csv(exportar(tmp_path, MAPAS / "m06_fonte.txt")[1])}
+
+
+def test_csv_casa_destino_virgula_e_lida_de_volta(tmp_path):
+    # a lama "," precisa de aspas no CSV; o leitor deve devolvê-la intacta
+    linhas = linhas_csv(exportar(tmp_path, MAPAS / "m01_terreno.txt")[1])
+    assert any(r["casa_destino"] == "," and r["peso"] == "3" for r in linhas)
+
+
+def test_csv_m07_nao_tem_arco_para_ALVO(tmp_path):
+    linhas = linhas_csv(exportar(tmp_path, MAPAS / "m07_impossivel.txt")[1])
+    assert all(r["destino"] != "ALVO" for r in linhas)
+
+
+def test_exportar_cria_a_pasta_de_saida(tmp_path):
+    g = construir_g_est(ler_mapa(MINIMO))
+    exportar_arestas(g, tmp_path / "out" / "parte1" / "arestas_minimo.csv")
+    assert (tmp_path / "out" / "parte1" / "arestas_minimo.csv").exists()
+
+
+def test_exportar_todos_gera_um_arquivo_por_mapa_fornecido(tmp_path):
+    gerados = exportar_todos(RAIZ, tmp_path)
+    por_nome = {arquivo.name: arcos for arquivo, (estados, arcos) in gerados.items()}
+    for nome, arcos in ARCOS_ESPERADOS.items():
+        assert por_nome[f"arestas_{nome}.csv"] == arcos
+        assert len(linhas_csv(tmp_path / f"arestas_{nome}.csv")) == arcos
+
+
+def test_arquivos_em_out_parte1_estao_em_dia_com_o_codigo(tmp_path):
+    # out/parte1 foi gerado pelo código (python -m src.graphs.estados); se o G_est mudar, gerar de novo
+    exportar_todos(RAIZ, tmp_path)
+    for nome in ARCOS_ESPERADOS:
+        commitado = (RAIZ / "out" / "parte1" / f"arestas_{nome}.csv").read_bytes().replace(b"\r\n", b"\n")  # o git no Windows pode converter
+        assert commitado == (tmp_path / f"arestas_{nome}.csv").read_bytes()

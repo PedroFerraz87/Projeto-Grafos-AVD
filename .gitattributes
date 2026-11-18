@@ -1,0 +1,2 @@
+# docs/contratos.md, seção 1.1: os CSV gerados em out/ usam fim de linha \n em qualquer sistema
+out/**/*.csv text eol=lf

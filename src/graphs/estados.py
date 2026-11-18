@@ -1,4 +1,7 @@
+import csv
+import re
 from collections import deque
+from pathlib import Path
 
 from .graph import Graph
 
@@ -108,3 +111,45 @@ def construir_g_est(grade, fonte_consumivel=False):
                 fila.append(novo)
     g.adicionar_vertice("ALVO")
     return g
+
+
+COLUNAS_ARESTAS = ["origem", "destino", "movimento", "casa_destino", "peso", "via_esteira",
+                   "camada_origem", "camada_destino"]
+
+
+def nome_curto(caminho_mapa):
+    nome = Path(caminho_mapa).stem
+    achou = re.match(r"m\d\d(?=_)", nome)
+    return achou.group() if achou else nome
+
+
+def exportar_arestas(g, caminho):
+    Path(caminho).parent.mkdir(parents=True, exist_ok=True)
+    with open(caminho, "w", encoding="utf-8", newline="") as arquivo:
+        escritor = csv.writer(arquivo, lineterminator="\n")
+        escritor.writerow(COLUNAS_ARESTAS)
+        for a in g.arcos():
+            camada_destino = "" if a.destino == "ALVO" else a.destino.split("|")[1]
+            escritor.writerow([a.origem, a.destino, a.metadados["movimento"], a.metadados["casa_destino"],
+                               a.peso, str(a.metadados["via_esteira"]).lower(),
+                               a.origem.split("|")[1], camada_destino])
+
+
+def exportar_todos(raiz, pasta_saida=None):
+    from .io import ler_mapa
+
+    raiz = Path(raiz)
+    pasta_saida = Path(pasta_saida) if pasta_saida else raiz / "out" / "parte1"
+    mapas = sorted([*(raiz / "data" / "mapas").glob("*.txt"), *(raiz / "data" / "mapas_grupo").glob("*.txt")])
+    gerados = {}
+    for mapa in mapas:
+        g = construir_g_est(ler_mapa(mapa))
+        destino = pasta_saida / f"arestas_{nome_curto(mapa)}.csv"
+        exportar_arestas(g, destino)
+        gerados[destino] = (len(g) - 1, sum(1 for _ in g.arcos()))
+    return gerados
+
+
+if __name__ == "__main__":
+    for arquivo, (estados, arcos) in exportar_todos(Path(__file__).resolve().parents[2]).items():
+        print(f"{arquivo.name}: {estados} estados, {arcos} arcos (com os arcos até ALVO)")
