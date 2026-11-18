@@ -252,7 +252,8 @@ def test_g_est_dos_mapas_fornecidos(mapa, fonte_consumivel):
 
 CABECALHO = "origem,destino,movimento,casa_destino,peso,via_esteira,camada_origem,camada_destino"
 
-ARCOS_ESPERADOS = {"m01": 47, "m02": 75, "m03": 467, "m04": 67, "m05": 444, "m06": 47, "m07": 38, "m08": 6365}
+ARCOS_ESPERADOS = {"m01": 47, "m02": 75, "m03": 467, "m04": 67, "m05": 444, "m06": 47, "m07": 38, "m08": 6365,
+                   "m1": 3760, "m2": 18}  # m1 e m2: mapas definitivos do grupo (ver tests/test_mapas_grupo.py)
 
 
 def exportar(tmp_path, mapa):
@@ -343,7 +344,7 @@ def test_exportar_cria_a_pasta_de_saida(tmp_path):
     assert (tmp_path / "out" / "parte1" / "arestas_minimo.csv").exists()
 
 
-def test_exportar_todos_gera_um_arquivo_por_mapa_fornecido(tmp_path):
+def test_exportar_todos_gera_um_arquivo_por_mapa(tmp_path):
     gerados = exportar_todos(RAIZ, tmp_path)
     por_nome = {arquivo.name: arcos for arquivo, (estados, arcos) in gerados.items()}
     for nome, arcos in ARCOS_ESPERADOS.items():

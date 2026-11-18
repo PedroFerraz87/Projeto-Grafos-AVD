@@ -3,13 +3,91 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Labirinto interativo — demonstração</title>
+  <title>Labirinto de Estados</title>
   <style>
     :root {
       color-scheme: light;
-      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-      color: #172033;
-      background: #f3f6fb;
+      font-family: ui-sans-serif, system-ui, "Segoe UI Variable", "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+
+      --fundo: #f3f5fb;
+      --cartao: #ffffff;
+      --cartao-2: #f7f8fc;
+      --borda: #e3e8f2;
+      --texto: #0f172a;
+      --suave: #5b6b85;
+      --acento: #4f46e5;
+      --acento-btn: #4f46e5;
+      --acento-suave: #eef0ff;
+      --ok: #047857;
+      --ok-fundo: #d1fae5;
+      --falha: #be123c;
+      --falha-fundo: #ffe4e6;
+      --aviso: #b45309;
+      --aviso-fundo: #fef3c7;
+      --sombra: 0 1px 2px rgba(15, 23, 42, 0.06), 0 10px 28px rgba(30, 41, 90, 0.09);
+      --faixa: linear-gradient(135deg, #1e1b4b 0%, #3730a3 55%, #6d28d9 100%);
+
+      --matiz-s: 70%;
+      --matiz-l: 95%;
+      --trilha: rgba(79, 70, 229, 0.30);
+      --perigo: #e11d48;
+      --perigo-faixa: rgba(225, 29, 72, 0.30);
+      --troca: #7c3aed;
+
+      --t-parede: #243049;
+      --t-piso: #ffffff;
+      --t-lama: #e5cfa6;
+      --t-agua: #a9d6f2;
+      --t-chave: #fde68a;
+      --t-porta: #d4c6fb;
+      --t-esteira: #d3dae6;
+      --t-bonus: #b7ecd0;
+      --t-fonte: #fdc79a;
+      --t-inicio: #b9efc8;
+      --t-saida: #fcd277;
+      --t-tinta: #1b2540;
+
+      --cell: 24px;
+    }
+
+    :root[data-tema="escuro"] {
+      color-scheme: dark;
+      --fundo: #0b1120;
+      --cartao: #121a2f;
+      --cartao-2: #18223b;
+      --borda: #26324d;
+      --texto: #e8ecf7;
+      --suave: #93a1bd;
+      --acento: #a5b4fc;
+      --acento-suave: #1e2547;
+      --ok: #6ee7b7;
+      --ok-fundo: #0f3a2c;
+      --falha: #fda4af;
+      --falha-fundo: #4a1526;
+      --aviso: #fcd34d;
+      --aviso-fundo: #3d2e0a;
+      --sombra: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 28px rgba(0, 0, 0, 0.35);
+      --faixa: linear-gradient(135deg, #0f0d2e 0%, #1e1b6b 55%, #3b1d7a 100%);
+
+      --matiz-s: 38%;
+      --matiz-l: 15%;
+      --trilha: rgba(129, 140, 248, 0.38);
+      --perigo: #fb7185;
+      --perigo-faixa: rgba(251, 113, 133, 0.34);
+      --troca: #c4b5fd;
+
+      --t-parede: #04070f;
+      --t-piso: #1c2742;
+      --t-lama: #7a6140;
+      --t-agua: #245b83;
+      --t-chave: #8a6d12;
+      --t-porta: #4f3f96;
+      --t-esteira: #34425f;
+      --t-bonus: #17603a;
+      --t-fonte: #8a4515;
+      --t-inicio: #1c6b3e;
+      --t-saida: #9a6410;
+      --t-tinta: #e8ecf7;
     }
 
     * {
@@ -17,369 +95,1068 @@
     }
 
     body {
-      max-width: 760px;
+      margin: 0;
+      background: var(--fundo);
+      color: var(--texto);
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+
+    /* ---------- cabeçalho ---------- */
+
+    .faixa {
+      padding: 1.5rem 1rem 4.2rem;
+      background: var(--faixa);
+      color: #fff;
+    }
+
+    .faixa-conteudo {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      max-width: 1180px;
       margin: 0 auto;
-      padding: 2rem 1rem;
     }
 
-    h1 {
-      margin-bottom: 0.35rem;
+    .marca {
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: 2.9rem;
+      height: 2.9rem;
+      border-radius: 0.85rem;
+      background: rgba(255, 255, 255, 0.14);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
     }
 
-    .intro,
-    .status {
-      color: #48566e;
+    .faixa h1 {
+      margin: 0;
+      font-size: clamp(1.35rem, 2.6vw, 1.9rem);
+      letter-spacing: -0.015em;
     }
 
-    .panel {
-      margin-top: 1.5rem;
-      padding: 1.25rem;
-      border: 1px solid #d8e0ec;
-      border-radius: 0.8rem;
-      background: white;
-      box-shadow: 0 0.4rem 1.5rem #182b4910;
+    .faixa p {
+      margin: 0.1rem 0 0;
+      color: #c7d2fe;
+      font-size: 0.95rem;
     }
 
-    .legend,
-    .controls {
+    .titulos {
+      flex: 1;
+      min-width: 0;
+    }
+
+    main {
+      max-width: 1180px;
+      margin: -2.8rem auto 0;
+      padding: 0 1rem 2.5rem;
+    }
+
+    /* ---------- cartões ---------- */
+
+    .cartao {
+      padding: 1.15rem;
+      border: 1px solid var(--borda);
+      border-radius: 1rem;
+      background: var(--cartao);
+      box-shadow: var(--sombra);
+    }
+
+    .cartao h2 {
+      margin: 0 0 0.7rem;
+      color: var(--suave);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .selecao {
       display: flex;
       flex-wrap: wrap;
+      align-items: end;
+      gap: 0.8rem 1.4rem;
+    }
+
+    .campo {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      color: var(--suave);
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    select {
+      min-width: 12.5rem;
+      min-height: 2.6rem;
+      padding: 0.4rem 2.2rem 0.4rem 0.8rem;
+      border: 1px solid var(--borda);
+      border-radius: 0.65rem;
+      appearance: none;
+      background: var(--cartao-2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 0.75rem center;
+      color: var(--texto);
+      font: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .resultado {
+      display: flex;
+      flex: 1;
+      flex-wrap: wrap;
       align-items: center;
-      gap: 0.75rem 1rem;
+      justify-content: flex-end;
+      gap: 0.6rem;
+      min-width: 14rem;
+      min-height: 2.6rem;
     }
 
-    .legend {
-      margin-bottom: 1rem;
-      font-size: 0.9rem;
+    .resumo {
+      color: var(--texto);
+      font-weight: 600;
     }
 
-    .legend-item {
+    .selo {
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
+      padding: 0.2rem 0.7rem;
+      border-radius: 999px;
+      background: var(--ok-fundo);
+      color: var(--ok);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
     }
 
-    .swatch {
-      width: 1rem;
-      height: 1rem;
-      border: 1px solid #aeb9ca;
-      border-radius: 0.2rem;
-      background: white;
+    .selo.falha {
+      background: var(--falha-fundo);
+      color: var(--falha);
     }
 
-    .swatch.wall {
-      border-color: #29364d;
-      background: #29364d;
+    .selo.aviso {
+      background: var(--aviso-fundo);
+      color: var(--aviso);
     }
 
-    .swatch.path {
-      border-color: #a9d8bd;
-      background: #d9f3e3;
+    .palco {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 20rem;
+      gap: 1.1rem;
+      align-items: start;
+      margin-top: 1.1rem;
     }
 
-    .swatch.player {
-      border-color: #2463eb;
-      background: #2463eb;
+    .palco > * {
+      min-width: 0;
+    }
+
+    .lateral {
+      display: grid;
+      gap: 1.1rem;
+    }
+
+    /* ---------- mapa ---------- */
+
+    .tabuleiro {
+      overflow: auto;
+      max-height: 68vh;
+      padding: 0.9rem;
+      border: 1px solid var(--borda);
+      border-radius: 0.85rem;
+      background: hsl(var(--matiz, 215) var(--matiz-s) var(--matiz-l));
+      transition: background 0.4s;
     }
 
     .maze {
       display: grid;
-      grid-template-columns: repeat(10, minmax(1.7rem, 3rem));
-      justify-content: center;
-      gap: 3px;
-      overflow-x: auto;
+      gap: 2px;
+      width: max-content;
+      margin: 0 auto;
     }
 
     .cell {
-      display: grid;
-      aspect-ratio: 1;
-      place-items: center;
-      border-radius: 0.25rem;
-      background: #fff;
-      font-size: clamp(0.75rem, 3vw, 1.1rem);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--cell);
+      height: var(--cell);
+      border-radius: calc(var(--cell) * 0.2);
+      background: var(--t-piso);
+      color: var(--t-tinta);
+      font-size: calc(var(--cell) * 0.5);
       font-weight: 700;
+      line-height: 1;
+      user-select: none;
+      transition: background-color 0.12s, box-shadow 0.12s;
     }
 
-    .cell.wall {
-      color: white;
-      background: #29364d;
-    }
+    .cell.wall { background: var(--t-parede); }
+    .cell.mud { background: var(--t-lama); }
+    .cell.water { background: var(--t-agua); }
+    .cell.key { background: var(--t-chave); }
+    .cell.key.taken { opacity: 0.45; }
+    .cell.door { background: var(--t-porta); }
+    .cell.door.open { opacity: 0.5; }
+    .cell.belt { background: var(--t-esteira); }
+    .cell.bonus { background: var(--t-bonus); }
+    .cell.bonus.consumed { opacity: 0.45; }
+    .cell.spring { background: var(--t-fonte); }
+    .cell.start { background: var(--t-inicio); }
+    .cell.goal { background: var(--t-saida); }
 
     .cell.trail {
-      background: #d9f3e3;
+      background-image: linear-gradient(var(--trilha), var(--trilha));
+    }
+
+    .cell.trap {
+      box-shadow: inset 0 0 0 2px var(--perigo);
+      background-image: repeating-linear-gradient(45deg, var(--perigo-faixa) 0 4px, transparent 4px 8px);
+    }
+
+    .cell.switch {
+      outline: 2px dashed var(--troca);
+      outline-offset: -2px;
     }
 
     .cell.player {
-      color: white;
+      z-index: 1;
       border-radius: 50%;
-      background: #2463eb;
+      background: var(--acento-btn);
+      background-image: none;
+      box-shadow: 0 0 0 2px var(--cartao), 0 0 0 4px rgba(99, 102, 241, 0.55);
+      color: #fff;
     }
 
-    .cell.start,
-    .cell.goal {
-      color: #172033;
-      background: #ffe7a3;
+    .linha-do-tempo {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-top: 1rem;
     }
 
-    .cell.player.start,
-    .cell.player.goal {
-      color: white;
-      background: #2463eb;
+    .linha-do-tempo input {
+      flex: 1;
+      min-width: 0;
+      accent-color: var(--acento-btn);
     }
 
-    .controls {
-      margin-top: 1.25rem;
+    .linha-do-tempo span {
+      min-width: 6.5rem;
+      color: var(--suave);
+      font-size: 0.85rem;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    .controles {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.55rem;
+      margin-top: 0.9rem;
     }
 
     button {
-      min-height: 2.5rem;
-      padding: 0.45rem 0.85rem;
-      border: 1px solid #b9c5d6;
-      border-radius: 0.45rem;
-      background: #fff;
-      color: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      min-height: 2.6rem;
+      padding: 0.45rem 0.95rem;
+      border: 1px solid var(--borda);
+      border-radius: 0.7rem;
+      background: var(--cartao-2);
+      color: var(--texto);
       font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.05s;
+    }
+
+    button:hover:not(:disabled) {
+      background: var(--acento-suave);
+    }
+
+    button:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+
+    button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    button.principal {
+      min-width: 9.5rem;
+      border-color: transparent;
+      background: var(--acento-btn);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
+    }
+
+    button.principal:hover:not(:disabled) {
+      background: #4338ca;
+    }
+
+    .ic {
+      width: 1.1rem;
+      height: 1.1rem;
+      flex: none;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .ic .cheio {
+      fill: currentColor;
+      stroke: none;
+    }
+
+    #tocar .i-pausa,
+    #tocar.tocando .i-toca {
+      display: none;
+    }
+
+    #tocar.tocando .i-pausa {
+      display: inline;
+    }
+
+    .velocidade {
+      display: inline-flex;
+      flex: 1 1 100%;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.6rem;
+      margin-top: 0.3rem;
+      color: var(--suave);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .velocidade input {
+      width: min(10rem, 40vw);
+      accent-color: var(--acento-btn);
+    }
+
+    .velocidade output {
+      min-width: 5.2rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .status {
+      min-height: 1.4em;
+      margin: 0.8rem 0 0;
+      color: var(--suave);
+    }
+
+    .dica {
+      margin: 0.2rem 0 0;
+      color: var(--suave);
+      font-size: 0.8rem;
+    }
+
+    kbd {
+      padding: 0.05rem 0.4rem;
+      border: 1px solid var(--borda);
+      border-radius: 0.35rem;
+      background: var(--cartao-2);
+      font: inherit;
+      font-size: 0.78rem;
+    }
+
+    /* ---------- painel lateral ---------- */
+
+    .metricas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+    }
+
+    .metrica {
+      padding: 0.7rem 0.8rem;
+      border-radius: 0.8rem;
+      background: var(--cartao-2);
+      border: 1px solid var(--borda);
+    }
+
+    .metrica small {
+      display: block;
+      color: var(--suave);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .metrica strong {
+      display: block;
+      margin-top: 0.15rem;
+      font-size: 1.2rem;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.3;
+      white-space: nowrap;
+    }
+
+    input[type="range"] {
+      height: 0.45rem;
+      border-radius: 999px;
+      appearance: none;
+      -webkit-appearance: none;
+      background: linear-gradient(to right, var(--acento-btn) var(--preenchido, 0%), var(--borda) var(--preenchido, 0%));
       cursor: pointer;
     }
 
-    button:hover {
-      background: #edf3ff;
+    input[type="range"]:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
     }
 
-    button:focus-visible,
-    input:focus-visible {
-      outline: 3px solid #8bb2ff;
-      outline-offset: 2px;
+    input[type="range"]::-webkit-slider-thumb {
+      width: 1.15rem;
+      height: 1.15rem;
+      border: 3px solid var(--cartao);
+      border-radius: 50%;
+      appearance: none;
+      -webkit-appearance: none;
+      background: var(--acento-btn);
+      box-shadow: 0 0 0 1px var(--borda), 0 2px 6px rgba(0, 0, 0, 0.28);
     }
 
-    .speed-control {
+    input[type="range"]::-moz-range-thumb {
+      width: 0.85rem;
+      height: 0.85rem;
+      border: 3px solid var(--cartao);
+      border-radius: 50%;
+      background: var(--acento-btn);
+      box-shadow: 0 0 0 1px var(--borda), 0 2px 6px rgba(0, 0, 0, 0.28);
+    }
+
+    .metrica .pequeno {
+      font-size: 1rem;
+    }
+
+    .ficha {
+      display: inline-block;
+      min-width: 1.6rem;
+      margin-right: 0.25rem;
+      padding: 0.05rem 0.45rem;
+      border-radius: 999px;
+      background: hsl(var(--matiz, 215) var(--matiz-s) var(--matiz-l));
+      box-shadow: inset 0 0 0 1px var(--borda);
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .camada.flash {
+      animation: piscar 0.8s;
+    }
+
+    @keyframes piscar {
+      0%, 100% { box-shadow: inset 0 0 0 1px var(--borda); }
+      40% { box-shadow: 0 0 0 5px rgba(124, 58, 237, 0.4); }
+    }
+
+    dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.5rem 0.9rem;
+      margin: 0.85rem 0 0;
+    }
+
+    dt {
+      color: var(--suave);
+    }
+
+    dd {
+      margin: 0;
+      font-weight: 600;
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+
+    details summary {
+      margin-bottom: 0.7rem;
+      color: var(--suave);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .legenda {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.45rem 0.6rem;
+      font-size: 0.85rem;
+    }
+
+    .legenda span {
       display: inline-flex;
-      flex-wrap: wrap;
       align-items: center;
       gap: 0.5rem;
     }
 
-    input[type="range"] {
-      width: min(12rem, 45vw);
+    .legenda .cell {
+      flex: none;
+      width: 1.25rem;
+      height: 1.25rem;
+      font-size: 0.72rem;
     }
 
-    .status {
-      min-height: 1.5em;
-      margin-bottom: 0;
+    .opcoes {
+      display: grid;
+      gap: 0.4rem;
+      margin-top: 0.9rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid var(--borda);
     }
 
-    @media (max-width: 420px) {
-      body {
-        padding: 1rem 0.5rem;
+    .opcoes label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+
+    .opcoes input {
+      width: 1.05rem;
+      height: 1.05rem;
+      accent-color: var(--acento-btn);
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid #93c5fd;
+      outline-offset: 2px;
+    }
+
+    .tema {
+      flex: none;
+      min-height: 2.5rem;
+      border-color: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+
+    .tema:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.24);
+    }
+
+    .tema .i-lua {
+      display: none;
+    }
+
+    :root[data-tema="escuro"] .tema .i-lua {
+      display: inline;
+    }
+
+    :root[data-tema="escuro"] .tema .i-sol {
+      display: none;
+    }
+
+    .aviso-pagina {
+      max-width: 40rem;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    code {
+      padding: 0.1rem 0.35rem;
+      border-radius: 0.3rem;
+      background: var(--acento-suave);
+    }
+
+    @media (max-width: 900px) {
+      .palco {
+        grid-template-columns: minmax(0, 1fr);
       }
 
-      .panel {
-        padding: 0.85rem 0.5rem;
+      .resultado {
+        justify-content: flex-start;
       }
+    }
 
-      .maze {
-        grid-template-columns: repeat(10, minmax(1.45rem, 2.3rem));
-        gap: 2px;
+    @media (max-width: 600px) {
+      .faixa p,
+      .tema span {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
       }
     }
   </style>
 </head>
 <body>
-  <main>
-    <h1>Labirinto interativo</h1>
-    <p class="intro">Protótipo T20 com um mapa e percurso de demonstração.</p>
+  <div id="sem-dados" class="aviso-pagina" hidden>
+    <h1>Sem dados</h1>
+    <p>Este é o modelo do labirinto. Gere a página com os dados dos mapas usando
+      <code>python -m src.cli --interactive</code>; o arquivo sai em <code>out/parte1/labirinto_interativo.html</code>.</p>
+  </div>
 
-    <section class="panel" aria-label="Demonstração do percurso">
-      <div class="legend" aria-label="Legenda">
-        <span class="legend-item"><span class="swatch wall" aria-hidden="true"></span>Parede</span>
-        <span class="legend-item"><span class="swatch path" aria-hidden="true"></span>Percurso</span>
-        <span class="legend-item"><span class="swatch player" aria-hidden="true"></span>Posição atual</span>
+  <div id="app">
+    <header class="faixa">
+      <div class="faixa-conteudo">
+        <span class="marca" aria-hidden="true">
+          <svg class="ic" viewBox="0 0 24 24" width="26" height="26"><path d="M4 4h16v16H4z"/><path d="M4 10h9M13 10v6M9 16h4M17 4v6"/></svg>
+        </span>
+        <div class="titulos">
+          <h1>Labirinto de Estados</h1>
+          <p>O mapa não é o grafo: cada nó é (posição, chaves, bônus). Compare BFS, Dijkstra e Bellman-Ford passo a passo.</p>
+        </div>
+        <button id="tema" class="tema" type="button" aria-label="Alternar tema claro e escuro">
+          <svg class="ic i-sol" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="ic i-lua" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <span>Tema</span>
+        </button>
       </div>
+    </header>
 
-      <div id="maze" class="maze" role="grid" aria-label="Labirinto de demonstração"></div>
+    <main>
+      <section class="cartao" aria-label="Escolha do mapa e do algoritmo">
+        <div class="selecao">
+          <label class="campo">Mapa
+            <select id="mapa"></select>
+          </label>
+          <label class="campo">Algoritmo
+            <select id="algoritmo"></select>
+          </label>
+          <div class="resultado" role="status">
+            <span id="selo" class="selo">—</span>
+            <span id="resumo" class="resumo"></span>
+          </div>
+        </div>
+      </section>
 
-      <div class="controls">
-        <button id="play-pause" type="button">Iniciar</button>
-        <button id="restart" type="button">Reiniciar</button>
-        <label class="speed-control" for="speed">
-          Velocidade
-          <input id="speed" type="range" min="200" max="1200" step="100" value="700">
-          <span id="speed-value">700 ms/passo</span>
-        </label>
+      <div class="palco">
+        <section class="cartao" aria-label="Percurso no labirinto">
+          <div id="maze-wrap" class="tabuleiro">
+            <div id="maze" class="maze" role="img" aria-label="Labirinto"></div>
+          </div>
+
+          <div class="linha-do-tempo">
+            <input id="linha-do-tempo" type="range" min="0" max="0" value="0" step="1" aria-label="Passo do percurso">
+            <span id="linha-do-tempo-valor">—</span>
+          </div>
+
+          <div class="controles">
+            <button id="reiniciar" type="button"><svg class="ic" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 2.64-6.36"/><path d="M3 4v5h5"/></svg>Reiniciar</button>
+            <button id="anterior" type="button"><svg class="ic" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>Passo anterior</button>
+            <button id="tocar" class="principal" type="button"><svg class="ic i-toca" viewBox="0 0 24 24"><path class="cheio" d="M7 5l12 7-12 7z"/></svg><svg class="ic i-pausa" viewBox="0 0 24 24"><rect class="cheio" x="6" y="5" width="4" height="14" rx="1"/><rect class="cheio" x="14" y="5" width="4" height="14" rx="1"/></svg><span id="tocar-texto">Iniciar</span></button>
+            <button id="proximo" type="button">Próximo passo<svg class="ic" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+            <label class="velocidade" for="velocidade">
+              Velocidade
+              <input id="velocidade" type="range" min="100" max="1500" step="100" value="600">
+              <output id="velocidade-valor">600 ms/passo</output>
+            </label>
+          </div>
+          <p id="status" class="status" role="status" aria-live="polite">Pronto para iniciar.</p>
+          <p class="dica">Dica: use <kbd>←</kbd> e <kbd>→</kbd> para voltar e avançar um passo.</p>
+        </section>
+
+        <div class="lateral">
+          <section class="cartao" aria-label="Estado atual">
+            <h2>Estado atual</h2>
+            <div class="metricas">
+              <div class="metrica"><small>Passo</small><strong id="i-passo">—</strong></div>
+              <div class="metrica"><small>Custo acumulado</small><strong id="i-custo">—</strong></div>
+              <div class="metrica"><small>Camada</small><strong class="pequeno"><span id="i-camada" class="ficha camada">—</span></strong></div>
+              <div class="metrica"><small>Chaves</small><strong class="pequeno" id="i-chaves">—</strong></div>
+            </div>
+            <dl>
+              <dt>Posição (l, c)</dt><dd id="i-posicao">—</dd>
+              <dt>Bônus consumidos</dt><dd id="i-bonus">—</dd>
+              <dt>Último movimento</dt><dd id="i-movimento">—</dd>
+              <dt>Evento</dt><dd id="i-evento">—</dd>
+              <dt>Armadilhas na camada</dt><dd id="i-armadilhas">—</dd>
+            </dl>
+          </section>
+
+          <section class="cartao" aria-label="Legenda e realces">
+            <details open>
+              <summary>Legenda</summary>
+              <div class="legenda">
+                <span><span class="cell wall"></span>Parede</span>
+                <span><span class="cell mud"></span>Lama (3)</span>
+                <span><span class="cell water"></span>Água (5)</span>
+                <span><span class="cell start">S</span>Início</span>
+                <span><span class="cell goal">G</span>Saída</span>
+                <span><span class="cell key">a</span>Chave</span>
+                <span><span class="cell door">A</span>Porta</span>
+                <span><span class="cell belt">▶</span>Esteira</span>
+                <span><span class="cell bonus">+</span>Bônus (−4)</span>
+                <span><span class="cell spring">*</span>Fonte (−2)</span>
+                <span><span class="cell trail"></span>Percurso</span>
+                <span><span class="cell player"></span>Posição atual</span>
+                <span><span class="cell trap"></span>Armadilha</span>
+                <span><span class="cell switch"></span>Troca de camada</span>
+              </div>
+            </details>
+            <div class="opcoes">
+              <label><input id="ver-armadilhas" type="checkbox" checked> Realçar armadilhas</label>
+              <label><input id="ver-trocas" type="checkbox" checked> Realçar troca de camada</label>
+            </div>
+          </section>
+        </div>
       </div>
-      <p id="status" class="status" role="status" aria-live="polite">Pronto para iniciar.</p>
-    </section>
-  </main>
+    </main>
+  </div>
 
-  <script id="labyrinth-data" type="application/json">
-  {
-    "mapa": "demonstracao",
-    "grade": [
-      "##########",
-      "#S...#..G#",
-      "#.#..#...#",
-      "#.#......#",
-      "#..####..#",
-      "#........#",
-      "##########"
-    ],
-    "percurso": [[1,1], [1,2], [1,3], [1,4], [2,4], [3,4], [3,5], [3,6], [3,7], [2,7], [1,7], [1,8]]
-  }
-  </script>
+  <script id="dados" type="application/json">__DADOS__</script>
   <script>
-    "use strict";
+    (function () {
+      "use strict";
 
-    const data = JSON.parse(document.getElementById("labyrinth-data").textContent);
-    const mazeElement = document.getElementById("maze");
-    const playPauseButton = document.getElementById("play-pause");
-    const restartButton = document.getElementById("restart");
-    const speedInput = document.getElementById("speed");
-    const speedValue = document.getElementById("speed-value");
-    const statusElement = document.getElementById("status");
-    const cells = new Map();
-    let stepIndex = 0;
-    let timerId = null;
+      const $ = (id) => document.getElementById(id);
 
-    function coordinateKey(row, column) {
-      return `${row},${column}`;
-    }
-
-    function validateData() {
-      if (!Array.isArray(data.grade) || data.grade.length === 0) {
-        throw new Error("A grade de demonstração está vazia.");
+      let dados;
+      try {
+        dados = JSON.parse($("dados").textContent);
+      } catch (erro) {
+        $("app").hidden = true;
+        $("sem-dados").hidden = false;
+        return;
       }
 
-      const width = data.grade[0].length;
-      if (!data.grade.every((row) => row.length === width)) {
-        throw new Error("Todas as linhas do labirinto devem ter a mesma largura.");
+      const SETAS = { ">": "▶", "<": "◀", "^": "▲", "v": "▼" };
+      const EVENTOS = {
+        inicio: "Início do percurso",
+        chegada: "Chegou ao objetivo (G)",
+        bonus: "Consumiu um bônus (−4, só na 1ª vez)",
+        fonte: "Entrou na fonte (−2)",
+        esteira: "Entrou numa esteira",
+      };
+      const MENSAGENS = {
+        RECUSA: "O Dijkstra recusou este mapa: ele tem arco de peso negativo.",
+        CICLO_NEGATIVO: "O Bellman-Ford encontrou um ciclo negativo que alcança o objetivo: não há custo mínimo.",
+        SEM_SOLUCAO: "O objetivo é inalcançável a partir do início.",
+      };
+      const SELOS = {
+        OK: ["OK", ""],
+        RECUSA: ["RECUSA", "falha"],
+        CICLO_NEGATIVO: ["CICLO NEGATIVO", "falha"],
+        SEM_SOLUCAO: ["SEM SOLUÇÃO", "aviso"],
+      };
+
+      const seletorMapa = $("mapa");
+      const seletorAlgoritmo = $("algoritmo");
+      const labirinto = $("maze");
+      const moldura = $("maze-wrap");
+      const botaoTocar = $("tocar");
+      const velocidade = $("velocidade");
+      const linhaDoTempo = $("linha-do-tempo");
+
+      let nomeMapa = null;
+      let mapa = null;
+      let algoritmo = null;
+      let percurso = null;
+      let celulas = [];
+      let passo = 0;
+      let temporizador = null;
+
+      function textoEvento(evento) {
+        if (!evento) return "—";
+        if (EVENTOS[evento]) return EVENTOS[evento];
+        if (evento.startsWith("chave_")) return `Pegou a chave ${evento.slice(6)} (troca de camada)`;
+        if (evento.startsWith("porta_")) return `Atravessou a porta ${evento.slice(6)}`;
+        return evento;
       }
 
-      if (!Array.isArray(data.percurso) || data.percurso.length === 0) {
-        throw new Error("O percurso de demonstração está vazio.");
+      function tipoDaCasa(simbolo) {
+        if (simbolo === "#") return "wall";
+        if (simbolo === ",") return "mud";
+        if (simbolo === "~") return "water";
+        if (simbolo === "S") return "start";
+        if (simbolo === "G") return "goal";
+        if (simbolo === "+") return "bonus";
+        if (simbolo === "*") return "spring";
+        if ("abcd".includes(simbolo)) return "key";
+        if ("ABCD".includes(simbolo)) return "door";
+        if (simbolo in SETAS) return "belt";
+        return "floor";
       }
 
-      data.percurso.forEach(([row, column], index) => {
-        const symbol = data.grade[row]?.[column];
-        if (symbol === undefined || symbol === "#") {
-          throw new Error(`O passo ${index + 1} do percurso está fora da grade ou em uma parede.`);
-        }
+      function preencher(controle) {
+        const faixa = (controle.max - controle.min) || 1;
+        controle.style.setProperty("--preenchido", `${((controle.value - controle.min) / faixa) * 100}%`);
+      }
 
-        if (index > 0) {
-          const [previousRow, previousColumn] = data.percurso[index - 1];
-          const distance = Math.abs(row - previousRow) + Math.abs(column - previousColumn);
-          if (distance !== 1) {
-            throw new Error(`O passo ${index + 1} não é adjacente ao passo anterior.`);
-          }
-        }
+      function matizDaCamada(nome) {
+        const indice = Math.max(0, mapa.camadas.findIndex((c) => c.camada === nome));
+        return (205 + indice * 47) % 360;
+      }
+
+      // ---------- tema ----------
+
+      function aplicarTema(tema) {
+        document.documentElement.dataset.tema = tema;
+        try { localStorage.setItem("labirinto-tema", tema); } catch (erro) { /* sem armazenamento: vale só nesta visita */ }
+      }
+
+      $("tema").addEventListener("click", () => {
+        aplicarTema(document.documentElement.dataset.tema === "escuro" ? "claro" : "escuro");
       });
-    }
+      try { aplicarTema(localStorage.getItem("labirinto-tema") === "escuro" ? "escuro" : "claro"); } catch (erro) { aplicarTema("claro"); }
 
-    function renderMaze() {
-      mazeElement.style.gridTemplateColumns = `repeat(${data.grade[0].length}, minmax(1.7rem, 3rem))`;
-      data.grade.forEach((row, rowIndex) => {
-        [...row].forEach((symbol, columnIndex) => {
-          const cell = document.createElement("div");
-          const key = coordinateKey(rowIndex, columnIndex);
-          cell.className = "cell";
-          cell.setAttribute("role", "gridcell");
+      // ---------- mapa ----------
 
-          if (symbol === "#") {
-            cell.classList.add("wall");
-            cell.setAttribute("aria-label", "Parede");
-          } else {
-            if (symbol === "S") {
-              cell.classList.add("start");
-              cell.setAttribute("aria-label", "Início");
-            } else if (symbol === "G") {
-              cell.classList.add("goal");
-              cell.setAttribute("aria-label", "Objetivo");
-            } else {
-              cell.setAttribute("aria-label", "Caminho livre");
-            }
-            cell.textContent = symbol === "." ? "" : symbol;
-            cells.set(key, cell);
-          }
+      function ajustarTamanho() {
+        const colunas = mapa.grade[0].length;
+        const largura = moldura.clientWidth - 29;
+        const tamanho = Math.max(8, Math.min(36, Math.floor((largura - 2 * colunas) / colunas)));
+        document.documentElement.style.setProperty("--cell", `${tamanho}px`);
+      }
 
-          mazeElement.appendChild(cell);
+      function montarMapa(nome) {
+        nomeMapa = nome;
+        mapa = dados.mapas[nome];
+        labirinto.replaceChildren();
+        celulas = [];
+        let bonus = 0;
+        labirinto.style.gridTemplateColumns = `repeat(${mapa.grade[0].length}, var(--cell))`;
+        mapa.grade.forEach((linha) => {
+          const fila = [];
+          [...linha].forEach((simbolo) => {
+            const div = document.createElement("div");
+            const tipo = tipoDaCasa(simbolo);
+            div.textContent = tipo === "belt" ? SETAS[simbolo] : (tipo === "wall" || simbolo === "." ? "" : simbolo);
+            fila.push({ div, tipo, simbolo, bonus: simbolo === "+" ? bonus++ : -1 });
+            labirinto.appendChild(div);
+          });
+          celulas.push(fila);
         });
-      });
-      updatePosition();
-    }
-
-    function updatePosition() {
-      cells.forEach((cell) => cell.classList.remove("trail", "player"));
-      data.percurso.slice(0, stepIndex).forEach(([row, column]) => {
-        cells.get(coordinateKey(row, column))?.classList.add("trail");
-      });
-
-      const [row, column] = data.percurso[stepIndex];
-      const currentCell = cells.get(coordinateKey(row, column));
-      currentCell.classList.add("player");
-      currentCell.setAttribute("aria-label", `Posição atual, linha ${row}, coluna ${column}`);
-      statusElement.textContent = stepIndex === data.percurso.length - 1
-        ? `Percurso concluído: ${stepIndex} passos.`
-        : `Passo ${stepIndex} de ${data.percurso.length - 1}.`;
-    }
-
-    function stopPlayback() {
-      if (timerId !== null) {
-        window.clearTimeout(timerId);
-        timerId = null;
+        // armadilhas e trocas de camada, por camada, como conjuntos de "linha,coluna"
+        mapa.armadilhasPorCamada = {};
+        mapa.armadilhas.forEach((a) => {
+          (mapa.armadilhasPorCamada[a.chaves] = mapa.armadilhasPorCamada[a.chaves] || new Set()).add(`${a.linha},${a.coluna}`);
+        });
+        mapa.trocasPorCamada = {};
+        mapa.trocas_de_camada.forEach((t) => {
+          const conjunto = (mapa.trocasPorCamada[t.de] = mapa.trocasPorCamada[t.de] || new Set());
+          t.casas.forEach(([l, c]) => conjunto.add(`${l},${c}`));
+        });
+        ajustarTamanho();
       }
-      playPauseButton.textContent = "Continuar";
-    }
 
-    function scheduleNextStep() {
-      timerId = window.setTimeout(() => {
-        stepIndex += 1;
-        updatePosition();
+      // ---------- desenho ----------
 
-        if (stepIndex === data.percurso.length - 1) {
-          timerId = null;
-          playPauseButton.textContent = "Iniciar novamente";
-          return;
+      function pintar() {
+        const passos = percurso.percurso;
+        const atual = passos.length ? passos[passo] : null;
+        const camada = atual ? atual.camada : "-";
+        const chaves = atual ? atual.chaves : "";
+        const consumidos = new Set(atual ? atual.bonus : []);
+        const trilha = new Set(passos.slice(0, passo + 1).map((p) => `${p.linha},${p.coluna}`));
+        const vazio = new Set();
+        const armadilhas = $("ver-armadilhas").checked ? (mapa.armadilhasPorCamada[camada] || vazio) : vazio;
+        const trocas = $("ver-trocas").checked ? (mapa.trocasPorCamada[camada] || vazio) : vazio;
+
+        celulas.forEach((fila, l) => fila.forEach((c, col) => {
+          const chave = `${l},${col}`;
+          let classes = `cell ${c.tipo}`;
+          if (c.tipo === "door" && chaves.includes(c.simbolo.toLowerCase())) classes += " open";
+          if (c.tipo === "key" && chaves.includes(c.simbolo)) classes += " taken";
+          if (c.tipo === "bonus" && consumidos.has(c.bonus)) classes += " consumed";
+          if (trilha.has(chave)) classes += " trail";
+          if (armadilhas.has(chave)) classes += " trap";
+          if (trocas.has(chave)) classes += " switch";
+          if (atual && atual.linha === l && atual.coluna === col) classes += " player";
+          c.div.className = classes;
+        }));
+
+        document.documentElement.style.setProperty("--matiz", matizDaCamada(camada));
+        $("i-camada").textContent = camada === "-" ? "sem chaves" : camada;
+        $("i-passo").textContent = atual ? `${passo} de ${passos.length - 1}` : "—";
+        $("i-posicao").textContent = atual ? `(${atual.linha}, ${atual.coluna})` : "—";
+        $("i-chaves").replaceChildren();
+        if (!atual || !chaves) {
+          $("i-chaves").textContent = atual ? "nenhuma" : "—";
+        } else {
+          [...chaves].forEach((letra) => {
+            const ficha = document.createElement("span");
+            ficha.className = "ficha";
+            ficha.textContent = letra;
+            $("i-chaves").appendChild(ficha);
+          });
         }
-        scheduleNextStep();
-      }, Number(speedInput.value));
-    }
-
-    function startPlayback() {
-      if (stepIndex === data.percurso.length - 1) {
-        stepIndex = 0;
-        updatePosition();
+        $("i-bonus").textContent = atual ? (atual.bonus.length ? `${atual.bonus.join(", ")} (${atual.bonus.length})` : "nenhum") : "—";
+        $("i-custo").textContent = atual ? atual.custo_acumulado : "—";
+        $("i-movimento").textContent = atual && atual.movimento ? `${atual.movimento} (peso ${atual.peso})` : "—";
+        $("i-evento").textContent = atual ? textoEvento(atual.evento) : "—";
+        $("i-armadilhas").textContent = (mapa.armadilhasPorCamada[camada] || vazio).size;
+        linhaDoTempo.max = Math.max(0, passos.length - 1);
+        linhaDoTempo.value = passo;
+        linhaDoTempo.disabled = passos.length === 0;
+        preencher(linhaDoTempo);
+        $("linha-do-tempo-valor").textContent = atual ? `passo ${passo} / ${passos.length - 1}` : "—";
+        labirinto.setAttribute("aria-label", atual
+          ? `Labirinto ${nomeMapa}, posição linha ${atual.linha} coluna ${atual.coluna}, camada ${camada}, custo ${atual.custo_acumulado}`
+          : `Labirinto ${nomeMapa}`);
+        atualizarBotoes();
+        gravarHash();
       }
-      playPauseButton.textContent = "Pausar";
-      statusElement.textContent = `Executando a partir do passo ${stepIndex}.`;
-      scheduleNextStep();
-    }
 
-    playPauseButton.addEventListener("click", () => {
-      if (timerId !== null) {
-        stopPlayback();
-        statusElement.textContent = `Pausado no passo ${stepIndex}.`;
-      } else {
-        startPlayback();
+      function atualizarBotoes() {
+        const total = percurso.percurso.length;
+        $("reiniciar").disabled = total === 0 || passo === 0;
+        $("anterior").disabled = total === 0 || passo === 0;
+        $("proximo").disabled = total === 0 || passo >= total - 1;
+        botaoTocar.disabled = total === 0;
+        if (temporizador === null) {
+          botaoTocar.classList.remove("tocando");
+          $("tocar-texto").textContent = passo === 0 || total === 0 ? "Iniciar" : (passo >= total - 1 ? "Iniciar novamente" : "Continuar");
+        }
       }
-    });
 
-    restartButton.addEventListener("click", () => {
-      stopPlayback();
-      stepIndex = 0;
-      updatePosition();
-      playPauseButton.textContent = "Iniciar";
-      statusElement.textContent = "Percurso reiniciado.";
-    });
-
-    speedInput.addEventListener("input", () => {
-      speedValue.textContent = `${speedInput.value} ms/passo`;
-      if (timerId !== null) {
-        window.clearTimeout(timerId);
-        scheduleNextStep();
+      function atualizarResumo() {
+        const [rotulo, classe] = SELOS[percurso.status] || [percurso.status, "aviso"];
+        $("selo").textContent = rotulo;
+        $("selo").className = `selo ${classe}`.trim();
+        if (percurso.encontrou) {
+          $("resumo").textContent = `${algoritmo}: ${percurso.passos} passos, custo ${percurso.custo}.`;
+          if (percurso.observacao) $("resumo").textContent += ` (${percurso.observacao})`;
+        } else {
+          $("resumo").textContent = `${algoritmo}: ${MENSAGENS[percurso.status] || percurso.status}`;
+        }
       }
-    });
 
-    validateData();
-    renderMaze();
+      // ---------- navegação ----------
+
+      function irPara(novo) {
+        const passos = percurso.percurso;
+        if (!passos.length) return;
+        const anterior = passo;
+        passo = Math.max(0, Math.min(passos.length - 1, novo));
+        pintar();
+        const atual = passos[passo];
+        if (passo === anterior + 1 && passos[anterior].camada !== atual.camada) {
+          $("status").textContent = `Troca de camada: ${passos[anterior].camada} → ${atual.camada}. ${textoEvento(atual.evento)}.`;
+          const chip = $("i-camada");
+          chip.classList.remove("flash");
+          void chip.offsetWidth;
+          chip.classList.add("flash");
+        } else if (passo === passos.length - 1) {
+          $("status").textContent = `Percurso concluído: ${percurso.passos} passos, custo ${percurso.custo}.`;
+        } else {
+          $("status").textContent = `Passo ${passo} de ${passos.length - 1}.`;
+        }
+      }
+
+      function parar() {
+        if (temporizador !== null) {
+          window.clearTimeout(temporizador);
+          temporizador = null;
+        }
+        if (percurso) atualizarBotoes();
+      }
+
+      function agendar() {
+        temporizador = window.setTimeout(() => {
+          irPara(passo + 1);
+          if (passo >= percurso.percurso.length - 1) {
+            temporizador = null;
+            atualizarBotoes();
+          } else {
+            agendar();
+          }
+        }, Number(velocidade.value));
+      }
+
+      function tocar() {
+        if (passo >= percurso.percurso.length - 1) irPara(0);
+        $("tocar-texto").textContent = "Pausar";
+        botaoTocar.classList.add("tocando");
+        agendar();
+      }
+
+      // ---------- seleção ----------
+
+      function escolherPercurso(novoAlgoritmo, novoPasso) {
+        parar();
+        algoritmo = novoAlgoritmo;
+        percurso = mapa.percursos[algoritmo];
+        passo = Math.max(0, Math.min(percurso.percurso.length - 1, novoPasso || 0));
+        seletorAlgoritmo.value = algoritmo;
+        atualizarResumo();
+        pintar();
+        $("status").textContent = percurso.encontrou ? "Pronto para iniciar." : "Não há percurso para animar.";
+      }
+
+      function algoritmoPadrao() {
+        return ["DIJKSTRA", "BELLMAN_FORD", "BFS"].find((a) => mapa.percursos[a].encontrou) || "DIJKSTRA";
+      }
+
+      function gravarHash() {
+        try {
+          history.replaceState(null, "", `#${encodeURIComponent(nomeMapa)}/${algoritmo}/${passo}`);
+        } catch (erro) { /* abrir como arquivo local pode bloquear; o link direto é opcional */ }
+      }
+
+      function lerHash() {
+        const [m, a, p] = decodeURIComponent(location.hash.slice(1)).split("/");
+        return { mapa: dados.mapas[m] ? m : null, algoritmo: dados.algoritmos.includes(a) ? a : null, passo: Number(p) || 0 };
+      }
+
+      // ---------- eventos ----------
+
+      seletorMapa.addEventListener("change", () => {
+        parar();
+        montarMapa(seletorMapa.value);
+        escolherPercurso(algoritmoPadrao(), 0);
+      });
+      seletorAlgoritmo.addEventListener("change", () => escolherPercurso(seletorAlgoritmo.value, 0));
+      botaoTocar.addEventListener("click", () => {
+        if (temporizador !== null) {
+          parar();
+          $("status").textContent = `Pausado no passo ${passo}.`;
+        } else {
+          tocar();
+        }
+      });
+      $("proximo").addEventListener("click", () => { parar(); irPara(passo + 1); });
+      $("anterior").addEventListener("click", () => { parar(); irPara(passo - 1); });
+      $("reiniciar").addEventListener("click", () => { parar(); irPara(0); $("status").textContent = "Percurso reiniciado."; });
+      linhaDoTempo.addEventListener("input", () => { parar(); irPara(Number(linhaDoTempo.value)); });
+      velocidade.addEventListener("input", () => {
+        $("velocidade-valor").textContent = `${velocidade.value} ms/passo`;
+        preencher(velocidade);
+        if (temporizador !== null) {
+          window.clearTimeout(temporizador);
+          agendar();
+        }
+      });
+      $("ver-armadilhas").addEventListener("change", pintar);
+      $("ver-trocas").addEventListener("change", pintar);
+      window.addEventListener("resize", ajustarTamanho);
+      document.addEventListener("keydown", (e) => {
+        if (["INPUT", "SELECT", "BUTTON"].includes(e.target.tagName)) return;
+        if (e.key === "ArrowRight") { parar(); irPara(passo + 1); }
+        if (e.key === "ArrowLeft") { parar(); irPara(passo - 1); }
+      });
+
+      // ---------- início ----------
+
+      preencher(velocidade);
+      Object.keys(dados.mapas).forEach((nome) => seletorMapa.add(new Option(nome, nome)));
+      dados.algoritmos.forEach((nome) => seletorAlgoritmo.add(new Option(nome, nome)));
+      const inicial = lerHash();
+      const nomeInicial = inicial.mapa || (dados.mapas[dados.mapa_inicial] ? dados.mapa_inicial : Object.keys(dados.mapas)[0]);
+      seletorMapa.value = nomeInicial;
+      montarMapa(nomeInicial);
+      escolherPercurso(inicial.algoritmo || algoritmoPadrao(), inicial.mapa ? inicial.passo : 0);
+    })();
   </script>
 </body>
 </html>

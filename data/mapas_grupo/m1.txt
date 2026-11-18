@@ -1,4 +1,15 @@
-; T21 - demonstracao de chave, porta, esteira e bonus
-###############
-#S..a>A..+...G#
-###############
+; m1 - Mapa com chaves, esteiras e bonus (mapa do grupo)
+; Tres chaves (a, b, c) abrem as portas A, B e C. O caminho de menor custo pega a chave a
+; (contornar a porta A sai mais caro), colhe o bonus da rua, cruza a faixa de esteiras por
+; cima da lama e pega b e c antes de G. Ha um bonus-isca que nao compensa e uma estrada de
+; esteiras que nao entra no caminho otimo.
+###############################
+####a####################c#####
+####.########.>>>>.######+#####
+####.########.####.######.#####
+#S.......A....,,,,....B.....CG#
+######+#.##.#######.#.#v###.###
+########.##.#######.#.#v###.###
+########.,,.#######b#+#v###.###
+#######################..~..###
+###############################

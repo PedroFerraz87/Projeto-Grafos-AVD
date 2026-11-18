@@ -1,4 +1,6 @@
-; T21 - ramal de esteiras direcionado a um beco
+; m2 - Mapa armadilha (mapa do grupo)
+; Do corredor de cima desce um ramal ate uma esteira para a direita que termina na parede:
+; quem entra nele fica sem saida (estados-armadilha).
 #############
 #S....G.....#
 ###.#########

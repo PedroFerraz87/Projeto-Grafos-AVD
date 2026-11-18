@@ -468,6 +468,14 @@ O `cli.py` monta o dicionário (`solve.dados_interativos`) e chama
 `labirinto_interativo.html` em `--out`. O dicionário traz **todos os mapas** (para a seleção no
 HTML); `--mapa` só define `mapa_inicial`.
 
+O `viz.py` lê `src/templates/labirinto_interativo.html`, troca o marcador `__DADOS__` pelo JSON do
+dicionário e grava a página autocontida (sem recursos externos). A página tem seleção de mapa e de
+algoritmo; animação passo a passo com posição, chaves, bônus consumidos e custo acumulado; realce
+das armadilhas e das casas de troca de camada da camada atual; e controle de velocidade com avanço
+manual (botões, linha do tempo e setas ← →). Também há tema claro e escuro e um selo com o status
+do algoritmo (`OK`, `RECUSA`, `CICLO NEGATIVO` ou `SEM SOLUÇÃO`). Link direto para um estado:
+`#<mapa>/<algoritmo>/<passo>`.
+
 ```json
 {
   "mapa_inicial": "m03_tres_chaves",
