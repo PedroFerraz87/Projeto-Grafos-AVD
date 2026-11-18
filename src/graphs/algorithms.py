@@ -1,3 +1,4 @@
+# [IA] OpenAI Codex - implementação inicial de T11 a T15 no commit 9c109bf, ajustada posteriormente pelo grupo.
 from collections.abc import Hashable
 from dataclasses import dataclass
 from heapq import heappop, heappush
