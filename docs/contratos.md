@@ -76,7 +76,9 @@ extensão é decisão do grupo, já que o enunciado só define as três partes:
 (l,c)|chaves|{bonus}|{fontes}
 ```
 
-Sem a opção, o quarto campo **não aparece** (o rótulo continua com três partes).
+Sem a opção, o quarto campo **não aparece** (o rótulo continua com três partes). Os arquivos
+gerados pelo `cli` trazem sempre rótulos de três partes: a opção só serve para calcular a
+correção do m06 (seção 3.4).
 
 **Custo da fonte (`*`):** sem a opção, a fonte vale −2 **toda vez** que se entra nela, e o estado
 não lembra dela (é o "exploit" do m06: ciclo negativo). Com `--fonte-consumivel`, vale −2 só
@@ -160,6 +162,10 @@ Uma linha por par (mapa, algoritmo), ordenada por `mapa` e depois por
 
 `RECUSA` = Dijkstra diante de arco negativo; `CICLO_NEGATIVO` = Bellman-Ford encontrou ciclo
 negativo que alcança `ALVO`; `SEM_SOLUCAO` = `ALVO` inalcançável.
+
+Campos vazios por status: na `RECUSA`, `passos`, `custo`, `caminho`, `estados_visitados` e
+`tempo_ms`; no `CICLO_NEGATIVO`, `passos`, `custo` e `caminho`. Um ciclo negativo que **não**
+alcança `ALVO` deixa o Bellman-Ford como `OK` (a `observacao` registra o ciclo).
 
 ```csv
 mapa,algoritmo,passos,custo,status,caminho,ordem,tamanho,estados_visitados,tempo_ms,observacao
@@ -247,6 +253,12 @@ Cada item de `percurso`:
 Quando um passo dispara mais de um evento, usa-se o mais importante na ordem
 `chegada > chave > porta > bonus > fonte > esteira`.
 
+O evento vem da casa de destino do passo: `chegada` (`G`), `chave_x` (só ao coletar a chave, não
+ao revisitar a casa), `porta_X` (a cada passagem), `bonus` (só no consumo, quando vale −4),
+`fonte` (a cada entrada) e `esteira` (ao entrar numa esteira). Extras do grupo no objeto:
+`status` e `observacao`, com os mesmos valores de `solucoes.csv` (o HTML mostra a recusa do
+Dijkstra e o ciclo negativo; sem caminho, `encontrou` é `false`).
+
 ### 3.4 `ciclo_negativo_m06.json`
 
 Ciclo negativo encontrado pelo Bellman-Ford, exibido como sequência de estados e custo.
@@ -285,6 +297,13 @@ Estrutura (rótulos e pesos são marcadores, não o resultado do m06):
 
 Sem ciclo: `ciclo_encontrado: false`, `ciclo` e `arcos` vazios, `custo_ciclo: null`.
 
+O ciclo é sempre procurado no `G_est` com a fonte comum (−2 toda vez). Com `--fonte-consumivel`
+o arquivo mantém esse ciclo e preenche `correcao` com o custo mínimo no grafo corrigido
+(`fonte_consumivel` em `opcoes` indica a opção da execução). O arquivo só é escrito para os
+mapas em que o Bellman-Ford encontra ciclo negativo. A versão corrigida aparece **só aqui**:
+`solucoes.csv`, `percurso_<mapa>.json` e as demais saídas usam sempre a fonte comum, com ou sem
+`--fonte-consumivel`.
+
 ### 3.5 `armadilhas_m04.csv` e `armadilhas_m07.csv`
 
 Estados alcançáveis a partir de `S` dos quais `ALVO` é inalcançável (busca a partir de `ALVO`
@@ -299,7 +318,8 @@ no transposto). Uma linha por estado, ordenada por `linha`, `coluna`, `chaves`.
 | `simbolo` | str | caractere da casa |
 | `distancia_bfs` | int | distância em passos de `S` até o estado |
 
-O total e o percentual de armadilhas sobre os estados alcançáveis vão em
+`armadilhas_m04.csv` e `armadilhas_m07.csv` são gerados sempre; os dos demais mapas, só com
+`--armadilhas` (só com o cabeçalho se o mapa não tiver armadilhas). O total e o percentual de armadilhas sobre os estados alcançáveis vão em
 `metricas_global.json` (`armadilhas` e `pct_armadilhas`), não neste CSV.
 
 ### 3.6 `dfs_classificacao.csv`
@@ -315,6 +335,9 @@ contagem de arcos de cada classe, como no enunciado.
 | `avanco` | int | arcos de avanço |
 | `cruzamento` | int | arcos de cruzamento |
 | `possui_ciclo` | bool | *extra:* `true` se houver arco de retorno |
+
+Os arcos até `ALVO` não entram na contagem, como nas demais métricas: a soma das quatro classes
+é o `tamanho` do mapa.
 
 ```csv
 mapa,arvore,retorno,avanco,cruzamento,possui_ciclo
@@ -437,6 +460,40 @@ estrutura da seção 3.4.
 | `percurso_m03.png`, `percurso_m08.png` | P5 (T28) | `percurso_<mapa>.json` |
 | figura da árvore BFS do m02, figura de `G_est` em camadas, heatmap do m08 | P5/P3 (T28, T30) | `arestas_m02.csv`, `camadas.json`, `multiplicidade_m08.csv` |
 | `labirinto_interativo.html` | P5 (T20, T31) | `percurso_<mapa>.json`, `armadilhas_<mapa>.csv`, `metricas_global.json` (dados embutidos no HTML pelo Python) |
+
+### 3.13 Dados do labirinto interativo (`--interactive`)
+
+O `cli.py` monta o dicionário (`solve.dados_interativos`) e chama
+`viz.gerar_labirinto_interativo(dados, caminho_saida)`, que preenche o template e grava
+`labirinto_interativo.html` em `--out`. O dicionário traz **todos os mapas** (para a seleção no
+HTML); `--mapa` só define `mapa_inicial`.
+
+```json
+{
+  "mapa_inicial": "m03_tres_chaves",
+  "algoritmos": ["BFS", "DIJKSTRA", "BELLMAN_FORD"],
+  "mapas": {
+    "m02_uma_chave": {
+      "grade": ["#############", "#S....A....G#"],
+      "inicio": "(1,1)|-|{}",
+      "percursos": { "BFS": {}, "DIJKSTRA": {}, "BELLMAN_FORD": {} },
+      "armadilhas": [
+        { "mapa": "m04_esteiras", "estado": "(1,8)|-|{}", "linha": 1, "coluna": 8, "chaves": "-",
+          "simbolo": ".", "distancia_bfs": 0 }
+      ],
+      "camadas": [ { "camada": "-", "casas": [[1, 1], [1, 2]] } ],
+      "trocas_de_camada": [ { "de": "-", "para": "a", "quantidade": 1, "casas": [[3, 11]] } ]
+    }
+  }
+}
+```
+
+| Chave | Descrição |
+|---|---|
+| `percursos` | um objeto por algoritmo, **no formato da seção 3.3** (com `status`; `encontrou: false` e `percurso` vazio na recusa, no ciclo negativo e sem solução). A DFS não entra: ela não define um caminho |
+| `armadilhas` | as linhas de `armadilhas_<mapa>.csv` (seção 3.5), como objetos |
+| `camadas` | por camada (`-` se nenhuma chave), as casas `[linha, coluna]` que têm estado nela, em ordem; serve para realçar a troca de camada |
+| `trocas_de_camada` | os arcos entre camadas de `camadas.json` (seção 3.8): `de`, `para`, `quantidade` e as casas que provocam a troca |
 
 ---
 
