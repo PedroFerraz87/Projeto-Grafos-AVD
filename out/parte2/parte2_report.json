@@ -388,5 +388,300 @@
       "custo_transformado_bfs": 39,
       "custo_transformado_dijkstra": 37
     }
-  ]
+  ],
+  "benchmark": {
+    "arquivo_csv": "out/parte2/benchmark.csv",
+    "total_medicoes": 180,
+    "unidade_tempo": "ms",
+    "resumo": [
+      {
+        "algoritmo": "BELLMAN_FORD",
+        "recorte": 10,
+        "fonte": 2,
+        "execucoes": 5,
+        "tempo_medio_ms": 447.2874600018258,
+        "tempo_desvio_ms": 27.105784590385333
+      },
+      {
+        "algoritmo": "BELLMAN_FORD",
+        "recorte": 10,
+        "fonte": 4,
+        "execucoes": 5,
+        "tempo_medio_ms": 905.504920000385,
+        "tempo_desvio_ms": 423.5058760607095
+      },
+      {
+        "algoritmo": "BELLMAN_FORD",
+        "recorte": 10,
+        "fonte": 129,
+        "execucoes": 5,
+        "tempo_medio_ms": 456.4831400013645,
+        "tempo_desvio_ms": 36.10497197148373
+      },
+      {
+        "algoritmo": "BELLMAN_FORD",
+        "recorte": 50,
+        "fonte": 1,
+        "execucoes": 5,
+        "tempo_medio_ms": 10527.558020001743,
+        "tempo_desvio_ms": 1421.096785292753
+      },
+      {
+        "algoritmo": "BELLMAN_FORD",
+        "recorte": 50,
+        "fonte": 2,
+        "execucoes": 5,
+        "tempo_medio_ms": 9024.169839998649,
+        "tempo_desvio_ms": 130.29470797654292
+      },
+      {
+        "algoritmo": "BELLMAN_FORD",
+        "recorte": 50,
+        "fonte": 4,
+        "execucoes": 5,
+        "tempo_medio_ms": 9134.389000000374,
+        "tempo_desvio_ms": 102.74691684325096
+      },
+      {
+        "algoritmo": "BELLMAN_FORD",
+        "recorte": 100,
+        "fonte": 1,
+        "execucoes": 5,
+        "tempo_medio_ms": 33515.01694000035,
+        "tempo_desvio_ms": 524.1532520925989
+      },
+      {
+        "algoritmo": "BELLMAN_FORD",
+        "recorte": 100,
+        "fonte": 3,
+        "execucoes": 5,
+        "tempo_medio_ms": 39472.46170000144,
+        "tempo_desvio_ms": 4963.077781947584
+      },
+      {
+        "algoritmo": "BELLMAN_FORD",
+        "recorte": 100,
+        "fonte": 8,
+        "execucoes": 5,
+        "tempo_medio_ms": 35021.39679999818,
+        "tempo_desvio_ms": 2195.97049265196
+      },
+      {
+        "algoritmo": "BFS",
+        "recorte": 10,
+        "fonte": 2,
+        "execucoes": 5,
+        "tempo_medio_ms": 0.7333799992920831,
+        "tempo_desvio_ms": 0.25961059839269823
+      },
+      {
+        "algoritmo": "BFS",
+        "recorte": 10,
+        "fonte": 4,
+        "execucoes": 5,
+        "tempo_medio_ms": 0.47377999871969223,
+        "tempo_desvio_ms": 0.07451443874787805
+      },
+      {
+        "algoritmo": "BFS",
+        "recorte": 10,
+        "fonte": 129,
+        "execucoes": 5,
+        "tempo_medio_ms": 0.48396000056527555,
+        "tempo_desvio_ms": 0.06455666434704538
+      },
+      {
+        "algoritmo": "BFS",
+        "recorte": 50,
+        "fonte": 1,
+        "execucoes": 5,
+        "tempo_medio_ms": 2.036980002594646,
+        "tempo_desvio_ms": 0.5984011171603589
+      },
+      {
+        "algoritmo": "BFS",
+        "recorte": 50,
+        "fonte": 2,
+        "execucoes": 5,
+        "tempo_medio_ms": 2.7761200020904653,
+        "tempo_desvio_ms": 0.7672607892610263
+      },
+      {
+        "algoritmo": "BFS",
+        "recorte": 50,
+        "fonte": 4,
+        "execucoes": 5,
+        "tempo_medio_ms": 3.8616599995293655,
+        "tempo_desvio_ms": 1.573057224412244
+      },
+      {
+        "algoritmo": "BFS",
+        "recorte": 100,
+        "fonte": 1,
+        "execucoes": 5,
+        "tempo_medio_ms": 8.111419998749625,
+        "tempo_desvio_ms": 2.331301282578617
+      },
+      {
+        "algoritmo": "BFS",
+        "recorte": 100,
+        "fonte": 3,
+        "execucoes": 5,
+        "tempo_medio_ms": 6.695380000746809,
+        "tempo_desvio_ms": 3.066890382239604
+      },
+      {
+        "algoritmo": "BFS",
+        "recorte": 100,
+        "fonte": 8,
+        "execucoes": 5,
+        "tempo_medio_ms": 6.159119999210816,
+        "tempo_desvio_ms": 1.5943200277225296
+      },
+      {
+        "algoritmo": "DFS",
+        "recorte": 10,
+        "fonte": 2,
+        "execucoes": 5,
+        "tempo_medio_ms": 2.733439998701215,
+        "tempo_desvio_ms": 1.0408340131591183
+      },
+      {
+        "algoritmo": "DFS",
+        "recorte": 10,
+        "fonte": 4,
+        "execucoes": 5,
+        "tempo_medio_ms": 2.4577800009865314,
+        "tempo_desvio_ms": 0.5371032637798491
+      },
+      {
+        "algoritmo": "DFS",
+        "recorte": 10,
+        "fonte": 129,
+        "execucoes": 5,
+        "tempo_medio_ms": 2.6806200010469183,
+        "tempo_desvio_ms": 0.422488026286549
+      },
+      {
+        "algoritmo": "DFS",
+        "recorte": 50,
+        "fonte": 1,
+        "execucoes": 5,
+        "tempo_medio_ms": 6.882999998924788,
+        "tempo_desvio_ms": 0.954329825219291
+      },
+      {
+        "algoritmo": "DFS",
+        "recorte": 50,
+        "fonte": 2,
+        "execucoes": 5,
+        "tempo_medio_ms": 6.812799999897834,
+        "tempo_desvio_ms": 1.4177086194953035
+      },
+      {
+        "algoritmo": "DFS",
+        "recorte": 50,
+        "fonte": 4,
+        "execucoes": 5,
+        "tempo_medio_ms": 11.330139999336097,
+        "tempo_desvio_ms": 8.376780935553283
+      },
+      {
+        "algoritmo": "DFS",
+        "recorte": 100,
+        "fonte": 1,
+        "execucoes": 5,
+        "tempo_medio_ms": 31.28827999898931,
+        "tempo_desvio_ms": 24.576400674767967
+      },
+      {
+        "algoritmo": "DFS",
+        "recorte": 100,
+        "fonte": 3,
+        "execucoes": 5,
+        "tempo_medio_ms": 17.98574000131339,
+        "tempo_desvio_ms": 5.0450069280225005
+      },
+      {
+        "algoritmo": "DFS",
+        "recorte": 100,
+        "fonte": 8,
+        "execucoes": 5,
+        "tempo_medio_ms": 16.72026000014739,
+        "tempo_desvio_ms": 5.364015553962611
+      },
+      {
+        "algoritmo": "DIJKSTRA",
+        "recorte": 10,
+        "fonte": 2,
+        "execucoes": 5,
+        "tempo_medio_ms": 3.818220001994632,
+        "tempo_desvio_ms": 1.3991733015504886
+      },
+      {
+        "algoritmo": "DIJKSTRA",
+        "recorte": 10,
+        "fonte": 4,
+        "execucoes": 5,
+        "tempo_medio_ms": 2.855479999561794,
+        "tempo_desvio_ms": 1.1913082723301491
+      },
+      {
+        "algoritmo": "DIJKSTRA",
+        "recorte": 10,
+        "fonte": 129,
+        "execucoes": 5,
+        "tempo_medio_ms": 3.189919999567792,
+        "tempo_desvio_ms": 1.1923168994173448
+      },
+      {
+        "algoritmo": "DIJKSTRA",
+        "recorte": 50,
+        "fonte": 1,
+        "execucoes": 5,
+        "tempo_medio_ms": 6.018060001952108,
+        "tempo_desvio_ms": 0.8146276015905337
+      },
+      {
+        "algoritmo": "DIJKSTRA",
+        "recorte": 50,
+        "fonte": 2,
+        "execucoes": 5,
+        "tempo_medio_ms": 7.3648399993544444,
+        "tempo_desvio_ms": 2.751901621227154
+      },
+      {
+        "algoritmo": "DIJKSTRA",
+        "recorte": 50,
+        "fonte": 4,
+        "execucoes": 5,
+        "tempo_medio_ms": 6.159699997806456,
+        "tempo_desvio_ms": 1.5496149692034107
+      },
+      {
+        "algoritmo": "DIJKSTRA",
+        "recorte": 100,
+        "fonte": 1,
+        "execucoes": 5,
+        "tempo_medio_ms": 11.685099999886006,
+        "tempo_desvio_ms": 1.5444270744960833
+      },
+      {
+        "algoritmo": "DIJKSTRA",
+        "recorte": 100,
+        "fonte": 3,
+        "execucoes": 5,
+        "tempo_medio_ms": 12.664860002405476,
+        "tempo_desvio_ms": 1.56903706548139
+      },
+      {
+        "algoritmo": "DIJKSTRA",
+        "recorte": 100,
+        "fonte": 8,
+        "execucoes": 5,
+        "tempo_medio_ms": 11.708519999228884,
+        "tempo_desvio_ms": 0.9428473619238757
+      }
+    ]
+  }
 }
