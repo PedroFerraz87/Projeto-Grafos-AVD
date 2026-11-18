@@ -78,6 +78,13 @@ extensão é decisão do grupo, já que o enunciado só define as três partes:
 
 Sem a opção, o quarto campo **não aparece** (o rótulo continua com três partes).
 
+**Custo da fonte (`*`):** sem a opção, a fonte vale −2 **toda vez** que se entra nela, e o estado
+não lembra dela (é o "exploit" do m06: ciclo negativo). Com `--fonte-consumivel`, vale −2 só
+**na primeira vez** que o estado entra nela; depois de consumida (índice no quarto campo) passa
+a custar 1, como o bônus `+` já consumido. Essa regra também é decisão do grupo, porque o
+enunciado não a define, e é ela que elimina o ciclo negativo do m06 (correção registrada em
+`ciclo_negativo_m06.json`, campo `correcao`).
+
 **Nó alvo:** o nó virtual que recebe um arco de custo 0 de cada estado sobre `G` tem rótulo
 exatamente `ALVO`. Ele **não entra nas métricas** (ordem, tamanho, densidade, graus, camadas).
 
@@ -115,6 +122,10 @@ Um arquivo por mapa (inclusive `m08`), uma linha por arco de `G_est`, na ordem d
 | `via_esteira` | bool | *extra:* `true` se o arco sai de uma esteira |
 | `camada_origem` | str | *extra:* chaves da origem (`-` se nenhuma) |
 | `camada_destino` | str | *extra:* chaves do destino (`-` se nenhuma; vazio para `ALVO`) |
+
+O arco de um estado em `G` até `ALVO` é o único com `movimento` `-`: nele `casa_destino` e
+`camada_destino` ficam **vazios**, `peso` é `0` e `via_esteira` é `false` (última linha do
+exemplo abaixo). Nenhum outro arco sai de um estado em `G`.
 
 As cinco primeiras colunas são as do enunciado, na mesma ordem. Exemplo (as três primeiras
 linhas de dados são as do próprio enunciado):

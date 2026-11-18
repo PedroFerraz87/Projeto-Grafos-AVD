@@ -85,7 +85,7 @@ Apresentar os resultados de `comparacao_modelagem.csv`, considerando as modelage
 
 Registrar a demonstração do ciclo negativo em m05 no grafo de posições e a justificativa para seu comportamento no grafo de estados.
 
-Documentar também a correção opcional da fonte em m06 e os resultados obtidos.
+Documentar também a correção opcional da fonte em m06 e os resultados obtidos. Registrar, como decisões do grupo (o enunciado não as define; ver `docs/contratos.md`, seção 2): com `--fonte-consumivel` o rótulo do estado ganha um quarto campo `|{fontes}`, e a fonte consumida passa a custar 1 depois da primeira vez, como o bônus já consumido.
 
 ### 2.5 Caminhos e algoritmos
 
