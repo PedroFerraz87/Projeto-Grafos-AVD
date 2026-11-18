@@ -23,12 +23,56 @@ def criar_parser():
                              "ciclo_negativo_m06.json; as demais saídas não mudam")
     parser.add_argument("--interactive", action="store_true",
                         help="gera labirinto_interativo.html em --out, com todos os mapas; --mapa vira o mapa inicial")
+    parser.add_argument(
+        "--dataset",
+        type=Path,
+        help="Caminho do arquivo CSV do Bitcoin Alpha."
+    )
+
+    parser.add_argument(
+        "--benchmark",
+        action="store_true",
+        help="Executa o benchmark da Parte 2."
+    )
+    
     return parser
 
 
 def main(argv=None):
     parser = criar_parser()
     args = parser.parse_args(argv)
+
+    # [IA] Executa a T26 quando --benchmark for informado.
+    if args.benchmark:
+        if args.mapa or args.alg or args.interactive:
+            parser.error(
+                "--benchmark não pode ser combinado com opções de mapas."
+            )
+
+        from .benchmark import executar_benchmark
+
+        dataset = args.dataset or (
+            RAIZ / "data/dataset_parte2/soc-sign-bitcoinalpha.csv"
+        )
+
+        pasta_saida = Path(args.out)
+
+        if pasta_saida == Path("out/parte1"):
+            pasta_saida = Path("out/parte2")
+
+        arquivo_saida = pasta_saida / "benchmark.csv"
+
+        try:
+            executar_benchmark(dataset, arquivo_saida)
+        except (OSError, ValueError) as erro:
+            parser.error(str(erro))
+
+        print(f"Benchmark salvo em: {arquivo_saida}")
+        return 0
+
+    if args.dataset:
+        parser.error("--dataset deve ser usado com --benchmark.")
+
     out = Path(args.out)
     algoritmos = [args.alg] if args.alg else TODOS
 
