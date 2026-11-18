@@ -1,3 +1,4 @@
+# [IA] GitHub Copilot no VS Code - testes dos geradores de figuras da T28.
 # Testes do labirinto interativo (viz.py e do modelo HTML).
 import json
 import re
@@ -96,3 +97,15 @@ def test_cli_interactive_gera_o_html_de_verdade(tmp_path):
     assert embutido["mapas"]["m03_tres_chaves"]["percursos"]["DIJKSTRA"]["passos"] == 91
     assert embutido["mapas"]["m1"]["percursos"]["BELLMAN_FORD"]["custo"] == 42
     assert len(embutido["mapas"]["m2"]["armadilhas"]) == 6
+
+
+def test_geradores_de_figuras_t28(tmp_path):
+    gerados = viz.gerar_figuras_t28(RAIZ, tmp_path)
+    assert [p.name for p in gerados] == [
+        "percurso_m03.png",
+        "percurso_m08.png",
+        "arvore_bfs_m02.png",
+    ]
+    for caminho in gerados:
+        assert caminho.exists()
+        assert caminho.read_bytes().startswith(b"\x89PNG")
