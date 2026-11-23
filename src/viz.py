@@ -1,5 +1,6 @@
 # [IA] GitHub Copilot no VS Code - geração das figuras da T28.
 # [IA] Claude (Anthropic) - HTML interativo anterior.
+from base64 import b64encode
 import json
 from pathlib import Path
 
@@ -121,6 +122,13 @@ def gerar_labirinto_interativo(dados, caminho_saida):
     html = MODELO.read_text(encoding="utf-8")
     if html.count(MARCADOR) != 1:
         raise ValueError(f"o modelo {MODELO.name} deve ter exatamente um marcador {MARCADOR}")
+    # [IA] OpenAI Codex – incorporação dos recursos locais para a demonstração funcionar offline.
+    for marcador, nome in (("__MESA_ROTAS_HTML__", "mesa_rotas.html"), ("__MESA_ROTAS_JS__", "mesa_rotas.js")):
+        if marcador in html:
+            html = html.replace(marcador, MODELO.with_name(nome).read_text(encoding="utf-8"))
+    if "__HERO_IMAGE__" in html:
+        imagem = MODELO.with_name("rotas-hero.webp").read_bytes()
+        html = html.replace("__HERO_IMAGE__", b64encode(imagem).decode("ascii"))
     # "</" vira "<\/" para um texto do dicionário nunca fechar a tag <script>
     texto = json.dumps(dados, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     caminho_saida = Path(caminho_saida)
