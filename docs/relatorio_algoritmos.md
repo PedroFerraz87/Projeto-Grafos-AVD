@@ -1,6 +1,6 @@
 # Algoritmos e resultados dos labirintos
 
-Rascunho para a seção de Artur na T36, preparado com assistência de IA sobre a versão `f03c80c` do repositório.
+Seção de Artur Antunes (P2) para revisão de Ricardo Machado e incorporação ao relatório técnico na T36. Os resultados e comandos foram conferidos na base `833729d`. O texto original e esta revisão receberam assistência do OpenAI Codex.
 
 ## Buscas e caminhos
 
@@ -30,7 +30,12 @@ Na DFS iterativa, a pilha guarda o estado atual e a posição na lista de vizinh
 | `avanco` | O destino já foi finalizado e foi descoberto depois da origem. |
 | `cruzamento` | O destino já foi finalizado e foi descoberto antes da origem. |
 
-O CSV exportado exclui da contagem os arcos com destino `ALVO`. Em m06, foram registrados 23 arcos de árvore, 22 de retorno, nenhum de avanço e 1 de cruzamento. Em m07, foram 15 de árvore, 19 de retorno, 4 de avanço e nenhum de cruzamento. Os ciclos da DFS são detectados pela direção dos arcos, sem usar os pesos.
+O CSV exportado exclui da contagem os arcos com destino `ALVO`. A DFS detecta ciclos pela direção dos arcos, sem usar os pesos.
+
+| Mapa | Árvore | Retorno | Avanço | Cruzamento |
+|---|---:|---:|---:|---:|
+| m06 | 23 | 22 | 0 | 1 |
+| m07 | 15 | 19 | 4 | 0 |
 
 ## Ciclo negativo e correção do m06
 
@@ -48,13 +53,7 @@ A opção `--fonte-consumivel` acrescenta ao estado o conjunto das fontes já us
 | Bellman-Ford até `ALVO` | `CICLO_NEGATIVO` | `OK` |
 | Menor custo | Sem mínimo finito | 10 em 10 passos físicos |
 
-A conferência local da regra consumível usou o comando abaixo e a chamada direta ao construtor do grafo. Dijkstra ainda recusa o grafo corrigido, pois a primeira entrada na fonte conserva peso negativo.
-
-```powershell
-python -m src.cli --mapa m06 --alg BELLMAN_FORD --fonte-consumivel --out ../t36-algoritmos/m06-fonte-consumivel
-```
-
-Na CLI, a sequência principal de ciclo em `ciclo_negativo_m06.json` corresponde à regra original. O campo `correcao` registra o custo 10 do grafo consumível.
+Dijkstra ainda recusa o grafo corrigido, pois a primeira entrada na fonte conserva peso negativo. A CLI exporta o ciclo da regra original na parte principal de `ciclo_negativo_m06.json`. Na saída versionada, `correcao.aplicada` é `false`. Na reprodução com `--fonte-consumivel`, o campo `correcao.custo_minimo_apos_correcao` registra o custo 10. A execução direta no grafo corrigido confirma os 10 passos.
 
 ## Ausência de solução no m07
 
@@ -63,3 +62,26 @@ A busca a partir de `(1,1)|-|{}` chega a 16 estados físicos. Nenhum alcança `A
 BFS, Dijkstra e Bellman-Ford registram `SEM_SOLUCAO` em `solucoes.csv`. A ausência de caminho decorre da exploração de todos os estados alcançáveis sob as regras do mapa.
 
 Os dados publicados da Parte 1 estão em [solucoes.csv](../out/parte1/solucoes.csv), [dfs_classificacao.csv](../out/parte1/dfs_classificacao.csv), [ciclo_negativo_m06.json](../out/parte1/ciclo_negativo_m06.json) e [armadilhas_m07.csv](../out/parte1/armadilhas_m07.csv).
+
+## Reprodução e testes
+
+Na raiz do projeto, com as dependências de `requirements.txt` instaladas, os comandos gravam a reprodução em um diretório temporário.
+
+```powershell
+$repro = Join-Path ([System.IO.Path]::GetTempPath()) ("grafos-t36-" + [guid]::NewGuid())
+python -m pytest -q
+python -m src.cli --mapa m06 --fonte-consumivel --out (Join-Path $repro "m06")
+python -m src.cli --mapa m07 --out (Join-Path $repro "m07")
+```
+
+Com Python 3.11.15, a suíte na base `833729d` passou com 565 testes. Os testes de [BFS](../tests/test_bfs.py), [DFS](../tests/test_dfs.py), [Dijkstra](../tests/test_dijkstra.py), [Bellman-Ford](../tests/test_bellman_ford.py) e [armadilhas](../tests/test_armadilhas.py) verificam o núcleo P2. Os [testes de integração](../tests/test_solve.py) verificam as saídas dos mapas, incluindo a correção de m06 e as armadilhas de m07. Os [testes da T16](../tests/test_oraculo_networkx.py), implementados por Luca, usam NetworkX como oráculo dentro da suíte. Os [testes da T25](../tests/test_parte2.py) verificam a organização dos experimentos e a proteção do relatório integrado.
+
+## Evidências para a matriz de contribuição
+
+| Tarefa | Contribuição de Artur Antunes | Evidência |
+|---|---|---|
+| T02 | Casos de referência e suíte correspondente. Ricardo publicou a implementação de `Graph` e o módulo `test_graph.py` | `b508b46`, `fd18430`, `d101546`, `19cc433` |
+| T11–T15 | Publicação e integração inicial dos algoritmos e testes gerados com OpenAI Codex, com ajustes posteriores do grupo | `9c109bf`, `bacad13`, `0e8586d` |
+| T25 | Experimentos de algoritmos no Bitcoin Alpha, testes e relatório de resultados | `d9310ad` |
+| T32 | Apoio ao Victor na preparação das tabelas de tempo e caminhos | `0e8586d`, [tabelas publicadas](../out/parte2/tabelas_t32/) |
+| T34 e T36 | Parecer de integração e seção P2 do relatório técnico | `0e8586d`, [parecer atualizado](revisao_integracao_t34.md) |

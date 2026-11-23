@@ -1,16 +1,30 @@
 # Revisão da integração (T34)
 
-Base revisada: `f03c80c802e79b306f9eb82759102550a028f88c`. O registro abaixo é uma revisão técnica assistida com OpenAI Codex para Artur conferir com Ricardo e Pedro.
+Parecer de Artur Antunes para Ricardo Machado. A primeira revisão foi feita em `f03c80c`. Os casos abaixo foram conferidos novamente em 23/11/2026 sobre a base `833729d`.
 
 ## Achados
 
-1. **Tratamento de mapa inválido na CLI.** `python -m src.cli --mapa .gitignore` termina com código 1 e traceback de `MapaInvalido`. O tratamento atual em `src/cli.py` cobre a localização do arquivo. A análise posterior precisa tratar `MapaInvalido` e erros de leitura com uma mensagem que identifique o mapa inválido. Esse caso interessa à demonstração com mapa surpresa.
-2. **Contagem de armadilhas no painel.** Em `src/templates/labirinto_interativo.html`, a quantidade exibida usa posições únicas. Com bônus já consumidos e não consumidos, estados distintos podem ocupar a mesma posição na mesma camada. Um mapa sintético de teste produziu sete estados-armadilha em quatro casas. Se o painel informar quantidade de estados, deve contar os estados antes de agregar suas posições para o destaque visual.
-3. **Custo da fila da BFS no benchmark.** `src/graphs/algorithms.py` usa `list.pop(0)`, que desloca os itens restantes da fila. A comparação de escalabilidade deve considerar esse custo no código atual. Uma fila com `collections.deque` mantém a remoção da frente em tempo constante.
-4. **Origem da implementação.** A revisão encontrou a marcação de IA dos algoritmos no commit `9c109bf` e confirmou sua retirada em `bacad13`. A marcação foi reposta nesta cópia, com referência ao commit de origem e aos ajustes posteriores feitos no repositório do grupo.
+1. **Mapa inválido na CLI · encaminhado para a T34.** Um arquivo existente com a grade `##### / #SXG# / #####` (uma linha por trecho) gera `MapaInvalido` por causa do símbolo `X`. A CLI retorna 1 e exibe o traceback. O código atual trata a localização do arquivo. O tratamento da análise pode emitir uma mensagem curta com o nome do mapa e a causa, mantendo um código de saída de erro. A correção cabe à integração da CLI.
+2. **Contagem de armadilhas no painel · corrigida na demonstração.** Na base `833729d`, o painel exibe o número de casas distintas da camada. Estados com o mesmo conjunto de chaves e diferentes bônus consumidos podem compartilhar uma casa. Com o painel revisto, um teste de navegador em mapa sintético confirmou oito estados-armadilha e seis casas realçadas. Desligar o realce remove as marcas da grade e preserva o total do contador.
+3. **Custo da fila da BFS · registrado para o benchmark.** `src/graphs/algorithms.py` usa `list.pop(0)`, que desloca os itens restantes da fila. As medições publicadas da T26 correspondem a essa implementação. Em uma revisão futura do algoritmo, uma fila com `collections.deque` permite remover o primeiro elemento em tempo constante.
+4. **Origem da implementação · marcação presente.** O commit `9c109bf` publicou a implementação inicial e os testes gerados com OpenAI Codex. O commit `bacad13` removeu a marcação dos algoritmos, que foi restaurada em `0e8586d`. O cabeçalho atual identifica o commit de origem e registra os ajustes posteriores do grupo.
 
 ## Verificações
 
-Na base, `python -m pytest -q` passou em 561 testes, incluindo a CLI da Parte 1 e a produção de HTML em diretórios temporários. O caso da CLI com mapa inválido foi reproduzido separadamente. A contagem do painel foi conferida por leitura do código e com um mapa sintético. A revisão não incluiu teste visual no navegador.
+Na base `833729d`, `python -m pytest -q` passou em 565 testes. A revisão também reproduziu o caso de mapa inválido e executou o HTML revisto em desktop e celular com os mapas do projeto e o mapa sintético.
 
-Os pontos 1 e 2 ficam para conferência dos responsáveis pela CLI e pela visualização. As medições da T26 ainda são necessárias para a comparação de desempenho da T32.
+As 180 medições da T26 foram conferidas com os resumos do JSON e com as sete tabelas regeneradas da T32. O [apoio à comparação](avd/apoio_comparacao.md) descreve os comandos e as condições registradas no benchmark.
+
+## Revisões de Artur previstas no planejamento
+
+| Tarefa | Evidência conferida | Resultado |
+|---|---|---|
+| T01 | Estrutura, oito mapas fornecidos, configuração do pytest e dependências | `pip check` passou em Python 3.11.15. |
+| T04 | Figuras de m02 e do mapa mínimo | As contagens das figuras coincidem com a execução. Elas registram apoio de Claude e conferência por script. O desenho e a contagem manuais previstos no plano seguem sujeitos à comprovação do grupo. |
+| T07–T09 | Validação dos mapas, opções de porta em `G_pos` e regras de chaves, bônus, fonte e `ALVO` em `G_est` | Os testes das camadas de leitura e modelagem passaram. O erro de apresentação da CLI está registrado no item 1. |
+| T10 | Exportação de arestas | Os dez CSVs publicados coincidem com a reprodução após normalizar as quebras de linha. |
+| T16 | Oráculo implementado por Luca | Passaram os 345 casos dedicados. NetworkX aparece apenas na suíte, com grafos sintéticos e `G_pos` como entradas do oráculo. Os testes de integração cobrem `G_est`. |
+
+O comando `python -m pytest -q tests/test_io.py tests/test_estados.py tests/test_oraculo_networkx.py` passou com 441 testes.
+
+<!-- [IA] OpenAI Codex – reprodução das falhas, atualização do parecer e conferência de evidências. -->
