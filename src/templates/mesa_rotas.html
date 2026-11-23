@@ -1,0 +1,249 @@
+<!-- [IA] OpenAI Codex – interface da Mesa de rotas. -->
+<style>
+  #mesa-de-rotas {
+    --mesa-fundo: #0e1822;
+    --mesa-painel: #14212d;
+    --mesa-linha: #344653;
+    --mesa-texto: #f2f5f7;
+    --mesa-suave: #b3c2cc;
+    --mesa-cobre: #ff9a68;
+    --mesa-azul: #7edcf5;
+    max-width: 88rem;
+    margin-inline: auto;
+    padding: clamp(4rem, 9vw, 9rem) clamp(1.15rem, 4.2vw, 4.5rem);
+    scroll-margin-top: 4rem;
+  }
+
+  #mesa-de-rotas .mesa-cabecalho {
+    display: grid;
+    grid-template-columns: minmax(0, 1.22fr) minmax(16rem, .78fr);
+    gap: 1.5rem;
+    align-items: end;
+    margin-bottom: 1.9rem;
+  }
+  #mesa-de-rotas h2 {
+    margin: 0;
+    font-size: clamp(2.55rem, 5.4vw, 5.35rem);
+    line-height: .96;
+    letter-spacing: -.065em;
+    color: inherit;
+  }
+  #mesa-de-rotas .mesa-cabecalho p { max-width: 38ch; margin: 0; color: inherit; opacity: .8; line-height: 1.5; }
+  #mesa-de-rotas .mesa-palco {
+    background: var(--mesa-fundo);
+    color: var(--mesa-texto);
+    color-scheme: dark;
+    border: 1px solid var(--mesa-linha);
+    border-radius: .5rem;
+    overflow: hidden;
+  }
+  #mesa-de-rotas .mesa-config {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .85rem 1.6rem;
+    justify-content: space-between;
+    align-items: end;
+    padding: .9rem clamp(.85rem, 2vw, 1.65rem);
+    border-bottom: 1px solid var(--mesa-linha);
+  }
+  #mesa-de-rotas .mesa-config label, #mesa-de-rotas .mesa-canal label {
+    display: grid;
+    gap: .36rem;
+    font-size: .78rem;
+    font-weight: 650;
+    color: var(--mesa-suave);
+    min-width: 0;
+  }
+  #mesa-de-rotas .mesa-config label { min-width: min(100%, 17rem); }
+  #mesa-de-rotas :is(button, select, input) { font: inherit; }
+  #mesa-de-rotas button, #mesa-de-rotas select {
+    color: var(--mesa-texto);
+    min-height: 2.65rem;
+    border: 1px solid var(--mesa-linha);
+    border-radius: .25rem;
+    background: var(--mesa-painel);
+  }
+  #mesa-de-rotas button { padding: .45rem .7rem; cursor: pointer; }
+  #mesa-de-rotas select { padding: .45rem .55rem; width: 100%; min-width: 0; }
+  #mesa-de-rotas :is(button, select, input):focus-visible {
+    outline: 2px solid var(--mesa-cobre);
+    outline-offset: 3px;
+  }
+  #mesa-de-rotas button:disabled { opacity: .45; cursor: default; }
+  #mesa-de-rotas button:not(:disabled):hover { border-color: var(--mesa-suave); }
+  #mesa-de-rotas .mesa-vista { display: flex; align-items: center; gap: .35rem; }
+  #mesa-de-rotas .mesa-vista button[aria-pressed="true"] {
+    background: var(--mesa-texto);
+    color: var(--mesa-fundo);
+    border-color: var(--mesa-texto);
+    font-weight: 750;
+  }
+  #mesa-de-rotas .mesa-dupla { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #mesa-de-rotas .mesa-canal {
+    --mesa-sinal: var(--mesa-cobre);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    margin: 0;
+    background-color: var(--mesa-fundo);
+    border-top: 2px solid var(--mesa-sinal);
+  }
+  #mesa-de-rotas .mesa-canal + .mesa-canal { --mesa-sinal: var(--mesa-azul); border-left: 1px solid var(--mesa-linha); }
+  #mesa-de-rotas .mesa-canal header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: .75rem;
+    padding: .86rem clamp(.65rem, 2vw, 1.45rem);
+  }
+  #mesa-de-rotas .mesa-canal select { max-width: 17rem; font-size: .95rem; }
+  #mesa-de-rotas .mesa-status {
+    align-self: center;
+    width: fit-content;
+    max-width: 100%;
+    font-size: .74rem;
+    line-height: 1.2;
+    color: var(--mesa-suave);
+    padding: .31rem .44rem;
+    border: 1px solid var(--mesa-linha);
+    border-radius: .2rem;
+  }
+  #mesa-de-rotas .mesa-status[data-status="OK"] { color: var(--mesa-sinal); }
+  #mesa-de-rotas .mesa-status[data-status="CICLO_NEGATIVO"] { color: #ffb5a8; }
+  #mesa-de-rotas .mesa-status[data-status="RECUSA"] { color: #ffd597; }
+  #mesa-de-rotas .mesa-tabuleiro {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    margin: 0;
+    background: radial-gradient(ellipse at 50% 45%, #22394a 0%, #12212d 56%, #0d1720 100%);
+    border-block: 1px solid var(--mesa-linha);
+  }
+  #mesa-de-rotas canvas { display: block; width: 100%; height: clamp(14rem, 27vw, 23rem); }
+  #mesa-de-rotas .mesa-metricas {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+    padding: .78rem clamp(.65rem, 2vw, 1.45rem) .42rem;
+    gap: .55rem;
+  }
+  #mesa-de-rotas .mesa-metricas dt { font-size: .73rem; color: var(--mesa-suave); }
+  #mesa-de-rotas .mesa-metricas dd {
+    margin: .1rem 0 0;
+    font-size: clamp(1rem, 2vw, 1.45rem);
+    font-variant-numeric: tabular-nums;
+    font-weight: 680;
+    letter-spacing: -.03em;
+  }
+  #mesa-de-rotas .mesa-nota {
+    margin: 0;
+    padding: 0 clamp(.65rem, 2vw, 1.45rem) .7rem;
+    min-height: 2rem;
+    color: var(--mesa-suave);
+    font-size: .77rem;
+    line-height: 1.35;
+  }
+  #mesa-de-rotas .mesa-transporte {
+    display: grid;
+    grid-template-columns: auto minmax(7rem, 1fr) auto;
+    align-items: center;
+    gap: .55rem 1rem;
+    padding: .8rem clamp(.85rem, 2vw, 1.65rem);
+    background-color: var(--mesa-painel);
+    border-top: 1px solid var(--mesa-linha);
+  }
+  #mesa-de-rotas .mesa-acoes { display: flex; gap: .35rem; }
+  #mesa-de-rotas .mesa-acoes button[aria-label] { min-width: 2.55rem; }
+  #mesa-de-rotas #mesa-reproduzir {
+    color: #1f130c;
+    border-color: var(--mesa-cobre);
+    background-color: var(--mesa-cobre);
+    font-size: .85rem;
+    font-weight: 750;
+    min-width: 5.9rem;
+  }
+  #mesa-de-rotas input[type="range"] { width: 100%; accent-color: var(--mesa-cobre); margin: 0; min-height: 2.2rem; }
+  #mesa-de-rotas .mesa-passo { font-size: .77rem; color: var(--mesa-suave); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  #mesa-de-rotas .mesa-resumo {
+    margin: 0;
+    padding: .78rem clamp(.85rem, 2vw, 1.65rem);
+    color: var(--mesa-suave);
+    border-top: 1px solid var(--mesa-linha);
+    font-size: .83rem;
+    line-height: 1.45;
+  }
+  @media (max-width: 700px) {
+    #mesa-de-rotas .mesa-cabecalho { grid-template-columns: minmax(0, 1fr); gap: .9rem; }
+    #mesa-de-rotas .mesa-canal header { grid-template-columns: minmax(0, 1fr); gap: .45rem; align-content: start; }
+    #mesa-de-rotas .mesa-status { font-size: .67rem; min-height: 1.7rem; }
+    #mesa-de-rotas canvas { height: clamp(8rem, 32vw, 14rem); }
+    #mesa-de-rotas .mesa-metricas { gap: .35rem; }
+    #mesa-de-rotas .mesa-metricas dt { font-size: .64rem; }
+    #mesa-de-rotas .mesa-nota { font-size: .73rem; }
+    #mesa-de-rotas .mesa-transporte { grid-template-columns: minmax(6rem, 1fr) auto; }
+    #mesa-de-rotas .mesa-acoes { grid-column: 1 / -1; }
+  }
+  @media (max-width: 420px) {
+    #mesa-de-rotas { padding-inline: .68rem; }
+    #mesa-de-rotas .mesa-config { gap: .65rem; }
+    #mesa-de-rotas .mesa-canal select { font-size: .84rem; padding-inline: .25rem; }
+  }
+</style>
+<section id="mesa-de-rotas" aria-labelledby="mesa-titulo">
+  <div class="mesa-cabecalho">
+    <h2 id="mesa-titulo">Mesa de rotas</h2>
+    <p>Escolha dois algoritmos para o mesmo mapa. O controle de tempo avança os dois percursos em paralelo.</p>
+  </div>
+  <div class="mesa-palco">
+    <div class="mesa-config">
+      <label for="mesa-mapa">Mapa compartilhado<select id="mesa-mapa"></select></label>
+      <div class="mesa-vista" role="group" aria-label="Perspectiva dos dois mapas">
+        <button type="button" id="mesa-relevo" aria-pressed="true">Relevo</button>
+        <button type="button" id="mesa-planta" aria-pressed="false">Planta</button>
+      </div>
+    </div>
+    <div class="mesa-dupla">
+      <article class="mesa-canal" data-mesa-canal="a">
+        <header>
+          <label for="mesa-algoritmo-a">Algoritmo A<select id="mesa-algoritmo-a"></select></label>
+          <span class="mesa-status" data-mesa-status>—</span>
+        </header>
+        <figure class="mesa-tabuleiro">
+          <canvas id="mesa-quadro-a" role="img" aria-label="Labirinto do algoritmo A">Labirinto do algoritmo A.</canvas>
+        </figure>
+        <dl class="mesa-metricas">
+          <div><dt>Passos totais</dt><dd data-mesa-passos>—</dd></div>
+          <div><dt>Custo total</dt><dd data-mesa-custo>—</dd></div>
+          <div><dt>Custo até aqui</dt><dd data-mesa-acumulado>—</dd></div>
+        </dl>
+        <p class="mesa-nota" data-mesa-nota></p>
+      </article>
+      <article class="mesa-canal" data-mesa-canal="b">
+        <header>
+          <label for="mesa-algoritmo-b">Algoritmo B<select id="mesa-algoritmo-b"></select></label>
+          <span class="mesa-status" data-mesa-status>—</span>
+        </header>
+        <figure class="mesa-tabuleiro">
+          <canvas id="mesa-quadro-b" role="img" aria-label="Labirinto do algoritmo B">Labirinto do algoritmo B.</canvas>
+        </figure>
+        <dl class="mesa-metricas">
+          <div><dt>Passos totais</dt><dd data-mesa-passos>—</dd></div>
+          <div><dt>Custo total</dt><dd data-mesa-custo>—</dd></div>
+          <div><dt>Custo até aqui</dt><dd data-mesa-acumulado>—</dd></div>
+        </dl>
+        <p class="mesa-nota" data-mesa-nota></p>
+      </article>
+    </div>
+    <div class="mesa-transporte">
+      <div class="mesa-acoes" role="group" aria-label="Reprodução compartilhada">
+        <button type="button" id="mesa-reiniciar" aria-label="Reiniciar os dois percursos" title="Reiniciar">↺</button>
+        <button type="button" id="mesa-anterior" aria-label="Voltar um passo" title="Voltar um passo">‹</button>
+        <button type="button" id="mesa-reproduzir">Reproduzir</button>
+        <button type="button" id="mesa-proximo" aria-label="Avançar um passo" title="Avançar um passo">›</button>
+      </div>
+      <input id="mesa-tempo" type="range" min="0" max="0" value="0" aria-label="Passo compartilhado">
+      <output class="mesa-passo" for="mesa-tempo" id="mesa-passo" aria-live="off">Passo 0 de 0</output>
+    </div>
+    <p class="mesa-resumo" id="mesa-resumo" aria-live="polite"></p>
+  </div>
+</section>
