@@ -1,0 +1,36 @@
+{
+  "mapa": "m06_fonte",
+  "modelagem": "G_est",
+  "algoritmo": "BELLMAN_FORD",
+  "opcoes": {
+    "fonte_consumivel": false
+  },
+  "fonte": "(1,1)|-|{}",
+  "ciclo_encontrado": true,
+  "ciclo": [
+    "(3,6)|-|{}",
+    "(3,5)|-|{}",
+    "(3,6)|-|{}"
+  ],
+  "arcos": [
+    {
+      "origem": "(3,6)|-|{}",
+      "destino": "(3,5)|-|{}",
+      "peso": -2,
+      "movimento": "O"
+    },
+    {
+      "origem": "(3,5)|-|{}",
+      "destino": "(3,6)|-|{}",
+      "peso": 1,
+      "movimento": "L"
+    }
+  ],
+  "custo_ciclo": -1,
+  "afeta_alvo": true,
+  "correcao": {
+    "aplicada": false,
+    "descricao": null,
+    "custo_minimo_apos_correcao": null
+  }
+}

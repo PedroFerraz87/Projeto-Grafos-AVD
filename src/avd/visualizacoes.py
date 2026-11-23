@@ -4,6 +4,7 @@
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import pandas as pd
 
 COLUNAS = ["origem", "destino", "nota", "timestamp"]
@@ -17,6 +18,12 @@ def carregar_dados(caminho):
     )
 
     df["negativa"] = df["nota"] < 0
+
+    df["data"] = pd.to_datetime(df["timestamp"], unit="s", utc=True)
+
+    df["ano"] = df["data"].dt.year
+    df["mes"] = df["data"].dt.month
+    df["dia"] = df["data"].dt.day
 
     return df
 
@@ -112,6 +119,87 @@ def grafico_recebidas_negativas(df, pasta_saida):
     plt.close()
 
 
+#Gráfico 5
+
+
+def grafico_evolucao_mensal(df, pasta_saida):
+
+    avaliacoes_mes = (
+        df.set_index("data")
+        .resample("MS")
+        .size()
+    )
+
+    fig, ax = plt.subplots(figsize=(15, 6))
+
+    ax.plot(
+        avaliacoes_mes.index,
+        avaliacoes_mes.values,
+        marker="o",
+        markersize=3,
+        linewidth=1.5
+    )
+
+    ax.xaxis.set_major_locator(
+        mdates.MonthLocator(interval=3)
+    )
+
+    ax.xaxis.set_major_formatter(
+        mdates.DateFormatter("%m/%Y")
+    )
+
+    plt.setp(
+        ax.get_xticklabels(),
+        rotation=45,
+        ha="right"
+    )
+
+    ax.set_title("Evolução mensal das avaliações")
+    ax.set_xlabel("Mês/Ano")
+    ax.set_ylabel("Quantidade de avaliações")
+
+    ax.grid(axis="both", alpha=0.3)
+
+    plt.tight_layout()
+
+    plt.savefig(
+        pasta_saida / "05_evolucao_mensal.png",
+        dpi=150
+    )
+
+    plt.close()
+
+
+#Gráfico 6
+
+def grafico_boxplot_notas(df, pasta_saida):
+    negativas = df.loc[df["nota"] < 0, "nota"]
+    positivas = df.loc[df["nota"] > 0, "nota"]
+
+    plt.figure(figsize=(9, 5))
+
+    plt.boxplot(
+        [negativas, positivas],
+        tick_labels=["Negativas", "Positivas"],
+        patch_artist=True,
+        showmeans=True
+    )
+
+    plt.title("Distribuição das notas positivas e negativas")
+    plt.xlabel("Tipo de avaliação")
+    plt.ylabel("Nota")
+    plt.grid(axis="y", alpha=0.3)
+    plt.tight_layout()
+
+    plt.savefig(
+        pasta_saida / "06_boxplot_notas.png",
+        dpi=150
+    )
+
+    plt.close()
+
+
+
 
 def gerar_visualizacoes(
     caminho="data/dataset_parte2/soc-sign-bitcoinalpha.csv",
@@ -126,8 +214,10 @@ def gerar_visualizacoes(
     grafico_avaliacoes_usuario(df, pasta_saida)
     grafico_evolucao(df, pasta_saida)
     grafico_recebidas_negativas(df, pasta_saida)
+    grafico_evolucao_mensal(df, pasta_saida)
+    grafico_boxplot_notas(df, pasta_saida)
 
-    print("Quatro gráficos gerados em:", pasta_saida)
+    print("Seis gráficos gerados em:", pasta_saida)
 
 
 if __name__ == "__main__":

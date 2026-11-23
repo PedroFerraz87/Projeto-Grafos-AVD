@@ -1,0 +1,810 @@
+{
+  "mapa": "m1",
+  "algoritmo": "BELLMAN_FORD",
+  "modelagem": "G_est",
+  "opcoes": {
+    "fonte_consumivel": false,
+    "porta_como": "parede"
+  },
+  "grade": [
+    "###############################",
+    "####a####################c#####",
+    "####.########.>>>>.######+#####",
+    "####.########.####.######.#####",
+    "#S.......A....,,,,....B.....CG#",
+    "######+#.##.#######.#.#v###.###",
+    "########.##.#######.#.#v###.###",
+    "########.,,.#######b#+#v###.###",
+    "#######################..~..###",
+    "###############################"
+  ],
+  "inicio": "(4,1)|-|{}",
+  "fim": "ALVO",
+  "encontrou": true,
+  "status": "OK",
+  "observacao": "",
+  "passos": 52,
+  "custo": 42,
+  "percurso": [
+    {
+      "passo": 0,
+      "estado": "(4,1)|-|{}",
+      "linha": 4,
+      "coluna": 1,
+      "chaves": "",
+      "bonus": [],
+      "camada": "-",
+      "movimento": null,
+      "peso": 0,
+      "custo_acumulado": 0,
+      "evento": "inicio"
+    },
+    {
+      "passo": 1,
+      "estado": "(4,2)|-|{}",
+      "linha": 4,
+      "coluna": 2,
+      "chaves": "",
+      "bonus": [],
+      "camada": "-",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 1,
+      "evento": null
+    },
+    {
+      "passo": 2,
+      "estado": "(4,3)|-|{}",
+      "linha": 4,
+      "coluna": 3,
+      "chaves": "",
+      "bonus": [],
+      "camada": "-",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 2,
+      "evento": null
+    },
+    {
+      "passo": 3,
+      "estado": "(4,4)|-|{}",
+      "linha": 4,
+      "coluna": 4,
+      "chaves": "",
+      "bonus": [],
+      "camada": "-",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 3,
+      "evento": null
+    },
+    {
+      "passo": 4,
+      "estado": "(3,4)|-|{}",
+      "linha": 3,
+      "coluna": 4,
+      "chaves": "",
+      "bonus": [],
+      "camada": "-",
+      "movimento": "N",
+      "peso": 1,
+      "custo_acumulado": 4,
+      "evento": null
+    },
+    {
+      "passo": 5,
+      "estado": "(2,4)|-|{}",
+      "linha": 2,
+      "coluna": 4,
+      "chaves": "",
+      "bonus": [],
+      "camada": "-",
+      "movimento": "N",
+      "peso": 1,
+      "custo_acumulado": 5,
+      "evento": null
+    },
+    {
+      "passo": 6,
+      "estado": "(1,4)|a|{}",
+      "linha": 1,
+      "coluna": 4,
+      "chaves": "a",
+      "bonus": [],
+      "camada": "a",
+      "movimento": "N",
+      "peso": 1,
+      "custo_acumulado": 6,
+      "evento": "chave_a"
+    },
+    {
+      "passo": 7,
+      "estado": "(2,4)|a|{}",
+      "linha": 2,
+      "coluna": 4,
+      "chaves": "a",
+      "bonus": [],
+      "camada": "a",
+      "movimento": "S",
+      "peso": 1,
+      "custo_acumulado": 7,
+      "evento": null
+    },
+    {
+      "passo": 8,
+      "estado": "(3,4)|a|{}",
+      "linha": 3,
+      "coluna": 4,
+      "chaves": "a",
+      "bonus": [],
+      "camada": "a",
+      "movimento": "S",
+      "peso": 1,
+      "custo_acumulado": 8,
+      "evento": null
+    },
+    {
+      "passo": 9,
+      "estado": "(4,4)|a|{}",
+      "linha": 4,
+      "coluna": 4,
+      "chaves": "a",
+      "bonus": [],
+      "camada": "a",
+      "movimento": "S",
+      "peso": 1,
+      "custo_acumulado": 9,
+      "evento": null
+    },
+    {
+      "passo": 10,
+      "estado": "(4,5)|a|{}",
+      "linha": 4,
+      "coluna": 5,
+      "chaves": "a",
+      "bonus": [],
+      "camada": "a",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 10,
+      "evento": null
+    },
+    {
+      "passo": 11,
+      "estado": "(4,6)|a|{}",
+      "linha": 4,
+      "coluna": 6,
+      "chaves": "a",
+      "bonus": [],
+      "camada": "a",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 11,
+      "evento": null
+    },
+    {
+      "passo": 12,
+      "estado": "(5,6)|a|{1}",
+      "linha": 5,
+      "coluna": 6,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "S",
+      "peso": -4,
+      "custo_acumulado": 7,
+      "evento": "bonus"
+    },
+    {
+      "passo": 13,
+      "estado": "(4,6)|a|{1}",
+      "linha": 4,
+      "coluna": 6,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "N",
+      "peso": 1,
+      "custo_acumulado": 8,
+      "evento": null
+    },
+    {
+      "passo": 14,
+      "estado": "(4,7)|a|{1}",
+      "linha": 4,
+      "coluna": 7,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 9,
+      "evento": null
+    },
+    {
+      "passo": 15,
+      "estado": "(4,8)|a|{1}",
+      "linha": 4,
+      "coluna": 8,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 10,
+      "evento": null
+    },
+    {
+      "passo": 16,
+      "estado": "(4,9)|a|{1}",
+      "linha": 4,
+      "coluna": 9,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 11,
+      "evento": "porta_A"
+    },
+    {
+      "passo": 17,
+      "estado": "(4,10)|a|{1}",
+      "linha": 4,
+      "coluna": 10,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 12,
+      "evento": null
+    },
+    {
+      "passo": 18,
+      "estado": "(4,11)|a|{1}",
+      "linha": 4,
+      "coluna": 11,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 13,
+      "evento": null
+    },
+    {
+      "passo": 19,
+      "estado": "(4,12)|a|{1}",
+      "linha": 4,
+      "coluna": 12,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 14,
+      "evento": null
+    },
+    {
+      "passo": 20,
+      "estado": "(4,13)|a|{1}",
+      "linha": 4,
+      "coluna": 13,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 15,
+      "evento": null
+    },
+    {
+      "passo": 21,
+      "estado": "(3,13)|a|{1}",
+      "linha": 3,
+      "coluna": 13,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "N",
+      "peso": 1,
+      "custo_acumulado": 16,
+      "evento": null
+    },
+    {
+      "passo": 22,
+      "estado": "(2,13)|a|{1}",
+      "linha": 2,
+      "coluna": 13,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "N",
+      "peso": 1,
+      "custo_acumulado": 17,
+      "evento": null
+    },
+    {
+      "passo": 23,
+      "estado": "(2,14)|a|{1}",
+      "linha": 2,
+      "coluna": 14,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 18,
+      "evento": "esteira"
+    },
+    {
+      "passo": 24,
+      "estado": "(2,15)|a|{1}",
+      "linha": 2,
+      "coluna": 15,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 19,
+      "evento": "esteira"
+    },
+    {
+      "passo": 25,
+      "estado": "(2,16)|a|{1}",
+      "linha": 2,
+      "coluna": 16,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 20,
+      "evento": "esteira"
+    },
+    {
+      "passo": 26,
+      "estado": "(2,17)|a|{1}",
+      "linha": 2,
+      "coluna": 17,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 21,
+      "evento": "esteira"
+    },
+    {
+      "passo": 27,
+      "estado": "(2,18)|a|{1}",
+      "linha": 2,
+      "coluna": 18,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 22,
+      "evento": null
+    },
+    {
+      "passo": 28,
+      "estado": "(3,18)|a|{1}",
+      "linha": 3,
+      "coluna": 18,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "S",
+      "peso": 1,
+      "custo_acumulado": 23,
+      "evento": null
+    },
+    {
+      "passo": 29,
+      "estado": "(4,18)|a|{1}",
+      "linha": 4,
+      "coluna": 18,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "S",
+      "peso": 1,
+      "custo_acumulado": 24,
+      "evento": null
+    },
+    {
+      "passo": 30,
+      "estado": "(4,19)|a|{1}",
+      "linha": 4,
+      "coluna": 19,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 25,
+      "evento": null
+    },
+    {
+      "passo": 31,
+      "estado": "(5,19)|a|{1}",
+      "linha": 5,
+      "coluna": 19,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "S",
+      "peso": 1,
+      "custo_acumulado": 26,
+      "evento": null
+    },
+    {
+      "passo": 32,
+      "estado": "(6,19)|a|{1}",
+      "linha": 6,
+      "coluna": 19,
+      "chaves": "a",
+      "bonus": [
+        1
+      ],
+      "camada": "a",
+      "movimento": "S",
+      "peso": 1,
+      "custo_acumulado": 27,
+      "evento": null
+    },
+    {
+      "passo": 33,
+      "estado": "(7,19)|ab|{1}",
+      "linha": 7,
+      "coluna": 19,
+      "chaves": "ab",
+      "bonus": [
+        1
+      ],
+      "camada": "ab",
+      "movimento": "S",
+      "peso": 1,
+      "custo_acumulado": 28,
+      "evento": "chave_b"
+    },
+    {
+      "passo": 34,
+      "estado": "(6,19)|ab|{1}",
+      "linha": 6,
+      "coluna": 19,
+      "chaves": "ab",
+      "bonus": [
+        1
+      ],
+      "camada": "ab",
+      "movimento": "N",
+      "peso": 1,
+      "custo_acumulado": 29,
+      "evento": null
+    },
+    {
+      "passo": 35,
+      "estado": "(5,19)|ab|{1}",
+      "linha": 5,
+      "coluna": 19,
+      "chaves": "ab",
+      "bonus": [
+        1
+      ],
+      "camada": "ab",
+      "movimento": "N",
+      "peso": 1,
+      "custo_acumulado": 30,
+      "evento": null
+    },
+    {
+      "passo": 36,
+      "estado": "(4,19)|ab|{1}",
+      "linha": 4,
+      "coluna": 19,
+      "chaves": "ab",
+      "bonus": [
+        1
+      ],
+      "camada": "ab",
+      "movimento": "N",
+      "peso": 1,
+      "custo_acumulado": 31,
+      "evento": null
+    },
+    {
+      "passo": 37,
+      "estado": "(4,20)|ab|{1}",
+      "linha": 4,
+      "coluna": 20,
+      "chaves": "ab",
+      "bonus": [
+        1
+      ],
+      "camada": "ab",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 32,
+      "evento": null
+    },
+    {
+      "passo": 38,
+      "estado": "(4,21)|ab|{1}",
+      "linha": 4,
+      "coluna": 21,
+      "chaves": "ab",
+      "bonus": [
+        1
+      ],
+      "camada": "ab",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 33,
+      "evento": null
+    },
+    {
+      "passo": 39,
+      "estado": "(4,22)|ab|{1}",
+      "linha": 4,
+      "coluna": 22,
+      "chaves": "ab",
+      "bonus": [
+        1
+      ],
+      "camada": "ab",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 34,
+      "evento": "porta_B"
+    },
+    {
+      "passo": 40,
+      "estado": "(4,23)|ab|{1}",
+      "linha": 4,
+      "coluna": 23,
+      "chaves": "ab",
+      "bonus": [
+        1
+      ],
+      "camada": "ab",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 35,
+      "evento": null
+    },
+    {
+      "passo": 41,
+      "estado": "(4,24)|ab|{1}",
+      "linha": 4,
+      "coluna": 24,
+      "chaves": "ab",
+      "bonus": [
+        1
+      ],
+      "camada": "ab",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 36,
+      "evento": null
+    },
+    {
+      "passo": 42,
+      "estado": "(4,25)|ab|{1}",
+      "linha": 4,
+      "coluna": 25,
+      "chaves": "ab",
+      "bonus": [
+        1
+      ],
+      "camada": "ab",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 37,
+      "evento": null
+    },
+    {
+      "passo": 43,
+      "estado": "(3,25)|ab|{1}",
+      "linha": 3,
+      "coluna": 25,
+      "chaves": "ab",
+      "bonus": [
+        1
+      ],
+      "camada": "ab",
+      "movimento": "N",
+      "peso": 1,
+      "custo_acumulado": 38,
+      "evento": null
+    },
+    {
+      "passo": 44,
+      "estado": "(2,25)|ab|{0,1}",
+      "linha": 2,
+      "coluna": 25,
+      "chaves": "ab",
+      "bonus": [
+        0,
+        1
+      ],
+      "camada": "ab",
+      "movimento": "N",
+      "peso": -4,
+      "custo_acumulado": 34,
+      "evento": "bonus"
+    },
+    {
+      "passo": 45,
+      "estado": "(1,25)|abc|{0,1}",
+      "linha": 1,
+      "coluna": 25,
+      "chaves": "abc",
+      "bonus": [
+        0,
+        1
+      ],
+      "camada": "abc",
+      "movimento": "N",
+      "peso": 1,
+      "custo_acumulado": 35,
+      "evento": "chave_c"
+    },
+    {
+      "passo": 46,
+      "estado": "(2,25)|abc|{0,1}",
+      "linha": 2,
+      "coluna": 25,
+      "chaves": "abc",
+      "bonus": [
+        0,
+        1
+      ],
+      "camada": "abc",
+      "movimento": "S",
+      "peso": 1,
+      "custo_acumulado": 36,
+      "evento": null
+    },
+    {
+      "passo": 47,
+      "estado": "(3,25)|abc|{0,1}",
+      "linha": 3,
+      "coluna": 25,
+      "chaves": "abc",
+      "bonus": [
+        0,
+        1
+      ],
+      "camada": "abc",
+      "movimento": "S",
+      "peso": 1,
+      "custo_acumulado": 37,
+      "evento": null
+    },
+    {
+      "passo": 48,
+      "estado": "(4,25)|abc|{0,1}",
+      "linha": 4,
+      "coluna": 25,
+      "chaves": "abc",
+      "bonus": [
+        0,
+        1
+      ],
+      "camada": "abc",
+      "movimento": "S",
+      "peso": 1,
+      "custo_acumulado": 38,
+      "evento": null
+    },
+    {
+      "passo": 49,
+      "estado": "(4,26)|abc|{0,1}",
+      "linha": 4,
+      "coluna": 26,
+      "chaves": "abc",
+      "bonus": [
+        0,
+        1
+      ],
+      "camada": "abc",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 39,
+      "evento": null
+    },
+    {
+      "passo": 50,
+      "estado": "(4,27)|abc|{0,1}",
+      "linha": 4,
+      "coluna": 27,
+      "chaves": "abc",
+      "bonus": [
+        0,
+        1
+      ],
+      "camada": "abc",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 40,
+      "evento": null
+    },
+    {
+      "passo": 51,
+      "estado": "(4,28)|abc|{0,1}",
+      "linha": 4,
+      "coluna": 28,
+      "chaves": "abc",
+      "bonus": [
+        0,
+        1
+      ],
+      "camada": "abc",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 41,
+      "evento": "porta_C"
+    },
+    {
+      "passo": 52,
+      "estado": "(4,29)|abc|{0,1}",
+      "linha": 4,
+      "coluna": 29,
+      "chaves": "abc",
+      "bonus": [
+        0,
+        1
+      ],
+      "camada": "abc",
+      "movimento": "L",
+      "peso": 1,
+      "custo_acumulado": 42,
+      "evento": "chegada"
+    }
+  ]
+}
