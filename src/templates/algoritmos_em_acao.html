@@ -72,8 +72,8 @@
   @media(max-width:385px) { .controles { grid-template-columns:minmax(6rem,1fr) auto auto; } .controles button { padding-inline:.35rem; } }
 </style>
 </head>
-<body>
-<header class="top"><div><a class="projeto" href="labirinto_interativo.html">Grafos + AVD</a><a href="labirinto_interativo.html">Voltar ao laboratório</a></div></header>
+<body data-vista-mapa="exploracao">
+<header class="top"><div><a class="projeto" href="labirinto_interativo.html">Grafos + AVD</a><a href="bitcoin_alpha.html">Bitcoin Alpha</a></div></header>
 <main>
   <div class="intro">
     <h1>Quatro modos de buscar.</h1>
@@ -91,6 +91,7 @@
 </main>
 <script id="dados" type="application/json">__DADOS__</script>
 <script>
+  __MAPA_UPLOAD_JS__
   const parametros = new URLSearchParams(location.search);
   if (parametros.has("compacto")) document.body.classList.add("compacto");
   const dados = JSON.parse(document.getElementById("dados").textContent);
@@ -108,7 +109,7 @@
                    CICLO_NEGATIVO:"Ciclo negativo", SEM_SOLUCAO:"Sem solução" };
   const nomes = {m01_terreno:"m01 · Terreno", m02_uma_chave:"m02 · Uma chave", m03_tres_chaves:"m03 · Três chaves",
                  m04_esteiras:"m04 · Esteiras", m05_bonus:"m05 · Bônus", m06_fonte:"m06 · Fonte",
-                 m07_impossivel:"m07 · Sem saída", m08_grande:"m08 · Mapa grande"};
+                 m07_impossivel:"m07 · Sem saída", m08_grande:"m08 · Mapa grande", mapa_enviado:"Mapa enviado"};
   const paineis = configuracoes.map(([id,nome,metodo,cor]) => {
     const artigo = document.createElement("article");
     artigo.dataset.algoritmo = id;

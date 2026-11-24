@@ -101,6 +101,7 @@ def test_cli_interactive_gera_o_html_de_verdade(tmp_path):
     # [IA] OpenAI Codex – validação da exportação conjunta das quatro explorações.
     pagina = tmp_path / "algoritmos_em_acao.html"
     assert 'href="algoritmos_em_acao.html"' in html and pagina.is_file()
+    assert 'id="upload-arquivo"' in html and "__MAPA_UPLOAD_JS__" not in html
     exploracoes = dados_embutidos(pagina.read_text(encoding="utf-8"))
     assert exploracoes["mapa_inicial"] == "m03_tres_chaves"
     m03 = exploracoes["mapas"]["m03_tres_chaves"]["buscas"]
@@ -110,6 +111,24 @@ def test_cli_interactive_gera_o_html_de_verdade(tmp_path):
     m06 = exploracoes["mapas"]["m06_fonte"]["buscas"]
     assert m06["DIJKSTRA"]["status"] == "RECUSA" and not m06["DIJKSTRA"]["eventos"]
     assert m06["BELLMAN_FORD"]["status"] == "CICLO_NEGATIVO" and m06["BELLMAN_FORD"]["ciclo"]
+
+    # [IA] OpenAI Codex – conferência dos dados incorporados no painel Bitcoin Alpha.
+    bitcoin = tmp_path / "bitcoin_alpha.html"
+    assert 'href="bitcoin_alpha.html"' in html and bitcoin.is_file()
+    resultados = dados_embutidos(bitcoin.read_text(encoding="utf-8"))
+    assert resultados["dataset"]["vertices"] == 3783
+    assert len(resultados["medicoes"]) == resultados["benchmark"]["total_medicoes"] == 180
+    assert len(resultados["comparacao_caminhos"]) == 5
+    assert resultados["bellman_ford"][1]["custo_ciclo"] == -11
+    assert set(resultados["experimentos"]) == {"1", "3", "8"}
+    for fonte, experimento in resultados["experimentos"].items():
+        assert len(experimento["resultados"]) == 4
+        assert int(fonte) in experimento["grafo"]["vertices"]
+    assert 'id="exec-par"' in bitcoin.read_text(encoding="utf-8")
+    assert len(resultados["rede"]["vertices"]) == 3783
+    assert len(resultados["rede"]["arcos"]) == 24186
+    assert 'id="rede-canvas"' in bitcoin.read_text(encoding="utf-8")
+    assert len(resultados["figuras"]) == 12
 
 
 def test_geradores_de_figuras_t28(tmp_path):

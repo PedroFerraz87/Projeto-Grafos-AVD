@@ -1,3 +1,5 @@
+import csv
+from base64 import b64encode
 import json
 from pathlib import Path
 
@@ -127,7 +129,62 @@ def gerar_pagina_algoritmos(dados, caminho_saida):
     return _gravar_html(modelo.read_text(encoding="utf-8"), dados, caminho_saida)
 
 
+# [IA] OpenAI Codex – disponibilização offline dos resultados publicados da Parte 2.
+def gerar_pagina_bitcoin(pasta_resultados, caminho_saida):
+    from .avd.experimentos import topologia_publicada
+
+    pasta = Path(pasta_resultados)
+    dados = json.loads((pasta / "parte2_report.json").read_text(encoding="utf-8"))
+    with (pasta / "benchmark.csv").open(encoding="utf-8", newline="") as arquivo:
+        dados["medicoes"] = [
+            [linha["algoritmo"], int(linha["recorte"]), int(linha["fonte"]),
+             int(linha["execucao"]), float(linha["tempo_ms"])]
+            for linha in csv.DictReader(arquivo)
+        ]
+    modelo = MODELO.with_name("bitcoin_alpha.html")
+    execucoes = pasta / "execucoes_interativas.json"
+    if execucoes.is_file():
+        dados["experimentos"] = json.loads(execucoes.read_text(encoding="utf-8"))
+    dados["rede"] = topologia_publicada([item["fonte"] for item in dados["bfs"]])
+    # [IA] OpenAI Codex – galeria de figuras incorporadas à página para consulta offline.
+    figuras = {
+        "Exploratórios": {
+            "01_distribuicao_notas.png": "Distribuição das notas",
+            "02_avaliacoes_usuario.png": "Avaliações feitas por usuário",
+            "03_evolucao_temporal.png": "Avaliações por ano",
+            "04_recebidas_negativas.png": "Avaliações recebidas e negativas",
+            "05_evolucao_mensal.png": "Avaliações por mês",
+            "06_boxplot_notas.png": "Notas negativas e positivas",
+        },
+        "Comparação dos algoritmos": {
+            "comparacao_algoritmos/comparacao_tempos_execucao.png": "Tempo médio por algoritmo",
+            "comparacao_algoritmos/escalabilidade_algoritmos.png": "Escalabilidade dos algoritmos",
+            "comparacao_algoritmos/comparacao_quantidade_arcos.png": "Quantidade de arcos nos caminhos",
+            "comparacao_algoritmos/comparacao_custos_caminhos.png": "Custo dos caminhos por par",
+        },
+        "Explanatórios": {
+            "visualizacoes_explanatorias/proporcao_confianca_por_ano.png": "Sinal das avaliações por ano",
+            "visualizacoes_explanatorias/conectividade_desconfianca.png": "Avaliações recebidas por grupo",
+        },
+    }
+    dados["figuras"] = []
+    for grupo, arquivos in figuras.items():
+        for nome, titulo in arquivos.items():
+            imagem = pasta / "avd" / nome
+            if imagem.is_file():
+                dados["figuras"].append({"grupo": grupo, "nome": imagem.name, "titulo": titulo,
+                                         "png": b64encode(imagem.read_bytes()).decode("ascii")})
+    html = modelo.read_text(encoding="utf-8")
+    for marcador, nome in (("__BANCADA_HTML__", "bancada_bitcoin.html"), ("__BANCADA_JS__", "bancada_bitcoin.js")):
+        html = html.replace(marcador, modelo.with_name(nome).read_text(encoding="utf-8"))
+    return _gravar_html(html, dados, caminho_saida)
+
+
 def _gravar_html(html, dados, caminho_saida):
+    for marcador, nome in (("__MAPA_UPLOAD_JS__", "mapa_upload.js"), ("__ABAS_JS__", "abas.js"),
+                           ("__ABAS_CSS__", "abas.css"), ("__REDE_BITCOIN_JS__", "rede_bitcoin.js")):
+        if marcador in html:
+            html = html.replace(marcador, MODELO.with_name(nome).read_text(encoding="utf-8"))
     texto = json.dumps(dados, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     caminho_saida = Path(caminho_saida)
     caminho_saida.parent.mkdir(parents=True, exist_ok=True)

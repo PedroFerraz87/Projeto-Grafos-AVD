@@ -1,0 +1,414 @@
+<!doctype html>
+<!-- [IA] OpenAI Codex – interface interativa sobre os experimentos e medições publicados da Parte 2. -->
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Explore as medições, buscas e caminhos dos algoritmos no Bitcoin Alpha.">
+<title>Bitcoin Alpha | Grafos + AVD</title>
+<style>
+  :root{color-scheme:light;--paper:#f1eee4;--ink:#192631;--muted:#4e5b61;--line:#b9b9ac;--blue:#123eaa;--panel:#faf8ef;--heading:"Bahnschrift","Segoe UI",system-ui,sans-serif;font-family:"Segoe UI",system-ui,sans-serif;background:var(--paper);color:var(--ink)}
+  *{box-sizing:border-box}
+  body{margin:0}
+  main,.bar>div{width:min(93%,1280px);margin:auto}
+  h1,h2,h3,p,dl{margin:0}
+  h1,h2,h3{font-family:var(--heading)}
+  a{color:inherit;text-underline-offset:.22em}
+  button,select,input{font:inherit;color:inherit}
+  button,select,input[type=range]{cursor:pointer}
+  :focus-visible{outline:2px solid var(--blue);outline-offset:4px}
+  .bar{border-bottom:1px solid var(--blue)}
+  .bar>div{min-height:50px;display:flex;align-items:center;justify-content:space-between;gap:.75rem}
+  .brand{font-weight:780;text-decoration:none;white-space:nowrap}
+  nav{display:flex;flex-wrap:wrap;gap:.5rem 1.3rem;font:.83rem Consolas,monospace}
+  .hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);gap:.7rem 1.5rem;align-items:end;padding:.9rem 0 .72rem;border-bottom:1px solid var(--blue)}
+  h1{font-size:clamp(2.55rem,4.2vw,4.55rem);font-weight:750;line-height:.89;letter-spacing:-.065em}
+  .hero p{font: .98rem/1.55 Consolas,monospace;max-width:42ch;color:var(--muted)}
+  .dados{display:flex;flex-wrap:wrap;gap:.45rem 1.5rem;margin:0;padding:.56rem 0;border-bottom:1px solid var(--line)}
+  .dados div{display:flex;align-items:baseline;gap:.5rem}
+  .dados dt{font-size:.84rem;color:var(--muted)}
+  .dados dd{order:-1;margin:0;font-size:1.45rem;font-weight:750;font-variant-numeric:tabular-nums}
+  section{padding:clamp(.8rem,1.4vw,1.4rem) 0;border-bottom:1px solid var(--line);scroll-margin-top:1rem}
+  h2{font-size:clamp(1.7rem,3vw,2.9rem);line-height:.98;font-weight:730;letter-spacing:-.055em}
+  h3{font-size:1.25rem;letter-spacing:-.025em}
+  .section-head{display:grid;grid-template-columns:1fr minmax(0,.68fr);gap:1rem;align-items:end;margin-bottom:1.1rem}
+  .section-head p,.nota{color:var(--muted);font-size:.86rem;line-height:1.5}
+  .control{display:flex;align-items:end;flex-wrap:wrap;gap:.65rem 1rem;padding:.75rem 1rem;background:#222724;color:#fff}
+  .control label{display:grid;gap:.22rem;font-size:.75rem}
+  .control select,.control button{min-height:2.3rem;padding:.3rem .5rem;background:#303631;border:1px solid #8d988e;border-radius:0;color:inherit;font-size:.87rem}
+  .control output{margin-left:auto;font:.79rem/1.45 Consolas,monospace}
+  .control input{min-width:8rem;width:100%;accent-color:#dbe3ae}
+  .control .cursor{flex:1}
+  .control :focus-visible{outline-color:#dbe3ae}
+  .control button.primary{background:#dbe3ae;color:#242c20;border-color:#dbe3ae;font-weight:740}
+  .sheet{border:1px solid var(--line);background:var(--panel)}
+  .chart{padding:.9rem 1rem}
+  .dot-row,.axis-row{display:grid;grid-template-columns:minmax(5.4rem,9rem) minmax(0,1fr) minmax(4.2rem,7rem);gap:.75rem;align-items:center}
+  .dot-row{padding:.54rem 0;border-bottom:1px solid #dedccf;min-height:3.15rem;font-size:.82rem}
+  .dot-row>strong,.dot-row>output{overflow-wrap:anywhere}
+  .dot-row>output{text-align:right;font: .83rem Consolas,monospace}
+  .scale{height:2rem;position:relative;background:#efeee5;border:1px solid #dedccf}
+  .sign,.tick{position:absolute;left:var(--x);transform:translateX(-50%)}
+  .tick{height:100%;top:0;border-left:1px solid #cccbbc}
+  .sign{top:calc(50% + var(--dy,0px));translate:0 -50%;width:.48rem;height:.48rem;border:1px solid var(--dot);border-radius:50%;background:var(--panel);padding:0}
+  .sign.mean{width:.65rem;height:.65rem;border-radius:0;background:var(--dot);border:1px solid var(--panel);z-index:1}
+  .axis-row{padding:.38rem 0 .2rem;font:.71rem Consolas,monospace;color:var(--muted)}
+  .axis{height:1.1rem;position:relative}
+  .axis span{position:absolute;left:var(--x);transform:translateX(-50%);white-space:nowrap}
+  .axis span:first-child{transform:none}
+  .axis span:last-child{transform:translateX(-100%)}
+  .chart-note{min-height:1.3rem;font:.76rem/1.45 Consolas,monospace;color:var(--muted);margin:.2rem 0}
+  details{padding:.75rem 1rem;border-top:1px solid var(--line);font-size:.83rem}
+  summary{cursor:pointer;font-weight:660}
+  table{width:100%;border-collapse:collapse;margin-top:.65rem;font-variant-numeric:tabular-nums;text-align:left}
+  th,td{padding:.45rem .35rem;border-bottom:1px solid var(--line)}
+  td:nth-child(n+2),th:nth-child(n+2){text-align:right}
+  .scroll{overflow:auto}
+  .two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .two article,.single{min-width:0;padding:1rem 1rem 1.25rem}
+  .two article+article{border-left:1px solid var(--line)}
+  .article-head{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:.25rem .6rem}
+  .article-head output{font:.78rem/1.35 Consolas,monospace;color:var(--muted)}
+  .route{display:flex;gap:0;align-items:center;list-style:none;padding:.6rem .1rem;margin:.6rem 0 0;overflow:auto}
+  .node{display:grid;place-items:center;min-width:2.4rem;aspect-ratio:1;border:1px solid #7b88aa;padding:.16rem;white-space:nowrap;font:700 .75rem Consolas,monospace;background:#eef1fa}
+  .node.future{background:#f0ede2;color:var(--muted);border-color:var(--line)}
+  .node.current{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .edge{display:grid;place-items:center;min-width:1.25rem;flex:1;align-self:stretch;font: .72rem Consolas,monospace;color:var(--muted);text-align:center;white-space:nowrap}
+  .edge span{align-self:end}
+  .edge b{font-weight:500}
+  .route.animada .edge{min-width:.75rem}
+  #bfs-rota .node.current{background:#00647f;border-color:#00647f}
+  #di-rota .node.current{background:#aa4226;border-color:#aa4226}
+  #bfs-niveis{--tinta:#00647f}
+  .galeria{margin:0;padding:.4rem;background:var(--panel);border:1px solid var(--line)}
+  .galeria img{display:block;width:100%;height:auto}
+  .galeria figcaption{display:flex;justify-content:space-between;gap:.6rem;margin:.25rem .45rem .15rem;font:.78rem/1.45 Consolas,monospace;color:var(--muted)}
+  #escolher-figura{max-width:min(28rem,74vw)}
+  .nota{margin-top:.6rem}
+  .bars{display:grid;gap:.55rem;margin-top:1rem}
+  .bar-row{display:grid;grid-template-columns:6rem 1fr auto;gap:.5rem;align-items:center;font:.79rem Consolas,monospace}
+  .bar-row .bar-track{height:.76rem;background:#e7e6db}
+  .bar-track span{display:block;width:var(--fill);height:100%;background:var(--tinta,var(--blue))}
+  .single .route{max-width:28rem}
+  footer{width:min(93%,1280px);margin:auto;padding:1.2rem 0 2rem;font:.82rem Consolas,monospace}
+  @media(max-width:680px){.hero,.section-head,.two{grid-template-columns:minmax(0,1fr)}.two article+article{border-left:0;border-top:1px solid var(--line)}.control output{margin-left:0}.chart{padding:.7rem}.axis-row,.dot-row{grid-template-columns:5.1rem minmax(0,1fr) 3.5rem;gap:.35rem}.dot-row{font-size:.73rem}.dot-row>output{font-size:.74rem}.axis-row span:nth-child(even){display:none}.axis-row .axis span:last-child{display:block}.control .cursor{flex-basis:60%}}
+  __ABAS_CSS__
+</style>
+</head>
+<body>
+<header class="bar"><div><a class="brand" href="labirinto_interativo.html">Grafos + AVD</a><nav aria-label="Navegação"><a href="labirinto_interativo.html#enviar-mapa">Enviar labirinto</a></nav></div></header>
+<main>
+  <div class="hero"><h1>Bitcoin Alpha.</h1><p>Explore os experimentos do projeto em uma rede de avaliações entre usuários. Cada avaliação é um arco dirigido com uma nota de confiança.</p></div>
+  <dl class="dados"><div><dt>usuários</dt><dd id="usuarios"></dd></div><div><dt>avaliações</dt><dd id="avaliacoes"></dd></div><div><dt>negativas</dt><dd id="negativas"></dd></div></dl>
+
+  <div role="tablist" aria-label="Visualizações da Parte 2" class="abas" data-abas>
+    <button type="button" role="tab" id="aba-grafo" aria-controls="tab-grafo" data-painel="tab-grafo">Grafo e execuções</button>
+    <button type="button" role="tab" id="aba-tempos" aria-controls="tab-tempos" data-painel="tab-tempos">Desempenho</button>
+    <button type="button" role="tab" id="aba-caminhos" aria-controls="tab-caminhos" data-painel="tab-caminhos">Caminhos</button>
+    <button type="button" role="tab" id="aba-buscas" aria-controls="tab-buscas" data-painel="tab-buscas">Buscas e ciclos</button>
+    <button type="button" role="tab" id="aba-figuras" aria-controls="tab-figuras" data-painel="tab-figuras">Gráficos</button>
+    <button type="button" role="tab" id="aba-metodo" aria-controls="tab-metodo" data-painel="tab-metodo">Método</button>
+  </div>
+
+  __BANCADA_HTML__
+
+  <div id="tab-tempos" role="tabpanel" aria-labelledby="aba-tempos">
+  <section id="benchmark" aria-labelledby="titulo-tempos">
+    <div class="section-head"><h2 id="titulo-tempos">Tempos de execução.</h2><p>Compare as cinco medições de cada algoritmo no mesmo recorte e com a mesma fonte. Círculos são execuções e quadrados indicam médias.</p></div>
+    <div class="control">
+      <label>Recorte<select id="recorte"></select></label><label>Usuário de origem<select id="fonte-bench"></select></label>
+      <output id="dimensoes"></output>
+    </div>
+    <div class="sheet">
+      <div class="chart"><div id="grafico" aria-label="Tempos dos quatro algoritmos em escala logarítmica"></div><div class="axis-row"><span>Tempo (ms)</span><div class="axis" id="eixo"></div><span>Média (ms)</span></div><p class="chart-note" id="medicao-ativa" aria-live="polite">Foque ou selecione um ponto para ver o valor.</p></div>
+      <details><summary>Ver execuções e estatísticas</summary><div class="scroll"><table><thead><tr><th>Algoritmo</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>Média</th><th>Mediana</th><th>Desvio amostral</th><th>Mín.</th><th>Máx.</th></tr></thead><tbody id="valores"></tbody></table></div></details>
+      <details><summary>Comparar os três recortes por algoritmo</summary><p class="nota">Média das execuções registradas em cada recorte, considerando as fontes escolhidas para aquele tamanho.</p><p class="nota"><label>Algoritmo <select id="escala-alg"></select></label></p><div class="bars" id="escala-barras"></div></details>
+    </div>
+    <p class="nota">A escala logarítmica permite ler tempos com ordens de grandeza diferentes. As fontes disponíveis mudam entre os recortes.</p>
+  </section>
+  </div>
+
+  <div id="tab-caminhos" role="tabpanel" aria-labelledby="aba-caminhos">
+  <section id="caminhos" aria-labelledby="titulo-caminhos">
+    <div class="section-head"><h2 id="titulo-caminhos">Dois caminhos.</h2><p>A BFS minimiza a quantidade de arcos. Dijkstra minimiza o custo com a regra <code>10 − nota</code>. Os dois caminhos são avaliados com essa mesma transformação.</p></div>
+    <div class="control"><label>Origem → destino<select id="par"></select></label><button id="rodar" class="primary" type="button">Reproduzir</button><label class="cursor">Passo compartilhado<input id="passo" type="range" min="0" value="0"></label><output id="posicao"></output></div>
+    <div class="two sheet">
+      <article><div class="article-head"><h3>BFS</h3><output id="bfs-total"></output></div><ol class="route animada" id="bfs-rota" aria-label="Caminho encontrado pela BFS"></ol></article>
+      <article><div class="article-head"><h3>Dijkstra</h3><output id="di-total"></output></div><ol class="route animada" id="di-rota" aria-label="Caminho encontrado por Dijkstra"></ol></article>
+    </div>
+    <p class="nota">Cada nó mostra o ID de um usuário da rede. A linha do tempo percorre os caminhos calculados.</p>
+  </section>
+  </div>
+
+  <div id="tab-buscas" role="tabpanel" aria-labelledby="aba-buscas">
+  <section id="buscas" aria-labelledby="titulo-buscas">
+    <div class="section-head"><h2 id="titulo-buscas">Como a busca se espalha.</h2><p>Nos casos da T25, a BFS agrupa os usuários por distância da origem. A DFS classifica os arcos que examina.</p></div>
+    <div class="control"><label>Usuário de origem<select id="fonte-busca"></select></label><output>Grafo completo</output></div>
+    <div class="two sheet">
+      <article><div class="article-head"><h3>Níveis da BFS</h3><output id="bfs-alcance"></output></div><div class="bars" id="bfs-niveis"></div></article>
+      <article><div class="article-head"><h3>Arcos da DFS</h3><output id="dfs-alcance"></output></div><div class="bars" id="dfs-classes" style="--tinta:#8743aa"></div></article>
+    </div>
+  </section>
+
+  <section id="bellman" aria-labelledby="titulo-bellman">
+    <div class="section-head"><h2 id="titulo-bellman">Bellman-Ford.</h2><p>Alterne entre o caminho encontrado no subgrafo do experimento e o ciclo negativo identificado na rede original.</p></div>
+    <div class="control"><label>Caso<select id="caso"><option value="0">Subgrafo sem ciclo negativo</option><option value="1">Grafo original com ciclo negativo</option></select></label></div>
+    <article class="sheet single"><div class="article-head"><h3 id="bf-titulo"></h3><output id="bf-custo"></output></div><ol id="bf-rota" class="route" aria-label="Sequência de usuários do caso selecionado"></ol><p id="bf-nota" class="nota"></p></article>
+  </section>
+  </div>
+  <div id="tab-figuras" role="tabpanel" aria-labelledby="aba-figuras">
+    <section aria-labelledby="titulo-figuras">
+      <div class="section-head"><h2 id="titulo-figuras">Gráficos da Parte 2.</h2><p>Explore as figuras sobre avaliações, caminhos e desempenho. Escolha um gráfico para ver ou baixar.</p></div>
+      <div class="control"><label>Gráfico<select id="escolher-figura"></select></label></div>
+      <figure class="galeria" id="galeria-figura">
+        <img id="figura-bitcoin" alt="">
+        <figcaption><span id="figura-legenda"></span><a id="baixar-figura">Baixar PNG</a></figcaption>
+      </figure>
+      <p class="nota" id="figuras-ausentes" hidden>Gere os PNGs da Parte 2 e exporte a página com --interactive para carregar as figuras.</p>
+    </section>
+  </div>
+</main>
+<footer>Fonte dos resultados: <code>parte2_report.json</code> e <code>benchmark.csv</code>.</footer>
+<script id="dados" type="application/json">__DADOS__</script>
+<script>
+  __ABAS_JS__
+  const dados = JSON.parse(document.getElementById("dados").textContent);
+  const $ = id => document.getElementById(id);
+  const inteiro = new Intl.NumberFormat("pt-BR");
+  const decimal = new Intl.NumberFormat("pt-BR",{maximumFractionDigits:3});
+  const formatar = n => decimal.format(n);
+  const rotulos = {BFS:"BFS",DFS:"DFS",DIJKSTRA:"Dijkstra",BELLMAN_FORD:"Bellman-Ford"};
+  const tintas = {BFS:"#00647f",DFS:"#8743aa",DIJKSTRA:"#aa4226",BELLMAN_FORD:"#246046"};
+  document.querySelector(".dados").querySelectorAll("dd").forEach((dd,i) => {
+    dd.textContent = inteiro.format([dados.dataset.vertices,dados.dataset.arcos,dados.dataset.arcos_negativos][i]);
+  });
+
+  const ordens = dados.medicoes.map(([, , , ,tempo]) => Math.log10(tempo));
+  const menor = Math.floor(Math.min(...ordens));
+  const maior = Math.ceil(Math.max(...ordens));
+  const posicao = tempo => 100 * (Math.log10(tempo)-menor)/(maior-menor);
+  const marcas = Array.from({length:maior-menor+1},(_,i)=>10**(menor+i));
+  const recorte = $("recorte"), fonteBench = $("fonte-bench");
+  dados.dataset.recortes.forEach(d => recorte.add(new Option(d.recorte+"%",d.recorte)));
+  recorte.value = "100";
+  for (const marca of marcas) {
+    const el = document.createElement("span");
+    el.style.setProperty("--x",posicao(marca)+"%");
+    el.textContent = formatar(marca);
+    $("eixo").append(el);
+  }
+
+  function inserirPonto(trilha,valor,rotulo,execucao) {
+    const ponto = document.createElement("button");
+    ponto.type = "button";
+    ponto.className = execucao ? "sign" : "sign mean";
+    ponto.style.setProperty("--x",posicao(valor)+"%");
+    if (execucao) ponto.style.setProperty("--dy",((execucao-3)*5)+"px");
+    ponto.setAttribute("aria-label",rotulo);
+    ponto.title = rotulo;
+    const avisar = () => $("medicao-ativa").textContent = rotulo;
+    ponto.addEventListener("focus",avisar);
+    ponto.addEventListener("click",avisar);
+    ponto.addEventListener("pointerenter",avisar);
+    trilha.append(ponto);
+  }
+
+  function desenharTempos() {
+    const fontes = dados.dataset.recortes.find(d => d.recorte === Number(recorte.value));
+    $("dimensoes").textContent = inteiro.format(fontes.vertices)+" usuários · "+inteiro.format(fontes.arcos)+" arcos";
+    $("medicao-ativa").textContent = "Foque ou selecione um ponto para ver o valor.";
+    $("grafico").replaceChildren();
+    $("valores").replaceChildren();
+    for (const [algoritmo,nome] of Object.entries(rotulos)) {
+      const medic = dados.medicoes.filter(([alg,r,f])=> alg===algoritmo && r===fontes.recorte && f===Number(fonteBench.value))
+        .sort((a,b)=>a[3]-b[3]);
+      const resumo = dados.benchmark.resumo.find(d => d.algoritmo===algoritmo && d.recorte===fontes.recorte && d.fonte===Number(fonteBench.value));
+      const linha = document.createElement("div");
+      linha.className = "dot-row";
+      linha.innerHTML = '<strong></strong><div class="scale"></div><output></output>';
+      linha.querySelector("strong").textContent = nome;
+      const trilha = linha.querySelector(".scale");
+      trilha.style.setProperty("--dot",tintas[algoritmo]);
+      marcas.forEach(valor => {
+        const marca = document.createElement("span");
+        marca.className = "tick";
+        marca.style.setProperty("--x",posicao(valor)+"%");
+        trilha.append(marca);
+      });
+      for (const [, , ,numero,tempo] of medic) inserirPonto(trilha,tempo,nome+" · execução "+numero+" · "+formatar(tempo)+" ms",numero);
+      if (resumo) inserirPonto(trilha,resumo.tempo_medio_ms,nome+" · média · "+formatar(resumo.tempo_medio_ms)+" ms");
+      linha.querySelector("output").textContent = resumo ? formatar(resumo.tempo_medio_ms) : "—";
+      $("grafico").append(linha);
+      const tabela = document.createElement("tr");
+      const cabecalho = document.createElement("th");
+      cabecalho.scope = "row";
+      cabecalho.textContent = nome;
+      tabela.append(cabecalho);
+      for (const n of [1,2,3,4,5]) {
+        const celula = tabela.insertCell();
+        const valor = medic.find(l => l[3]===n);
+        celula.textContent = valor ? formatar(valor[4]) : "—";
+      }
+      tabela.insertCell().textContent = linha.querySelector("output").textContent;
+      const tempos = medic.map(l=>l[4]).sort((a,b)=>a-b);
+      for (const valor of [tempos[2],resumo?.tempo_desvio_ms,tempos[0],tempos.at(-1)]) {
+        tabela.insertCell().textContent = valor == null ? "—" : formatar(valor);
+      }
+      $("valores").append(tabela);
+    }
+  }
+
+  function trocarRecorte() {
+    const anterior = fonteBench.value;
+    const fontes = [...new Set(dados.medicoes.filter(([,r])=>r===Number(recorte.value)).map(([, ,f])=>f))].sort((a,b)=>a-b);
+    fonteBench.replaceChildren(...fontes.map(f=>new Option(f,f)));
+    if (fontes.includes(Number(anterior))) fonteBench.value = anterior;
+    desenharTempos();
+  }
+  recorte.addEventListener("change",trocarRecorte);
+  fonteBench.addEventListener("change",desenharTempos);
+  trocarRecorte();
+
+  function rota(destino,usuarios,passo,pesos=[]) {
+    destino.replaceChildren();
+    usuarios.forEach((id,i)=>{
+      if (i) {
+        const ligacao = document.createElement("li");
+        ligacao.className = "edge";
+        ligacao.setAttribute("aria-hidden","true");
+        const peso = document.createElement("span");
+        const seta = document.createElement("b");
+        peso.textContent = pesos[i-1] ?? "";
+        seta.textContent = "→";
+        ligacao.append(peso,seta);
+        destino.append(ligacao);
+      }
+      const no = document.createElement("li");
+      no.className = "node" + (i===passo ? " current" : i>passo ? " future" : "");
+      if (i===passo) no.setAttribute("aria-current","step");
+      no.textContent = id;
+      destino.append(no);
+    });
+  }
+
+  const par = $("par"), passo = $("passo"), rodar = $("rodar");
+  let relogio;
+  dados.comparacao_caminhos.forEach((d,i)=>par.add(new Option(d.origem+" → "+d.destino,i)));
+  function pausar() {clearInterval(relogio); relogio=undefined; rodar.textContent="Reproduzir";}
+  function mostrarRotas(valor) {
+    const d = dados.comparacao_caminhos[Number(par.value)];
+    for (const [prefixo,alg] of [["bfs","bfs"],["di","dijkstra"]]) {
+      const caminho = d["caminho_"+alg], passos = d["passos_"+alg], custo = d["custo_transformado_"+alg];
+      rota($(prefixo+"-rota"),caminho,Math.min(valor,passos));
+      $(prefixo+"-total").textContent = passos+" arcos · custo "+custo;
+    }
+    passo.value = valor;
+    $("posicao").textContent = "Passo "+valor+" de "+passo.max;
+  }
+  function trocarPar() {
+    pausar();
+    const d = dados.comparacao_caminhos[Number(par.value)];
+    passo.max = Math.max(d.passos_bfs,d.passos_dijkstra);
+    mostrarRotas(0);
+  }
+  par.addEventListener("change",trocarPar);
+  passo.addEventListener("input",()=>{pausar();mostrarRotas(Number(passo.value));});
+  rodar.addEventListener("click",()=>{
+    if (relogio) {pausar();return;}
+    if (Number(passo.value)===Number(passo.max)) mostrarRotas(0);
+    rodar.textContent = "Pausar";
+    relogio = setInterval(()=>{
+      mostrarRotas(Number(passo.value)+1);
+      if (passo.value===passo.max) pausar();
+    },460);
+  });
+  trocarPar();
+
+  function preencherBarras(destino,linhas,formatarValor = inteiro.format) {
+    destino.replaceChildren();
+    const maiorValor = Math.max(...linhas.map(([,valor])=>valor));
+    for (const [rotulo,valor] of linhas) {
+      const row = document.createElement("div");
+      row.className = "bar-row";
+      row.innerHTML = '<span></span><div class="bar-track" aria-hidden="true"><span></span></div><strong></strong>';
+      row.firstElementChild.textContent = rotulo;
+      row.querySelector(".bar-track").style.setProperty("--fill",(maiorValor ? valor/maiorValor*100 : 0)+"%");
+      row.lastElementChild.textContent = formatarValor(valor);
+      destino.append(row);
+    }
+  }
+
+  const escalaAlg = $("escala-alg");
+  for (const [id,nome] of Object.entries(rotulos)) escalaAlg.add(new Option(nome,id));
+  function mostrarEscala() {
+    const algoritmo = escalaAlg.value;
+    const linhas = dados.dataset.recortes.map(({recorte})=>{
+      const tempos = dados.medicoes.filter(([alg,r])=>alg===algoritmo && r===recorte).map(l=>l[4]);
+      return [recorte+"%",tempos.reduce((total,t)=>total+t,0)/tempos.length];
+    });
+    $("escala-barras").style.setProperty("--tinta",tintas[algoritmo]);
+    preencherBarras($("escala-barras"),linhas,valor=>formatar(valor)+" ms");
+  }
+  escalaAlg.addEventListener("change",mostrarEscala);
+  mostrarEscala();
+
+  const fonteBusca = $("fonte-busca");
+  for (const caso of dados.bfs) fonteBusca.add(new Option(caso.fonte,caso.fonte));
+  function mostrarBuscas() {
+    const fonte = Number(fonteBusca.value);
+    const bfs = dados.bfs.find(d=>d.fonte===fonte), dfs = dados.dfs.find(d=>d.fonte===fonte);
+    $("bfs-alcance").textContent = inteiro.format(bfs.alcancados)+" usuários alcançados";
+    $("dfs-alcance").textContent = inteiro.format(dfs.alcancados)+" usuários alcançados";
+    preencherBarras($("bfs-niveis"),Object.entries(bfs.niveis).map(([i,valor])=>["Nível "+i,valor]));
+    preencherBarras($("dfs-classes"),[["Árvore",dfs.classes.arvore],["Retorno",dfs.classes.retorno],["Avanço",dfs.classes.avanco],["Cruzamento",dfs.classes.cruzamento]]);
+  }
+  fonteBusca.addEventListener("change",mostrarBuscas);
+  mostrarBuscas();
+
+  const caso = $("caso");
+  function mostrarBellman() {
+    const d = dados.bellman_ford[Number(caso.value)];
+    const temCiclo = Boolean(d.ciclo.length);
+    const caminho = temCiclo ? d.ciclo : d.caminho_exemplo;
+    $("bf-titulo").textContent = temCiclo ? "Ciclo encontrado" : "Caminho no subgrafo";
+    $("bf-custo").textContent = "Custo com notas originais: "+formatar(temCiclo ? d.custo_ciclo : d.custo_exemplo);
+    $("bf-nota").textContent = temCiclo ? "Fonte da execução: "+d.fonte+". O ciclo afeta "+inteiro.format(d.afetados)+" usuários alcançáveis."
+      : d.criterio_subgrafo+" O subgrafo tem "+inteiro.format(d.arcos_negativos)+" arcos de peso negativo.";
+    const pesos = temCiclo ? d.arcos_do_ciclo.map(a=>a.peso) : (caminho.length === 2 ? [d.custo_exemplo] : []);
+    rota($("bf-rota"),caminho,caminho.length-1,pesos);
+  }
+  caso.addEventListener("change",mostrarBellman);
+  mostrarBellman();
+  const galeria = $("escolher-figura");
+  const gruposFiguras = new Map();
+  dados.figuras.forEach((figura,i)=>{
+    if (!gruposFiguras.has(figura.grupo)) {
+      const novo = document.createElement("optgroup");
+      novo.label = figura.grupo;
+      gruposFiguras.set(figura.grupo,novo);
+      galeria.append(novo);
+    }
+    gruposFiguras.get(figura.grupo).append(new Option(figura.titulo,i));
+  });
+  function mostrarFigura() {
+    const figura = dados.figuras[Number(galeria.value)];
+    if (!figura) {
+      galeria.disabled = true;
+      $("galeria-figura").hidden = true;
+      $("figuras-ausentes").hidden = false;
+      return;
+    }
+    const imagem = "data:image/png;base64," + figura.png;
+    $("figura-bitcoin").src = imagem;
+    $("figura-bitcoin").alt = figura.titulo;
+    $("figura-legenda").textContent = figura.grupo + " · " + figura.titulo;
+    $("baixar-figura").href = imagem;
+    $("baixar-figura").download = figura.nome;
+  }
+  galeria.addEventListener("change",mostrarFigura);
+  mostrarFigura();
+  __REDE_BITCOIN_JS__
+  __BANCADA_JS__
+</script>
+</body>
+</html>

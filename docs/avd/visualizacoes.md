@@ -16,7 +16,7 @@
 
 **Gráfico:** `03_evolucao_temporal.png`
 
-**Observações:** O gráfico mostra que a grande maioria das avaliações foi realizada em 2011, ano que apresentou o maior volume de atividade. Nos anos seguintes, houve uma redução drástica e contínua na quantidade de avaliações registradas. Isso mostra ao menos que o engajamento dos usuários com as avaliações diminui, mas não necessariamente quer dizer que a quantidade de usuários na plataforma diminui.
+**Observações:** O maior volume anual foi registrado em 2011, com 7.603 avaliações (31,4% da amostra). Os anos seguintes registraram menos avaliações. O primeiro e o último ano têm cobertura parcial, e o gráfico mede o volume de avaliações registradas.
 
 ## 4. Avaliações recebidas × negativas
 

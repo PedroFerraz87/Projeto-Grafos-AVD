@@ -46,7 +46,19 @@ python -c "from src.graphs.estados import exportar_todos; import sys; exportar_t
 
 Abra [Rotas possíveis](out/parte1/labirinto_interativo.html) para comparar dois percursos em planta ou relevo. A página [Quatro algoritmos em ação](out/parte1/algoritmos_em_acao.html) mostra BFS, DFS, Dijkstra e Bellman-Ford com o mesmo controle de reprodução. A CLI gera as páginas, os percursos, as soluções e os casos de armadilha. `src.analises` gera as métricas, a comparação de modelagens e as figuras da T30. `exportar_todos` exporta os CSVs de arestas.
 
+Para testar um mapa ao vivo, inicie `python -m src.avd.servidor_bitcoin` e abra `http://127.0.0.1:8765/labirinto_interativo.html#enviar-mapa`. Escolha um `.txt` em UTF-8 que siga as mesmas regras dos mapas da CLI. O mapa analisado aparece na Mesa de rotas e na vista dos quatro algoritmos na mesma aba do navegador.
+
 ### Parte 2 — Bitcoin Alpha
+
+O painel [Bitcoin Alpha](out/parte1/bitcoin_alpha.html) organiza grafo, desempenho, caminhos, buscas, método e gráficos em abas. Na aba do grafo, reproduza um algoritmo na rede completa, localize usuários pelo ID ou compare os quatro em paralelo. Na aba **Gráficos**, selecione uma das 12 figuras e baixe o PNG. A CLI gera essa página com `--interactive`.
+
+Na bancada da Parte 2, os cinco pares de três origens ficam disponíveis offline para reprodução das execuções registradas. Para **executar novamente os quatro algoritmos** no dataset completo, rode o serviço local e abra `http://127.0.0.1:8765/bitcoin_alpha.html`.
+
+```powershell
+python -m src.avd.servidor_bitcoin
+```
+
+O botão **Rodar os quatro** calcula no servidor local e envia os resultados à medida que terminam. Para regenerar os registros offline, use `python -m src.avd.experimentos` e depois execute a CLI com `--interactive`. Essa etapa reexecuta Bellman-Ford para as três fontes e pode levar alguns minutos.
 
 Os casos de algoritmos e as tabelas podem ser reproduzidos com as medições publicadas pelo grupo.
 
@@ -64,6 +76,14 @@ python -m src.cli --dataset data/dataset_parte2/soc-sign-bitcoinalpha.csv --benc
 ```
 
 O comando grava `benchmark.csv`. Para incorporar essas medições ao JSON local da T25, rode `python -c "from src.registrar_benchmark import registrar_benchmark; import sys; registrar_benchmark(*sys.argv[1:])" (Join-Path $parte2 "benchmark.csv") $relatorio`. As [figuras publicadas](out/parte2/avd/) incluem os gráficos exploratórios, explanatórios e os de comparação entre algoritmos.
+
+Para regenerar as figuras nos caminhos de entrega, execute:
+
+```powershell
+python -m src.avd.visualizacoes
+python -m src.avd.visualizacoes_algoritmos
+python -m src.avd.visualizacoes_explanatorias
+```
 
 ## Testes
 
@@ -114,7 +134,7 @@ O projeto é desenvolvido por:
 - Artur Antunes
 - Victor Uen
 
-As responsabilidades, revisões e contribuições individuais serão detalhadas no relatório técnico, com evidências dos commits realizados.
+As responsabilidades, revisões e contribuições individuais estão no relatório técnico para revisão do G1. [PDF](docs/RELATORIO_TECNICO.pdf) · [Versão editável](docs/RELATORIO_TECNICO.md)
 
 ## Uso de IA
 

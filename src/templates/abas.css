@@ -1,0 +1,11 @@
+.abas {
+  display:flex; flex-wrap:wrap; gap:.25rem; border-bottom:1px solid var(--linha, var(--line));
+  padding:.65rem 0 .35rem; margin-block:.35rem .7rem;
+}
+.abas button {
+  min-height:2.35rem; padding:.34rem .63rem; font:700 .83rem/1.2 Consolas,monospace;
+  border:1px solid transparent; cursor:pointer; color:inherit; background:transparent;
+}
+.abas button:not([aria-selected=true]):hover {border-color:var(--linha,var(--line));}
+.abas button[aria-selected=true] {color:var(--botao-texto,#fff);background:var(--botao,#123eaa);border-color:var(--botao,#123eaa);}
+[role=tabpanel][hidden] {display:none !important;}

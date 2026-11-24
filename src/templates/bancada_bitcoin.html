@@ -1,0 +1,89 @@
+<!-- [IA] OpenAI Codex – bancada dos algoritmos e leitura do benchmark. -->
+<style>
+  .bancada-quatro{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid var(--line)}
+  .exec-panel{min-width:0;background:var(--panel);padding:.78rem;border-bottom:1px solid var(--line)}
+  .exec-panel:nth-child(odd){border-right:1px solid var(--line)}
+  .exec-panel header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.2rem .6rem}
+  .exec-panel header output{font:.76rem Consolas,monospace;color:var(--muted)}
+  .exec-panel canvas{width:100%;height:clamp(110px,16vw,208px);display:block;background:#e9e7dc;margin:.5rem 0}
+  .exec-panel p{min-height:2em;line-height:1.35}
+  .exec-panel .fatos{font:.79rem/1.4 Consolas,monospace;color:var(--blue)}
+  .exec-nav{scroll-margin:1rem}
+  .exec-nav .controle-passos{flex:1}
+  #exec-par{min-width:9rem}
+  #exec-mensagem{min-height:2.65rem;display:flex;align-items:center;padding:.55rem .85rem;margin:0;border-inline:1px solid var(--line)}
+  #usuarios-grafo{min-height:1.35rem}
+  .rede-barra{display:flex;flex-wrap:wrap;align-items:end;gap:.45rem .7rem;padding:.6rem .72rem;border:1px solid var(--line);background:var(--panel)}
+  .rede-topo{display:flex;flex-wrap:wrap;gap:.4rem .8rem;align-items:end;padding:.56rem .68rem;border:1px solid var(--line);background:var(--panel)}
+  .rede-topo .rede-barra{border:0;padding:0}
+  .rede-barra label{display:grid;gap:.22rem;font-size:.73rem}
+  .rede-barra button,.rede-barra select,.rede-barra input{min-height:2rem;padding:.2rem .38rem;border:1px solid var(--line);background:#fffdf5;border-radius:0;color:var(--ink);font-size:.82rem}
+  .rede-barra button[aria-pressed=true]{background:var(--blue);border-color:var(--blue);color:white}
+  .rede-barra input{width:6.5rem}
+  #rede-canvas{display:block;width:100%;height:clamp(270px,34vw,385px);background:#f7f5ec;border:1px solid var(--line);border-top:0;touch-action:none;cursor:grab}
+  #rede-canvas.arrastando{cursor:grabbing}
+  #rede-resumo{margin:.55rem 0 0;color:var(--muted);font:.8rem/1.45 Consolas,monospace}
+  #executar [hidden]{display:none !important}
+  .cenarios td,.cenarios th{text-align:left;vertical-align:top;line-height:1.4}
+  .cenarios td{padding:.65rem .5rem}
+  @media(max-width:620px){.exec-panel{padding:.55rem}.exec-panel canvas{height:clamp(103px,28vw,150px)}.exec-panel header h3{font-size:1rem}.exec-panel .nota,.exec-panel .fatos{font-size:.72rem}.bancada-quatro{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<div id="tab-grafo" role="tabpanel" aria-labelledby="aba-grafo">
+<section id="executar" aria-labelledby="titulo-execucao">
+  <div class="section-head">
+    <h2 id="titulo-execucao">Execute na rede de usuários.</h2>
+    <p>Escolha um par de usuários e acompanhe a busca no grafo. Cada ponto é um usuário e cada arco é uma avaliação.</p>
+  </div>
+  <div class="control exec-nav">
+    <label>Origem → destino<select id="exec-par"></select></label>
+    <button type="button" class="primary" id="exec-rodar">Rodar os quatro</button>
+    <button type="button" id="exec-replay">Reproduzir</button>
+    <label class="controle-passos">Evento compartilhado<input id="exec-passo" type="range" min="0" max="0" value="0"></label>
+    <output id="exec-progresso"></output>
+  </div>
+  <p id="exec-mensagem" class="nota" role="status"></p>
+  <div class="rede-topo">
+    <div class="rede-barra" role="group" aria-label="Modo de visualização">
+      <button type="button" id="ver-rede" aria-pressed="true">Rede completa</button>
+      <button type="button" id="ver-quatro" aria-pressed="false">Comparar quatro</button>
+    </div>
+    <form id="rede-controles" class="rede-barra" aria-label="Controles da rede completa">
+      <label>Algoritmo<select id="rede-algoritmo"></select></label>
+      <label>ID do usuário<input id="rede-usuario" inputmode="numeric" pattern="[0-9]+" placeholder="Ex. 498"></label>
+      <button type="submit">Localizar</button>
+      <button type="button" id="rede-reduzir" aria-label="Reduzir zoom">−</button>
+      <button type="button" id="rede-ampliar" aria-label="Ampliar zoom">+</button>
+      <button type="button" id="rede-enquadrar">Enquadrar</button>
+    </form>
+  </div>
+  <div id="rede-inteira">
+    <canvas id="rede-canvas" role="img" aria-label="Grafo dirigido do Bitcoin Alpha. Você também pode localizar um usuário pelo seu identificador."></canvas>
+    <p class="nota" id="rede-execucao"></p>
+    <p id="rede-resumo"></p>
+    <p class="nota" id="rede-inspecao">Clique em um usuário para ver suas conexões. Arraste para mover o grafo.</p>
+  </div>
+  <div id="rede-comparacao" hidden>
+    <div id="exec-paineis" class="bancada-quatro"></div>
+    <p id="usuarios-grafo" class="nota"></p>
+  </div>
+  <p class="nota">A vista em quatro painéis desenha uma amostra da rede. O cálculo usa o grafo completo nos dois modos. O controle percorre eventos. Bellman-Ford mostra o primeiro relaxamento de cada usuário e a DFS mostra a exploração em profundidade.</p>
+</section>
+</div>
+
+<div id="tab-metodo" role="tabpanel" aria-labelledby="aba-metodo">
+<section aria-labelledby="titulo-cenarios">
+  <div class="section-head"><h2 id="titulo-cenarios">Qual busca usar?</h2><p>A escolha depende do que você quer medir: passos, custo, estrutura da rede ou efeito de notas negativas.</p></div>
+  <div class="scroll">
+    <table class="cenarios">
+      <thead><tr><th>Algoritmo</th><th>Cenário adequado</th><th>O que a execução mede</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">BFS</th><td>Menor número de avaliações para chegar de um usuário a outro.</td><td>Visita por níveis. A BFS usual custa O(V + E) com fila de remoção constante; a fila desta implementação usa <code>pop(0)</code>.</td></tr>
+        <tr><th scope="row">DFS</th><td>Explorar alcance e classificar arcos para investigar a estrutura dirigida.</td><td>Registra descoberta, finalização e classes de arcos em O(V + E). A trilha de descoberta depende da ordem dos vizinhos.</td></tr>
+        <tr><th scope="row">Dijkstra</th><td>Buscar menor custo quando cada arco tem peso não negativo.</td><td>Usa <code>10 − nota</code> como custo. Nesta implementação, a checagem dos pesos custa O(E) e as entradas da fila de prioridade podem chegar a O(E).</td></tr>
+        <tr><th scope="row">Bellman-Ford</th><td>Trabalhar com notas originais, inclusive negativas, e detectar ciclos negativos alcançáveis.</td><td>Relaxa arcos repetidamente, com pior caso O(VE). Se um ciclo negativo alcança o destino, o custo mínimo fica indefinido.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="nota">V é o número de usuários e E é o número de avaliações. Os tempos da bancada correspondem a uma execução com registro de eventos. A seção Tempos usa as cinco repetições por combinação publicadas pelo grupo. O CSV publicado não registra o ambiente de medição.</p>
+</section>
+</div>

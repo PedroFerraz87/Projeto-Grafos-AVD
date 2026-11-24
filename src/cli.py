@@ -117,6 +117,9 @@ def main(argv=None):
         pagina_algoritmos = out / "algoritmos_em_acao.html"
         viz.gerar_pagina_algoritmos(dados_exploracao(analises.values(), inicial), pagina_algoritmos)
         escritos.append(pagina_algoritmos)
+        pagina_bitcoin = out / "bitcoin_alpha.html"
+        viz.gerar_pagina_bitcoin(RAIZ / "out" / "parte2", pagina_bitcoin)
+        escritos.append(pagina_bitcoin)
 
     for arquivo in escritos:
         print(arquivo)
