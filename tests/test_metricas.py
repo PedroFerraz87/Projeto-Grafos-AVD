@@ -184,3 +184,27 @@ def test_ordem_e_tamanho_do_g_pos_do_m01():
     assert metricas.ordem(g) == livres
     assert metricas.camadas(g).keys() == {"-"}
     assert metricas.arcos_entre_camadas(g) == []
+
+
+# ---------- rankings (T23) ----------
+# [IA] Claude (Anthropic) - testes dos rankings da T23 gerados a pedido do Luca; revisar e declarar.
+
+def test_ranking_graus_maior_primeiro_e_empate_pela_leitura(mini):
+    assert metricas.ranking_graus(metricas.graus_saida(mini), 4) == [
+        {"estado": S0, "grau": 2}, {"estado": S1, "grau": 2},
+        {"estado": S2, "grau": 2}, {"estado": S3, "grau": 1},
+    ]
+    # mesma casa (1,2): a camada sem chaves vem antes da camada "a"
+    assert metricas.ranking_graus(metricas.graus_entrada(mini), 4) == [
+        {"estado": S2, "grau": 2}, {"estado": S0, "grau": 1},
+        {"estado": S1, "grau": 1}, {"estado": S3, "grau": 1},
+    ]
+    assert metricas.ranking_graus({}) == []
+
+
+def test_ranking_multiplicidade(mini):
+    assert metricas.ranking_multiplicidade(metricas.multiplicidade(mini), 3) == [
+        {"linha": 1, "coluna": 2, "estados": 2},
+        {"linha": 1, "coluna": 1, "estados": 1},
+        {"linha": 1, "coluna": 3, "estados": 1},
+    ]

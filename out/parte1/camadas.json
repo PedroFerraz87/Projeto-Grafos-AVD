@@ -1,0 +1,377 @@
+{
+  "m01_terreno": {
+    "camadas": [
+      {
+        "camada": "-",
+        "ordem": 24,
+        "tamanho": 46,
+        "densidade": 0.08333333333333333
+      }
+    ],
+    "arcos_entre_camadas": []
+  },
+  "m02_uma_chave": {
+    "camadas": [
+      {
+        "camada": "-",
+        "ordem": 16,
+        "tamanho": 30,
+        "densidade": 0.125
+      },
+      {
+        "camada": "a",
+        "ordem": 23,
+        "tamanho": 43,
+        "densidade": 0.08498023715415019
+      }
+    ],
+    "arcos_entre_camadas": [
+      {
+        "de": "-",
+        "para": "a",
+        "quantidade": 1,
+        "casas": [
+          [
+            3,
+            11
+          ]
+        ]
+      }
+    ]
+  },
+  "m03_tres_chaves": {
+    "camadas": [
+      {
+        "camada": "-",
+        "ordem": 12,
+        "tamanho": 22,
+        "densidade": 0.16666666666666666
+      },
+      {
+        "camada": "a",
+        "ordem": 53,
+        "tamanho": 114,
+        "densidade": 0.041364296081277216
+      },
+      {
+        "camada": "ab",
+        "ordem": 72,
+        "tamanho": 160,
+        "densidade": 0.03129890453834116
+      },
+      {
+        "camada": "abc",
+        "ordem": 76,
+        "tamanho": 167,
+        "densidade": 0.029298245614035087
+      }
+    ],
+    "arcos_entre_camadas": [
+      {
+        "de": "-",
+        "para": "a",
+        "quantidade": 1,
+        "casas": [
+          [
+            8,
+            1
+          ]
+        ]
+      },
+      {
+        "de": "a",
+        "para": "ab",
+        "quantidade": 1,
+        "casas": [
+          [
+            1,
+            12
+          ]
+        ]
+      },
+      {
+        "de": "ab",
+        "para": "abc",
+        "quantidade": 1,
+        "casas": [
+          [
+            6,
+            6
+          ]
+        ]
+      }
+    ]
+  },
+  "m04_esteiras": {
+    "camadas": [
+      {
+        "camada": "-",
+        "ordem": 17,
+        "tamanho": 30,
+        "densidade": 0.11029411764705882
+      },
+      {
+        "camada": "a",
+        "ordem": 20,
+        "tamanho": 35,
+        "densidade": 0.09210526315789473
+      }
+    ],
+    "arcos_entre_camadas": [
+      {
+        "de": "-",
+        "para": "a",
+        "quantidade": 1,
+        "casas": [
+          [
+            3,
+            11
+          ]
+        ]
+      }
+    ]
+  },
+  "m05_bonus": {
+    "camadas": [
+      {
+        "camada": "-",
+        "ordem": 215,
+        "tamanho": 438,
+        "densidade": 0.009519669637035428
+      }
+    ],
+    "arcos_entre_camadas": []
+  },
+  "m06_fonte": {
+    "camadas": [
+      {
+        "camada": "-",
+        "ordem": 24,
+        "tamanho": 46,
+        "densidade": 0.08333333333333333
+      }
+    ],
+    "arcos_entre_camadas": []
+  },
+  "m07_impossivel": {
+    "camadas": [
+      {
+        "camada": "-",
+        "ordem": 16,
+        "tamanho": 38,
+        "densidade": 0.15833333333333333
+      }
+    ],
+    "arcos_entre_camadas": []
+  },
+  "m08_grande": {
+    "camadas": [
+      {
+        "camada": "-",
+        "ordem": 165,
+        "tamanho": 356,
+        "densidade": 0.013155949741315596
+      },
+      {
+        "camada": "a",
+        "ordem": 314,
+        "tamanho": 670,
+        "densidade": 0.006817118088764983
+      },
+      {
+        "camada": "ab",
+        "ordem": 442,
+        "tamanho": 940,
+        "densidade": 0.004822441797231713
+      },
+      {
+        "camada": "abc",
+        "ordem": 829,
+        "tamanho": 1818,
+        "densidade": 0.0026485550951906435
+      },
+      {
+        "camada": "abcd",
+        "ordem": 1169,
+        "tamanho": 2574,
+        "densidade": 0.001885172902726836
+      }
+    ],
+    "arcos_entre_camadas": [
+      {
+        "de": "-",
+        "para": "a",
+        "quantidade": 2,
+        "casas": [
+          [
+            27,
+            5
+          ]
+        ]
+      },
+      {
+        "de": "a",
+        "para": "ab",
+        "quantidade": 1,
+        "casas": [
+          [
+            3,
+            23
+          ]
+        ]
+      },
+      {
+        "de": "ab",
+        "para": "abc",
+        "quantidade": 2,
+        "casas": [
+          [
+            5,
+            37
+          ]
+        ]
+      },
+      {
+        "de": "abc",
+        "para": "abcd",
+        "quantidade": 1,
+        "casas": [
+          [
+            3,
+            29
+          ]
+        ]
+      }
+    ]
+  },
+  "m1": {
+    "camadas": [
+      {
+        "camada": "-",
+        "ordem": 172,
+        "tamanho": 332,
+        "densidade": 0.011287909696722427
+      },
+      {
+        "camada": "a",
+        "ordem": 180,
+        "tamanho": 356,
+        "densidade": 0.011049037864680323
+      },
+      {
+        "camada": "ab",
+        "ordem": 516,
+        "tamanho": 1020,
+        "densidade": 0.0038383382253330323
+      },
+      {
+        "camada": "b",
+        "ordem": 500,
+        "tamanho": 972,
+        "densidade": 0.0038957915831663325
+      },
+      {
+        "camada": "abc",
+        "ordem": 272,
+        "tamanho": 532,
+        "densidade": 0.007217278055133492
+      },
+      {
+        "camada": "bc",
+        "ordem": 264,
+        "tamanho": 508,
+        "densidade": 0.0073165111187924875
+      }
+    ],
+    "arcos_entre_camadas": [
+      {
+        "de": "-",
+        "para": "a",
+        "quantidade": 4,
+        "casas": [
+          [
+            1,
+            4
+          ]
+        ]
+      },
+      {
+        "de": "a",
+        "para": "ab",
+        "quantidade": 4,
+        "casas": [
+          [
+            7,
+            19
+          ]
+        ]
+      },
+      {
+        "de": "-",
+        "para": "b",
+        "quantidade": 4,
+        "casas": [
+          [
+            7,
+            19
+          ]
+        ]
+      },
+      {
+        "de": "ab",
+        "para": "abc",
+        "quantidade": 4,
+        "casas": [
+          [
+            1,
+            25
+          ]
+        ]
+      },
+      {
+        "de": "b",
+        "para": "bc",
+        "quantidade": 4,
+        "casas": [
+          [
+            1,
+            25
+          ]
+        ]
+      },
+      {
+        "de": "b",
+        "para": "ab",
+        "quantidade": 8,
+        "casas": [
+          [
+            1,
+            4
+          ]
+        ]
+      },
+      {
+        "de": "bc",
+        "para": "abc",
+        "quantidade": 4,
+        "casas": [
+          [
+            1,
+            4
+          ]
+        ]
+      }
+    ]
+  },
+  "m2": {
+    "camadas": [
+      {
+        "camada": "-",
+        "ordem": 13,
+        "tamanho": 17,
+        "densidade": 0.10897435897435898
+      }
+    ],
+    "arcos_entre_camadas": []
+  }
+}

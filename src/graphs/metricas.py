@@ -87,13 +87,14 @@ def maior_grau(graus):
     estado = min((v for v, d in graus.items() if d == maximo), key=_chave_leitura)
     return {"estado": estado, "grau": maximo}
 
-# ---------- becos ----------
+def ranking_graus(graus, n=5):
+    """Os n estados de maior grau, do maior para o menor; empate pela ordem de leitura."""
+    ordenados = sorted(graus.items(), key=lambda item: (-item[1], _chave_leitura(item[0])))
+    return [{"estado": v, "grau": d} for v, d in ordenados[:n]]
 
 def becos(g, em_g=None):
     em_g = estados_em_g(g) if em_g is None else set(em_g)
     return [v for v, d in graus_saida(g).items() if d == 0 and v not in em_g]
-
-# ---------- multiplicidade ----------
 
 def multiplicidade(g):
     return dict(Counter(posicao(v) for v in _vertices(g)))
@@ -108,7 +109,10 @@ def resumo_multiplicidade(mult):
         "media": sum(mult.values()) / len(mult),
     }
 
-# ---------- camadas ----------
+def ranking_multiplicidade(mult, n=5):
+    """As n casas com mais estados, da maior para a menor; empate por linha e coluna."""
+    ordenadas = sorted(mult.items(), key=lambda item: (-item[1], item[0]))
+    return [{"linha": l, "coluna": c, "estados": m} for (l, c), m in ordenadas[:n]]
 
 def camadas(g):
     resultado = {}

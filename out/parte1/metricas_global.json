@@ -1,0 +1,1225 @@
+{
+  "gerado_em": "2026-11-24T01:24:10",
+  "mapas": {
+    "m01_terreno": {
+      "G_pos": {
+        "ordem": 24,
+        "tamanho": 46,
+        "densidade": 0.08333333333333333
+      },
+      "G_est": {
+        "ordem": 24,
+        "tamanho": 46,
+        "densidade": 0.08333333333333333,
+        "teto_teorico": 24,
+        "taxa_ocupacao": 1.0,
+        "grau_saida": {
+          "min": 0,
+          "max": 2,
+          "medio": 1.9166666666666667
+        },
+        "grau_entrada": {
+          "min": 1,
+          "max": 2,
+          "medio": 1.9166666666666667
+        },
+        "maior_grau_saida": {
+          "estado": "(1,1)|-|{}",
+          "grau": 2
+        },
+        "maior_grau_entrada": {
+          "estado": "(1,1)|-|{}",
+          "grau": 2
+        },
+        "becos": 0,
+        "multiplicidade": {
+          "max": 1,
+          "casas_no_max": 24,
+          "media": 1.0
+        },
+        "camadas": 1,
+        "arcos_entre_camadas": 0,
+        "armadilhas": 0,
+        "pct_armadilhas": 0.0,
+        "dfs": {
+          "arvore": 23,
+          "retorno": 22,
+          "avanco": 0,
+          "cruzamento": 1,
+          "possui_ciclo": true
+        },
+        "rankings": {
+          "grau_saida": [
+            {
+              "estado": "(1,1)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,2)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,3)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,4)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,5)|-|{}",
+              "grau": 2
+            }
+          ],
+          "grau_entrada": [
+            {
+              "estado": "(1,1)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,2)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,3)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,4)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,5)|-|{}",
+              "grau": 2
+            }
+          ],
+          "multiplicidade": [
+            {
+              "linha": 1,
+              "coluna": 1,
+              "estados": 1
+            },
+            {
+              "linha": 1,
+              "coluna": 2,
+              "estados": 1
+            },
+            {
+              "linha": 1,
+              "coluna": 3,
+              "estados": 1
+            },
+            {
+              "linha": 1,
+              "coluna": 4,
+              "estados": 1
+            },
+            {
+              "linha": 1,
+              "coluna": 5,
+              "estados": 1
+            }
+          ]
+        }
+      }
+    },
+    "m02_uma_chave": {
+      "G_pos": {
+        "ordem": 22,
+        "tamanho": 39,
+        "densidade": 0.08441558441558442
+      },
+      "G_est": {
+        "ordem": 39,
+        "tamanho": 74,
+        "densidade": 0.04993252361673414,
+        "teto_teorico": 46,
+        "taxa_ocupacao": 0.8478260869565217,
+        "grau_saida": {
+          "min": 0,
+          "max": 2,
+          "medio": 1.8974358974358974
+        },
+        "grau_entrada": {
+          "min": 1,
+          "max": 2,
+          "medio": 1.8974358974358974
+        },
+        "maior_grau_saida": {
+          "estado": "(1,1)|-|{}",
+          "grau": 2
+        },
+        "maior_grau_entrada": {
+          "estado": "(1,1)|-|{}",
+          "grau": 2
+        },
+        "becos": 0,
+        "multiplicidade": {
+          "max": 2,
+          "casas_no_max": 16,
+          "media": 1.6956521739130435
+        },
+        "camadas": 2,
+        "arcos_entre_camadas": 1,
+        "armadilhas": 0,
+        "pct_armadilhas": 0.0,
+        "dfs": {
+          "arvore": 38,
+          "retorno": 36,
+          "avanco": 0,
+          "cruzamento": 0,
+          "possui_ciclo": true
+        },
+        "rankings": {
+          "grau_saida": [
+            {
+              "estado": "(1,1)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,1)|a|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,2)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,2)|a|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,3)|-|{}",
+              "grau": 2
+            }
+          ],
+          "grau_entrada": [
+            {
+              "estado": "(1,1)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,1)|a|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,2)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,2)|a|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,3)|-|{}",
+              "grau": 2
+            }
+          ],
+          "multiplicidade": [
+            {
+              "linha": 1,
+              "coluna": 1,
+              "estados": 2
+            },
+            {
+              "linha": 1,
+              "coluna": 2,
+              "estados": 2
+            },
+            {
+              "linha": 1,
+              "coluna": 3,
+              "estados": 2
+            },
+            {
+              "linha": 1,
+              "coluna": 4,
+              "estados": 2
+            },
+            {
+              "linha": 1,
+              "coluna": 5,
+              "estados": 2
+            }
+          ]
+        }
+      }
+    },
+    "m03_tres_chaves": {
+      "G_pos": {
+        "ordem": 73,
+        "tamanho": 156,
+        "densidade": 0.02968036529680365
+      },
+      "G_est": {
+        "ordem": 213,
+        "tamanho": 466,
+        "densidade": 0.010319780317122863,
+        "teto_teorico": 608,
+        "taxa_ocupacao": 0.3503289473684211,
+        "grau_saida": {
+          "min": 0,
+          "max": 3,
+          "medio": 2.187793427230047
+        },
+        "grau_entrada": {
+          "min": 1,
+          "max": 3,
+          "medio": 2.187793427230047
+        },
+        "maior_grau_saida": {
+          "estado": "(3,4)|ab|{}",
+          "grau": 3
+        },
+        "maior_grau_entrada": {
+          "estado": "(1,12)|ab|{}",
+          "grau": 3
+        },
+        "becos": 0,
+        "multiplicidade": {
+          "max": 4,
+          "casas_no_max": 12,
+          "media": 2.8026315789473686
+        },
+        "camadas": 4,
+        "arcos_entre_camadas": 3,
+        "armadilhas": 0,
+        "pct_armadilhas": 0.0,
+        "dfs": {
+          "arvore": 212,
+          "retorno": 231,
+          "avanco": 23,
+          "cruzamento": 0,
+          "possui_ciclo": true
+        },
+        "rankings": {
+          "grau_saida": [
+            {
+              "estado": "(3,4)|ab|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(3,4)|abc|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(3,5)|ab|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(3,5)|abc|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(3,6)|ab|{}",
+              "grau": 3
+            }
+          ],
+          "grau_entrada": [
+            {
+              "estado": "(1,12)|ab|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(3,4)|ab|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(3,4)|abc|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(3,5)|ab|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(3,5)|abc|{}",
+              "grau": 3
+            }
+          ],
+          "multiplicidade": [
+            {
+              "linha": 1,
+              "coluna": 1,
+              "estados": 4
+            },
+            {
+              "linha": 1,
+              "coluna": 2,
+              "estados": 4
+            },
+            {
+              "linha": 1,
+              "coluna": 3,
+              "estados": 4
+            },
+            {
+              "linha": 1,
+              "coluna": 4,
+              "estados": 4
+            },
+            {
+              "linha": 1,
+              "coluna": 5,
+              "estados": 4
+            }
+          ]
+        }
+      }
+    },
+    "m04_esteiras": {
+      "G_pos": {
+        "ordem": 23,
+        "tamanho": 36,
+        "densidade": 0.07114624505928854
+      },
+      "G_est": {
+        "ordem": 37,
+        "tamanho": 66,
+        "densidade": 0.04954954954954955,
+        "teto_teorico": 48,
+        "taxa_ocupacao": 0.7708333333333334,
+        "grau_saida": {
+          "min": 0,
+          "max": 3,
+          "medio": 1.7837837837837838
+        },
+        "grau_entrada": {
+          "min": 1,
+          "max": 3,
+          "medio": 1.7837837837837838
+        },
+        "maior_grau_saida": {
+          "estado": "(3,8)|-|{}",
+          "grau": 3
+        },
+        "maior_grau_entrada": {
+          "estado": "(3,8)|-|{}",
+          "grau": 3
+        },
+        "becos": 2,
+        "multiplicidade": {
+          "max": 2,
+          "casas_no_max": 17,
+          "media": 1.85
+        },
+        "camadas": 2,
+        "arcos_entre_camadas": 1,
+        "armadilhas": 4,
+        "pct_armadilhas": 10.81081081081081,
+        "dfs": {
+          "arvore": 36,
+          "retorno": 30,
+          "avanco": 0,
+          "cruzamento": 0,
+          "possui_ciclo": true
+        },
+        "rankings": {
+          "grau_saida": [
+            {
+              "estado": "(3,8)|-|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(3,8)|a|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(1,1)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,1)|a|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,2)|-|{}",
+              "grau": 2
+            }
+          ],
+          "grau_entrada": [
+            {
+              "estado": "(3,8)|-|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(3,8)|a|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(1,1)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,1)|a|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,8)|-|{}",
+              "grau": 2
+            }
+          ],
+          "multiplicidade": [
+            {
+              "linha": 1,
+              "coluna": 1,
+              "estados": 2
+            },
+            {
+              "linha": 1,
+              "coluna": 2,
+              "estados": 2
+            },
+            {
+              "linha": 1,
+              "coluna": 3,
+              "estados": 2
+            },
+            {
+              "linha": 1,
+              "coluna": 8,
+              "estados": 2
+            },
+            {
+              "linha": 1,
+              "coluna": 9,
+              "estados": 2
+            }
+          ]
+        }
+      }
+    },
+    "m05_bonus": {
+      "G_pos": {
+        "ordem": 44,
+        "tamanho": 90,
+        "densidade": 0.04756871035940803
+      },
+      "G_est": {
+        "ordem": 215,
+        "tamanho": 438,
+        "densidade": 0.009519669637035428,
+        "teto_teorico": 352,
+        "taxa_ocupacao": 0.6107954545454546,
+        "grau_saida": {
+          "min": 0,
+          "max": 3,
+          "medio": 2.0372093023255813
+        },
+        "grau_entrada": {
+          "min": 1,
+          "max": 4,
+          "medio": 2.0372093023255813
+        },
+        "maior_grau_saida": {
+          "estado": "(3,1)|-|{}",
+          "grau": 3
+        },
+        "maior_grau_entrada": {
+          "estado": "(3,2)|-|{0}",
+          "grau": 4
+        },
+        "becos": 0,
+        "multiplicidade": {
+          "max": 6,
+          "casas_no_max": 21,
+          "media": 4.886363636363637
+        },
+        "camadas": 1,
+        "arcos_entre_camadas": 0,
+        "armadilhas": 0,
+        "pct_armadilhas": 0.0,
+        "dfs": {
+          "arvore": 214,
+          "retorno": 208,
+          "avanco": 5,
+          "cruzamento": 11,
+          "possui_ciclo": true
+        },
+        "rankings": {
+          "grau_saida": [
+            {
+              "estado": "(3,1)|-|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(3,1)|-|{0}",
+              "grau": 3
+            },
+            {
+              "estado": "(3,1)|-|{0,1,2}",
+              "grau": 3
+            },
+            {
+              "estado": "(3,1)|-|{0,2}",
+              "grau": 3
+            },
+            {
+              "estado": "(3,1)|-|{1,2}",
+              "grau": 3
+            }
+          ],
+          "grau_entrada": [
+            {
+              "estado": "(3,2)|-|{0}",
+              "grau": 4
+            },
+            {
+              "estado": "(3,2)|-|{0,1,2}",
+              "grau": 4
+            },
+            {
+              "estado": "(3,2)|-|{0,2}",
+              "grau": 4
+            },
+            {
+              "estado": "(3,10)|-|{0,1,2}",
+              "grau": 4
+            },
+            {
+              "estado": "(3,10)|-|{1,2}",
+              "grau": 4
+            }
+          ],
+          "multiplicidade": [
+            {
+              "linha": 1,
+              "coluna": 1,
+              "estados": 6
+            },
+            {
+              "linha": 1,
+              "coluna": 2,
+              "estados": 6
+            },
+            {
+              "linha": 1,
+              "coluna": 3,
+              "estados": 6
+            },
+            {
+              "linha": 1,
+              "coluna": 4,
+              "estados": 6
+            },
+            {
+              "linha": 1,
+              "coluna": 5,
+              "estados": 6
+            }
+          ]
+        }
+      }
+    },
+    "m06_fonte": {
+      "G_pos": {
+        "ordem": 24,
+        "tamanho": 46,
+        "densidade": 0.08333333333333333
+      },
+      "G_est": {
+        "ordem": 24,
+        "tamanho": 46,
+        "densidade": 0.08333333333333333,
+        "teto_teorico": 24,
+        "taxa_ocupacao": 1.0,
+        "grau_saida": {
+          "min": 0,
+          "max": 2,
+          "medio": 1.9166666666666667
+        },
+        "grau_entrada": {
+          "min": 1,
+          "max": 2,
+          "medio": 1.9166666666666667
+        },
+        "maior_grau_saida": {
+          "estado": "(1,1)|-|{}",
+          "grau": 2
+        },
+        "maior_grau_entrada": {
+          "estado": "(1,1)|-|{}",
+          "grau": 2
+        },
+        "becos": 0,
+        "multiplicidade": {
+          "max": 1,
+          "casas_no_max": 24,
+          "media": 1.0
+        },
+        "camadas": 1,
+        "arcos_entre_camadas": 0,
+        "armadilhas": 0,
+        "pct_armadilhas": 0.0,
+        "dfs": {
+          "arvore": 23,
+          "retorno": 22,
+          "avanco": 0,
+          "cruzamento": 1,
+          "possui_ciclo": true
+        },
+        "rankings": {
+          "grau_saida": [
+            {
+              "estado": "(1,1)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,2)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,3)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,4)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,5)|-|{}",
+              "grau": 2
+            }
+          ],
+          "grau_entrada": [
+            {
+              "estado": "(1,1)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,2)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,3)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,4)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,5)|-|{}",
+              "grau": 2
+            }
+          ],
+          "multiplicidade": [
+            {
+              "linha": 1,
+              "coluna": 1,
+              "estados": 1
+            },
+            {
+              "linha": 1,
+              "coluna": 2,
+              "estados": 1
+            },
+            {
+              "linha": 1,
+              "coluna": 3,
+              "estados": 1
+            },
+            {
+              "linha": 1,
+              "coluna": 4,
+              "estados": 1
+            },
+            {
+              "linha": 1,
+              "coluna": 5,
+              "estados": 1
+            }
+          ]
+        }
+      }
+    },
+    "m07_impossivel": {
+      "G_pos": {
+        "ordem": 29,
+        "tamanho": 61,
+        "densidade": 0.07512315270935961
+      },
+      "G_est": {
+        "ordem": 16,
+        "tamanho": 38,
+        "densidade": 0.15833333333333333,
+        "teto_teorico": 62,
+        "taxa_ocupacao": 0.25806451612903225,
+        "grau_saida": {
+          "min": 1,
+          "max": 3,
+          "medio": 2.375
+        },
+        "grau_entrada": {
+          "min": 1,
+          "max": 3,
+          "medio": 2.375
+        },
+        "maior_grau_saida": {
+          "estado": "(3,1)|-|{}",
+          "grau": 3
+        },
+        "maior_grau_entrada": {
+          "estado": "(3,1)|-|{}",
+          "grau": 3
+        },
+        "becos": 0,
+        "multiplicidade": {
+          "max": 1,
+          "casas_no_max": 16,
+          "media": 1.0
+        },
+        "camadas": 1,
+        "arcos_entre_camadas": 0,
+        "armadilhas": 16,
+        "pct_armadilhas": 100.0,
+        "dfs": {
+          "arvore": 15,
+          "retorno": 19,
+          "avanco": 4,
+          "cruzamento": 0,
+          "possui_ciclo": true
+        },
+        "rankings": {
+          "grau_saida": [
+            {
+              "estado": "(3,1)|-|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(3,2)|-|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(3,3)|-|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(3,4)|-|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(4,2)|-|{}",
+              "grau": 3
+            }
+          ],
+          "grau_entrada": [
+            {
+              "estado": "(3,1)|-|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(3,2)|-|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(3,3)|-|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(3,4)|-|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(4,2)|-|{}",
+              "grau": 3
+            }
+          ],
+          "multiplicidade": [
+            {
+              "linha": 1,
+              "coluna": 1,
+              "estados": 1
+            },
+            {
+              "linha": 1,
+              "coluna": 2,
+              "estados": 1
+            },
+            {
+              "linha": 1,
+              "coluna": 3,
+              "estados": 1
+            },
+            {
+              "linha": 1,
+              "coluna": 4,
+              "estados": 1
+            },
+            {
+              "linha": 1,
+              "coluna": 5,
+              "estados": 1
+            }
+          ]
+        }
+      }
+    },
+    "m08_grande": {
+      "G_pos": {
+        "ordem": 1165,
+        "tamanho": 2558,
+        "densidade": 0.0018863472117752903
+      },
+      "G_est": {
+        "ordem": 2919,
+        "tamanho": 6364,
+        "densidade": 0.0007471551398849588,
+        "teto_teorico": 18704,
+        "taxa_ocupacao": 0.156062874251497,
+        "grau_saida": {
+          "min": 0,
+          "max": 4,
+          "medio": 2.18019869818431
+        },
+        "grau_entrada": {
+          "min": 1,
+          "max": 4,
+          "medio": 2.18019869818431
+        },
+        "maior_grau_saida": {
+          "estado": "(3,15)|a|{}",
+          "grau": 4
+        },
+        "maior_grau_entrada": {
+          "estado": "(3,15)|a|{}",
+          "grau": 4
+        },
+        "becos": 0,
+        "multiplicidade": {
+          "max": 5,
+          "casas_no_max": 165,
+          "media": 2.497005988023952
+        },
+        "camadas": 5,
+        "arcos_entre_camadas": 6,
+        "armadilhas": 0,
+        "pct_armadilhas": 0.0,
+        "dfs": {
+          "arvore": 2918,
+          "retorno": 3178,
+          "avanco": 265,
+          "cruzamento": 3,
+          "possui_ciclo": true
+        },
+        "rankings": {
+          "grau_saida": [
+            {
+              "estado": "(3,15)|a|{}",
+              "grau": 4
+            },
+            {
+              "estado": "(3,15)|ab|{}",
+              "grau": 4
+            },
+            {
+              "estado": "(3,15)|abc|{}",
+              "grau": 4
+            },
+            {
+              "estado": "(3,15)|abcd|{}",
+              "grau": 4
+            },
+            {
+              "estado": "(5,63)|abcd|{}",
+              "grau": 4
+            }
+          ],
+          "grau_entrada": [
+            {
+              "estado": "(3,15)|a|{}",
+              "grau": 4
+            },
+            {
+              "estado": "(3,15)|ab|{}",
+              "grau": 4
+            },
+            {
+              "estado": "(3,15)|abc|{}",
+              "grau": 4
+            },
+            {
+              "estado": "(3,15)|abcd|{}",
+              "grau": 4
+            },
+            {
+              "estado": "(5,37)|abc|{}",
+              "grau": 4
+            }
+          ],
+          "multiplicidade": [
+            {
+              "linha": 1,
+              "coluna": 1,
+              "estados": 5
+            },
+            {
+              "linha": 1,
+              "coluna": 2,
+              "estados": 5
+            },
+            {
+              "linha": 1,
+              "coluna": 3,
+              "estados": 5
+            },
+            {
+              "linha": 2,
+              "coluna": 3,
+              "estados": 5
+            },
+            {
+              "linha": 3,
+              "coluna": 1,
+              "estados": 5
+            }
+          ]
+        }
+      }
+    },
+    "m1": {
+      "G_pos": {
+        "ordem": 66,
+        "tamanho": 123,
+        "densidade": 0.028671328671328673
+      },
+      "G_est": {
+        "ordem": 1904,
+        "tamanho": 3752,
+        "densidade": 0.0010355166764551328,
+        "teto_teorico": 4416,
+        "taxa_ocupacao": 0.4311594202898551,
+        "grau_saida": {
+          "min": 0,
+          "max": 3,
+          "medio": 1.9705882352941178
+        },
+        "grau_entrada": {
+          "min": 1,
+          "max": 3,
+          "medio": 1.9705882352941178
+        },
+        "maior_grau_saida": {
+          "estado": "(4,4)|-|{}",
+          "grau": 3
+        },
+        "maior_grau_entrada": {
+          "estado": "(4,4)|-|{}",
+          "grau": 3
+        },
+        "becos": 0,
+        "multiplicidade": {
+          "max": 32,
+          "casas_no_max": 42,
+          "media": 27.594202898550726
+        },
+        "camadas": 6,
+        "arcos_entre_camadas": 32,
+        "armadilhas": 0,
+        "pct_armadilhas": 0.0,
+        "dfs": {
+          "arvore": 1903,
+          "retorno": 1736,
+          "avanco": 34,
+          "cruzamento": 79,
+          "possui_ciclo": true
+        },
+        "rankings": {
+          "grau_saida": [
+            {
+              "estado": "(4,4)|-|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(4,4)|-|{1}",
+              "grau": 3
+            },
+            {
+              "estado": "(4,4)|-|{1,2}",
+              "grau": 3
+            },
+            {
+              "estado": "(4,4)|-|{2}",
+              "grau": 3
+            },
+            {
+              "estado": "(4,4)|a|{}",
+              "grau": 3
+            }
+          ],
+          "grau_entrada": [
+            {
+              "estado": "(4,4)|-|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(4,4)|-|{1}",
+              "grau": 3
+            },
+            {
+              "estado": "(4,4)|-|{1,2}",
+              "grau": 3
+            },
+            {
+              "estado": "(4,4)|-|{2}",
+              "grau": 3
+            },
+            {
+              "estado": "(4,4)|a|{}",
+              "grau": 3
+            }
+          ],
+          "multiplicidade": [
+            {
+              "linha": 2,
+              "coluna": 4,
+              "estados": 32
+            },
+            {
+              "linha": 2,
+              "coluna": 13,
+              "estados": 32
+            },
+            {
+              "linha": 2,
+              "coluna": 14,
+              "estados": 32
+            },
+            {
+              "linha": 2,
+              "coluna": 15,
+              "estados": 32
+            },
+            {
+              "linha": 2,
+              "coluna": 16,
+              "estados": 32
+            }
+          ]
+        }
+      }
+    },
+    "m2": {
+      "G_pos": {
+        "ordem": 18,
+        "tamanho": 26,
+        "densidade": 0.08496732026143791
+      },
+      "G_est": {
+        "ordem": 13,
+        "tamanho": 17,
+        "densidade": 0.10897435897435898,
+        "teto_teorico": 18,
+        "taxa_ocupacao": 0.7222222222222222,
+        "grau_saida": {
+          "min": 0,
+          "max": 3,
+          "medio": 1.3076923076923077
+        },
+        "grau_entrada": {
+          "min": 1,
+          "max": 3,
+          "medio": 1.3076923076923077
+        },
+        "maior_grau_saida": {
+          "estado": "(1,3)|-|{}",
+          "grau": 3
+        },
+        "maior_grau_entrada": {
+          "estado": "(1,3)|-|{}",
+          "grau": 3
+        },
+        "becos": 1,
+        "multiplicidade": {
+          "max": 1,
+          "casas_no_max": 13,
+          "media": 1.0
+        },
+        "camadas": 1,
+        "arcos_entre_camadas": 0,
+        "armadilhas": 6,
+        "pct_armadilhas": 46.15384615384615,
+        "dfs": {
+          "arvore": 12,
+          "retorno": 5,
+          "avanco": 0,
+          "cruzamento": 0,
+          "possui_ciclo": true
+        },
+        "rankings": {
+          "grau_saida": [
+            {
+              "estado": "(1,3)|-|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(1,2)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,4)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,5)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(2,3)|-|{}",
+              "grau": 2
+            }
+          ],
+          "grau_entrada": [
+            {
+              "estado": "(1,3)|-|{}",
+              "grau": 3
+            },
+            {
+              "estado": "(1,2)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,4)|-|{}",
+              "grau": 2
+            },
+            {
+              "estado": "(1,1)|-|{}",
+              "grau": 1
+            },
+            {
+              "estado": "(1,5)|-|{}",
+              "grau": 1
+            }
+          ],
+          "multiplicidade": [
+            {
+              "linha": 1,
+              "coluna": 1,
+              "estados": 1
+            },
+            {
+              "linha": 1,
+              "coluna": 2,
+              "estados": 1
+            },
+            {
+              "linha": 1,
+              "coluna": 3,
+              "estados": 1
+            },
+            {
+              "linha": 1,
+              "coluna": 4,
+              "estados": 1
+            },
+            {
+              "linha": 1,
+              "coluna": 5,
+              "estados": 1
+            }
+          ]
+        }
+      }
+    }
+  }
+}
