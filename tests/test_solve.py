@@ -2,6 +2,8 @@
 # Testes do T22 (solve.py e cli.py da Parte 1).
 import csv
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -332,3 +334,31 @@ def test_cli_interactive_sem_a_funcao_do_viz_falha_antes_de_gerar_arquivos(tmp_p
         cli.main(["--mapa", "m03", "--interactive", "--out", str(tmp_path)])
     assert erro.value.code == 1 and "gerar_labirinto_interativo" in capsys.readouterr().err
     assert list(tmp_path.iterdir()) == []
+
+
+# ---------- T34: mapa inválido na CLI ----------
+
+@pytest.mark.parametrize("grade, causa", [
+    ("#####\n#SXG#\n#####\n", "símbolo desconhecido 'X' na linha 2, coluna 3"),
+    ("#####\n#SSG#\n#####\n", "esperado exatamente um S, encontrado 2"),
+    ("#####\n#S..#\n#####\n", "o mapa não tem nenhum G"),
+    ("#####\n#SG#\n#####\n", "linha 2 tem 4 colunas, esperado 5"),
+])
+def test_cli_mapa_invalido_mostra_uma_linha_com_o_mapa_e_a_causa_e_sai_com_1(tmp_path, capsys, grade, causa):
+    mapa = tmp_path / "mapa_ruim.txt"
+    mapa.write_text(grade, encoding="utf-8")
+    with pytest.raises(SystemExit) as erro:
+        cli.main(["--mapa", str(mapa), "--out", str(tmp_path / "saida")])
+    assert erro.value.code == 1
+    assert capsys.readouterr().err == f"erro: mapa mapa_ruim inválido: {causa}\n"
+    assert not (tmp_path / "saida").exists()  # nada é gerado quando o mapa é inválido
+
+
+def test_cli_mapa_invalido_na_linha_de_comando_nao_mostra_traceback(tmp_path):
+    mapa = tmp_path / "mapa_ruim.txt"
+    mapa.write_text("#####\n#SXG#\n#####\n", encoding="utf-8")
+    r = subprocess.run([sys.executable, "-m", "src.cli", "--mapa", str(mapa), "--out", str(tmp_path / "saida")],
+                       capture_output=True, text=True, encoding="utf-8", errors="replace", cwd=RAIZ)
+    assert r.returncode == 1 and r.stdout == ""
+    assert "Traceback" not in r.stderr and r.stderr.startswith("erro: mapa mapa_ruim inv")
+    assert len(r.stderr.strip().splitlines()) == 1

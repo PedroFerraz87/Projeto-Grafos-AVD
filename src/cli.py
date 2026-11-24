@@ -1,6 +1,7 @@
 import argparse
 from pathlib import Path
 
+from .graphs.io import MapaInvalido
 from .solve import TODOS, analisar, caminho_mapa, dados_interativos, gerar_saidas, listar_mapas
 
 RAIZ = Path(__file__).resolve().parents[1]
@@ -89,7 +90,13 @@ def main(argv=None):
     caminhos = listar_mapas(RAIZ) if (selecionado is None or args.interactive) else [selecionado]
     if selecionado and selecionado not in caminhos:
         caminhos.append(selecionado)
-    analises = {c: analisar(c, args.fonte_consumivel) for c in caminhos}
+    analises = {}
+    for c in caminhos:
+        try:
+            analises[c] = analisar(c, args.fonte_consumivel)
+        except MapaInvalido as erro:
+            causa = str(erro).removeprefix(f"{c}: ")  # a mensagem do io.py começa pelo caminho do arquivo
+            parser.exit(1, f"erro: mapa {c.stem} inválido: {causa}\n")
     escolhidas = [analises[selecionado]] if selecionado else list(analises.values())
 
     out.mkdir(parents=True, exist_ok=True)

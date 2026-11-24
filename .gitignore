@@ -3,3 +3,6 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .DS_Store
+
+# copia de seguranca gerada por src/registrar_benchmark.py a cada execucao
+out/parte2/*.backup.json
