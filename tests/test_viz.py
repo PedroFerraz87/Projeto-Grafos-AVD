@@ -129,6 +129,7 @@ def test_cli_interactive_gera_o_html_de_verdade(tmp_path):
     assert len(resultados["rede"]["arcos"]) == 24186
     assert 'id="rede-canvas"' in bitcoin.read_text(encoding="utf-8")
     assert len(resultados["figuras"]) == 12
+    assert 'id="mostrar-todos-graficos"' in bitcoin.read_text(encoding="utf-8")
 
 
 def test_geradores_de_figuras_t28(tmp_path):

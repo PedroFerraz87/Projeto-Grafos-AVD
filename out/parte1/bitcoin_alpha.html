@@ -84,6 +84,18 @@
   .galeria img{display:block;width:100%;height:auto}
   .galeria figcaption{display:flex;justify-content:space-between;gap:.6rem;margin:.25rem .45rem .15rem;font:.78rem/1.45 Consolas,monospace;color:var(--muted)}
   #escolher-figura{max-width:min(28rem,74vw)}
+  .modo-graficos{display:flex;gap:.3rem}
+  .control .modo-graficos button[aria-pressed=true]{background:#dbe3ae;color:#242c20;border-color:#dbe3ae;font-weight:740}
+  #tab-figuras [hidden]{display:none !important}
+  #grade-figuras section{padding:0;border:0;margin:1rem 0 1.4rem}
+  #grade-figuras h3{margin:0 0 .45rem}
+  .figuras-grupo{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.72rem}
+  .mini-figura{display:grid;justify-items:stretch;align-content:start;gap:.45rem;text-align:left;padding:.28rem;border:1px solid var(--line);background:var(--panel)}
+  .mini-figura:hover{border-color:var(--blue)}
+  .mini-figura img{display:block;width:100%;aspect-ratio:1904/926;object-fit:contain;background:var(--paper)}
+  .mini-figura span{font-size:.78rem;font-weight:670;padding:0 .25rem .27rem}
+  @media(max-width:1050px){.figuras-grupo{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:580px){.figuras-grupo{grid-template-columns:minmax(0,1fr)}}
   .nota{margin-top:.6rem}
   .bars{display:grid;gap:.55rem;margin-top:1rem}
   .bar-row{display:grid;grid-template-columns:6rem 1fr auto;gap:.5rem;align-items:center;font:.79rem Consolas,monospace}
@@ -258,12 +270,19 @@
   </div>
   <div id="tab-figuras" role="tabpanel" aria-labelledby="aba-figuras">
     <section aria-labelledby="titulo-figuras">
-      <div class="section-head"><h2 id="titulo-figuras">Gráficos da Parte 2.</h2><p>Explore as figuras sobre avaliações, caminhos e desempenho. Escolha um gráfico para ver ou baixar.</p></div>
-      <div class="control"><label>Gráfico<select id="escolher-figura"></select></label></div>
+      <div class="section-head"><h2 id="titulo-figuras">Gráficos da Parte 2.</h2><p>Explore as figuras sobre avaliações, caminhos e desempenho. Selecione um gráfico para ampliar ou baixar.</p></div>
+      <div class="control">
+        <div class="modo-graficos" role="group" aria-label="Modo de exibição dos gráficos">
+          <button type="button" id="mostrar-um-grafico" aria-pressed="true" aria-controls="galeria-figura">Um por vez</button>
+          <button type="button" id="mostrar-todos-graficos" aria-pressed="false" aria-controls="grade-figuras">Ver todos</button>
+        </div>
+        <label id="campo-escolher-figura">Gráfico<select id="escolher-figura"></select></label>
+      </div>
       <figure class="galeria" id="galeria-figura">
         <img id="figura-bitcoin" alt="">
         <figcaption><span id="figura-legenda"></span><a id="baixar-figura">Baixar PNG</a></figcaption>
       </figure>
+      <div id="grade-figuras" hidden aria-label="Todos os gráficos"></div>
       <p class="nota" id="figuras-ausentes" hidden>Gere os PNGs da Parte 2 e exporte a página com --interactive para carregar as figuras.</p>
     </section>
   </div>
@@ -524,6 +543,7 @@
   mostrarBellman();
   const galeria = $("escolher-figura");
   const gruposFiguras = new Map();
+  const enderecoFigura = figura => "data:image/png;base64," + figura.png;
   dados.figuras.forEach((figura,i)=>{
     if (!gruposFiguras.has(figura.grupo)) {
       const novo = document.createElement("optgroup");
@@ -537,19 +557,64 @@
     const figura = dados.figuras[Number(galeria.value)];
     if (!figura) {
       galeria.disabled = true;
+      $("mostrar-um-grafico").disabled = $("mostrar-todos-graficos").disabled = true;
       $("galeria-figura").hidden = true;
       $("figuras-ausentes").hidden = false;
       return;
     }
-    const imagem = "data:image/png;base64," + figura.png;
+    const imagem = enderecoFigura(figura);
     $("figura-bitcoin").src = imagem;
     $("figura-bitcoin").alt = figura.titulo;
     $("figura-legenda").textContent = figura.grupo + " · " + figura.titulo;
     $("baixar-figura").href = imagem;
     $("baixar-figura").download = figura.nome;
   }
+  // [IA] OpenAI Codex – grade completa com abertura da figura em tamanho maior.
+  function mudarModoGraficos(todos) {
+    $("mostrar-um-grafico").setAttribute("aria-pressed", String(!todos));
+    $("mostrar-todos-graficos").setAttribute("aria-pressed", String(todos));
+    $("campo-escolher-figura").hidden = todos;
+    $("galeria-figura").hidden = todos;
+    const grade = $("grade-figuras");
+    grade.hidden = !todos;
+    if (!todos || grade.childElementCount) return;
+    for (const [grupo, opcoes] of gruposFiguras) {
+      const secao = document.createElement("section");
+      const titulo = document.createElement("h3");
+      titulo.textContent = grupo;
+      const painel = document.createElement("div");
+      painel.className = "figuras-grupo";
+      for (const opcao of opcoes.children) {
+        const figura = dados.figuras[Number(opcao.value)];
+        const botao = document.createElement("button");
+        botao.type = "button";
+        botao.className = "mini-figura";
+        botao.setAttribute("aria-label", "Ampliar " + figura.titulo);
+        const imagem = new Image();
+        imagem.alt = "";
+        imagem.loading = "lazy";
+        imagem.decoding = "async";
+        imagem.src = enderecoFigura(figura);
+        const legenda = document.createElement("span");
+        legenda.textContent = figura.titulo;
+        botao.append(imagem, legenda);
+        botao.addEventListener("click", () => {
+          galeria.value = opcao.value;
+          mostrarFigura();
+          mudarModoGraficos(false);
+          galeria.focus();
+        });
+        painel.append(botao);
+      }
+      secao.append(titulo, painel);
+      grade.append(secao);
+    }
+  }
   galeria.addEventListener("change",mostrarFigura);
+  $("mostrar-um-grafico").addEventListener("click", () => mudarModoGraficos(false));
+  $("mostrar-todos-graficos").addEventListener("click", () => mudarModoGraficos(true));
   mostrarFigura();
+  if (dados.figuras.length && new URLSearchParams(location.search).get("graficos") === "todos") mudarModoGraficos(true);
   /* [IA] OpenAI Codex – exploração visual da topologia real do Bitcoin Alpha. */
 class RedeBitCoin {
   constructor(rede, canvas, resumo, inspecao) {
