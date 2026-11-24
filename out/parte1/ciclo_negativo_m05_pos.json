@@ -1,0 +1,43 @@
+{
+  "mapa": "m05_bonus",
+  "modelagem": "G_pos",
+  "algoritmo": "BELLMAN_FORD",
+  "opcoes": {
+    "fonte_consumivel": false,
+    "porta_como": "parede"
+  },
+  "fonte": "(1,1)",
+  "ciclo_encontrado": true,
+  "ciclo": [
+    "(5,4)",
+    "(5,5)",
+    "(5,4)"
+  ],
+  "arcos": [
+    {
+      "origem": "(5,4)",
+      "destino": "(5,5)",
+      "peso": 1,
+      "movimento": "L"
+    },
+    {
+      "origem": "(5,5)",
+      "destino": "(5,4)",
+      "peso": -4,
+      "movimento": "O"
+    }
+  ],
+  "custo_ciclo": -3,
+  "afeta_alvo": true,
+  "correcao": {
+    "aplicada": false,
+    "descricao": null,
+    "custo_minimo_apos_correcao": null
+  },
+  "g_est": {
+    "ciclo_encontrado": false,
+    "status": "OK",
+    "passos": 20,
+    "custo_minimo": 5
+  }
+}

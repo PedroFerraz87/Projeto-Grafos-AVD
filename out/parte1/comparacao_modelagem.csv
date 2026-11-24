@@ -1,0 +1,10 @@
+mapa,abordagem,passos,caminho_valido,observacao
+m02_uma_chave,pos_porta_chao,10,false,"atravessa a porta A em (1,6) sem a chave a"
+m02_uma_chave,pos_porta_parede,,false,não alcança G
+m02_uma_chave,estados,34,true,
+m03_tres_chaves,pos_porta_chao,21,false,"atravessa a porta C em (7,13) sem a chave c"
+m03_tres_chaves,pos_porta_parede,,false,não alcança G
+m03_tres_chaves,estados,87,true,
+m04_esteiras,pos_porta_chao,14,false,"atravessa a porta A em (1,10) sem a chave a"
+m04_esteiras,pos_porta_parede,,false,não alcança G
+m04_esteiras,estados,20,true,
