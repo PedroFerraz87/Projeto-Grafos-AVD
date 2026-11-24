@@ -98,6 +98,19 @@ def test_cli_interactive_gera_o_html_de_verdade(tmp_path):
     assert embutido["mapas"]["m1"]["percursos"]["BELLMAN_FORD"]["custo"] == 42
     assert len(embutido["mapas"]["m2"]["armadilhas"]) == 6
 
+    # [IA] OpenAI Codex – validação da exportação conjunta das quatro explorações.
+    pagina = tmp_path / "algoritmos_em_acao.html"
+    assert 'href="algoritmos_em_acao.html"' in html and pagina.is_file()
+    exploracoes = dados_embutidos(pagina.read_text(encoding="utf-8"))
+    assert exploracoes["mapa_inicial"] == "m03_tres_chaves"
+    m03 = exploracoes["mapas"]["m03_tres_chaves"]["buscas"]
+    assert set(m03) == {"BFS", "DFS", "DIJKSTRA", "BELLMAN_FORD"}
+    assert {evento[2] for evento in m03["DFS"]["eventos"]} == {0, 1}
+    assert m03["BFS"]["passos"] == 87 and m03["DIJKSTRA"]["custo"] == 99
+    m06 = exploracoes["mapas"]["m06_fonte"]["buscas"]
+    assert m06["DIJKSTRA"]["status"] == "RECUSA" and not m06["DIJKSTRA"]["eventos"]
+    assert m06["BELLMAN_FORD"]["status"] == "CICLO_NEGATIVO" and m06["BELLMAN_FORD"]["ciclo"]
+
 
 def test_geradores_de_figuras_t28(tmp_path):
     gerados = viz.gerar_figuras_t28(RAIZ, tmp_path)

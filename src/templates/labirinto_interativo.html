@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- [IA] OpenAI Codex: composição do site, imagem da capa e interface de comparação dos percursos já calculados. -->
+<!-- [IA] OpenAI Codex: composição do site, cartografia da capa e interface dos percursos calculados. -->
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
@@ -10,18 +10,18 @@
     :root {
       color-scheme: light;
       font-family: "Segoe UI", system-ui, sans-serif;
-      --papel: #f1f1eb;
-      --painel: #fafaf4;
-      --prancha: #e1e4de;
+      --papel: #f1eee4;
+      --painel: #faf8ef;
+      --prancha: #e9e6d8;
       --texto: #192631;
       --suave: #56646b;
       --linha: #bcc5c4;
       --controle: #7a8b8e;
-      --acento: #9f3f1e;
-      --acento-fundo: #f3ddcc;
-      --botao: #192c39;
+      --acento: #123eaa;
+      --acento-fundo: #dfe7fa;
+      --botao: #143fa9;
       --botao-texto: #fbfcf8;
-      --foco: #a14525;
+      --foco: #243e9b;
       --falha: #882a2d;
       --falha-fundo: #f5dbd7;
       --aviso: #6b4b16;
@@ -30,7 +30,7 @@
       --perigo: #a03535;
       --perigo-faixa: #b3444759;
       --troca: #1c5e79;
-      --t-parede: #263948;
+      --t-parede: #293d83;
       --t-piso: #f9faf4;
       --t-lama: #daceab;
       --t-agua: #b3cfd7;
@@ -103,23 +103,25 @@
     .ic .cheio { fill: currentColor; stroke: none; }
 
     .capa {
-      position: relative; isolation: isolate; display: grid;
-      min-height: min(920px, 90svh); grid-template-rows: auto 1fr auto;
-      background: #101924; color: #f8f6f0; overflow: hidden;
+      border-bottom: 1px solid var(--linha);
+      background: var(--papel); color: var(--texto);
     }
-    .capa-arte, .capa-arte::after { position: absolute; inset: 0; }
-    .capa-arte { z-index: -1; left: 16%; }
-    .capa-arte img {
-      width: 100%; height: 100%; display: block; object-fit: cover; object-position: center 55%;
-    }
-    .capa-arte::after {
-      content: "";
-      background: linear-gradient(90deg, #101924, #101924d9 14%, #10192420 49%, transparent 78%),
-        linear-gradient(0deg, #101924bd 0%, transparent 35%, transparent 79%, #1019249c 100%);
-    }
+    .capa-arte { min-width: 0; color: var(--acento); }
+    .capa-arte canvas { width: 100%; display: block; }
+    .capa-arte figcaption { padding: .25rem 0; border-top: 1px solid; margin-top: .4rem; font: .79rem "Consolas", monospace; }
+    .ficha-atlas { min-width: 0; align-self: stretch; padding: .65rem 1.1rem; border-inline: 1px solid var(--acento); }
+    .ficha-atlas h2 { color: var(--acento); font: 700 .95rem/1.2 "Consolas", monospace; }
+    .ficha-atlas dl { border-top: 1px solid var(--linha); margin-top: .85rem; padding-top: .6rem; }
+    .ficha-atlas dl div { display: flex; justify-content: space-between; gap: .35rem; font: .81rem/1.65 "Consolas", monospace; }
+    .ficha-atlas dl dd { margin: 0; text-align: right; }
+    .capa .ficha-atlas p { margin-top: .5rem; font: .84rem/1.45 "Consolas", monospace; }
+    .atlas-quatro { margin: .55rem auto 0; }
+    .atlas-quatro h2 { padding: .5rem .75rem; margin: 0; color: #fff; background: #202320;
+      font: 700 clamp(.75rem,1.3vw,1.1rem)/1.4 "Consolas", monospace; text-align: center; }
+    .atlas-quatro iframe { width: 100%; display: block; height: 500px; border: 0; }
     .topo {
       display: flex; min-height: 5.25rem; align-items: center; justify-content: space-between;
-      gap: 1.25rem; border-bottom: 1px solid #a3b3c23c;
+      gap: 1.25rem; border-bottom: 1px solid var(--acento);
     }
     .assinatura {
       display: inline-flex; flex: none; align-items: center; gap: .75rem;
@@ -127,38 +129,38 @@
     }
     .assinatura .marca {
       display: grid; place-items: center; width: 2.15rem; height: 2.15rem;
-      color: #f3b081; border: 1px solid #e3a68075;
+      color: var(--acento); border: 1px solid var(--linha);
     }
     .navegacao { display: flex; align-items: center; gap: clamp(.85rem, 3vw, 2.5rem); margin-left: auto; }
-    .navegacao a { color: #e3e9e9; text-decoration: none; font-size: .85rem; font-weight: 570; }
+    .navegacao a { color: var(--texto); text-decoration: none; font: 550 .85rem "Consolas", monospace; }
     .navegacao a:hover, .assinatura:hover { text-decoration: underline; text-underline-offset: .28em; }
     .tema {
-      display: grid; place-items: center; color: inherit; background: #1019249c; border: 1px solid #c7d2d25e;
+      display: grid; place-items: center; color: inherit; background: var(--painel); border: 1px solid var(--linha);
       width: 2.6rem; height: 2.6rem; border-radius: 50%;
     }
-    .tema:hover { background: #33444f; }
+    .tema:hover { background: var(--acento-fundo); }
     .i-pausa, .tocando .i-toca, .tema .i-sol { display: none; }
     .tocando .i-pausa, :root[data-tema="escuro"] .tema .i-sol { display: block; }
     :root[data-tema="escuro"] .tema .i-lua { display: none; }
-    .capa-meio { display: flex; align-items: center; padding-block: clamp(2rem, 8vh, 6rem); }
+    .capa-meio { display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(9.2rem, .4fr) minmax(0, 1.18fr);
+      gap: clamp(1rem, 2.25vw, 2rem); align-items: center; padding-block: clamp(1.3rem, 3vw, 2.7rem); }
     .capa-texto { max-width: 43rem; }
     .capa h1 {
-      font-family: var(--heading); font-size: clamp(5rem, 10.1vw, 10.25rem);
-      font-weight: 630; line-height: .79; letter-spacing: -.078em;
+      font-family: var(--heading); font-size: clamp(3.65rem, 7.15vw, 7.5rem);
+      font-weight: 740; line-height: .87; letter-spacing: -.075em;
     }
-    .capa p { max-width: 33ch; margin-top: 1.8rem; color: #d7e0e4; font-size: clamp(1rem, 1.55vw, 1.33rem); }
-    .capa :focus-visible { outline-color: #ffb994; }
-    .capa-acoes { display: flex; align-items: center; flex-wrap: wrap; gap: .65rem 1.3rem; margin-top: 1.9rem; }
-    .capa-acoes .ligacao { color: #e8eeee; font-size: .88rem; text-decoration-thickness: 1px; text-underline-offset: .25em; }
+    .capa p { max-width: 44ch; margin-top: 1rem; color: var(--suave); font: clamp(.88rem,1.13vw,1rem)/1.43 "Consolas", monospace; }
+    .capa-acoes { display: flex; align-items: center; flex-wrap: wrap; gap: .65rem 1.3rem; margin-top: 1rem; }
+    .capa-acoes .ligacao { color: var(--acento); font-size: .88rem; text-decoration-thickness: 1px; text-underline-offset: .25em; }
     .chamada {
       display: inline-flex; gap: .85rem; align-items: center;
-      min-height: 3.05rem; padding: .68rem 1rem; color: #202829; background: #f4b389;
-      border: 1px solid #f4b389; font-weight: 720; font-size: .9rem; text-decoration: none; border-radius: .16rem;
+      min-height: 3.05rem; padding: .68rem 1rem; color: var(--botao-texto); background: var(--botao);
+      border: 1px solid var(--botao); font-weight: 720; font-size: .9rem; text-decoration: none;
     }
-    .chamada:hover { background: #ffd0ac; }
+    .chamada:hover { opacity: .9; }
     .capa-rodape {
       display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 1rem;
-      padding-block: 1.05rem; border-top: 1px solid #a3b3c247; color: #d2dadd; font-size: .79rem;
+      padding-block: 1.05rem; border-top: 1px solid var(--linha); color: var(--suave); font-size: .79rem;
     }
 
     .demonstracao { padding-block: clamp(3rem, 7vw, 6.6rem); }
@@ -315,14 +317,14 @@
     .aviso-pagina { max-width: 62ch; margin: 3rem auto; padding: 1rem; }
 
     @media (max-width: 1080px) {
+      .capa-meio { grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); }
+      .ficha-atlas { display: none; }
       .velocidade { margin-left: 0; }
       .bancada { grid-template-columns: minmax(0, 1.6fr) minmax(16rem, 1fr); }
     }
     @media (max-width: 770px) {
-      .capa { min-height: max(620px, 84svh); }
-      .capa-arte { left: 0; }
-      .capa-arte img { object-position: 59% center; }
-      .capa-arte::after { background: linear-gradient(90deg, #101924b8 0%, #10192496 35%, #10192426 100%), linear-gradient(0deg, #101924e8, transparent 50%, #10192470); }
+      .capa-meio { grid-template-columns: minmax(0, 1fr); }
+      .atlas-quatro iframe { height: 690px; }
       .bancada, .intro-demonstracao, .bitcoin-topo { grid-template-columns: 1fr; }
       .instrumentos { border-left: 0; border-top: 1px solid var(--linha); }
       .tabuleiro { min-height: clamp(12rem, 52vw, 20rem); }
@@ -335,7 +337,7 @@
       .navegacao a { font-size: .72rem; }
       .navegacao .nav-labirinto { display: none; }
       .tema { width: 2.15rem; height: 2.15rem; }
-      .capa h1 { font-size: clamp(4.4rem, 14vw, 5.3rem); }
+      .capa h1 { font-size: clamp(3.2rem, 12vw, 5rem); }
       .capa p { margin-top: 1.35rem; }
       .capa-rodape { font-size: .72rem; }
       .escolhas { grid-template-columns: minmax(0, 1.13fr) minmax(0, .94fr); gap: .55rem; }
@@ -361,9 +363,6 @@
   <div id="app">
     <a class="pular" href="#demonstracao">Pular para a demonstração</a>
     <header id="inicio" class="capa">
-      <figure class="capa-arte" aria-hidden="true">
-        <img alt="" src="data:image/webp;base64,__HERO_IMAGE__" fetchpriority="high">
-      </figure>
       <div class="topo limite">
         <a class="assinatura" href="#inicio" aria-label="Grafos e AVD, início">
           <span class="marca" aria-hidden="true">
@@ -373,7 +372,7 @@
         </a>
         <nav class="navegacao" aria-label="Seções do projeto">
           <a class="nav-labirinto" href="#demonstracao">Labirinto</a>
-          <a href="#mesa-de-rotas">Mesa de rotas</a>
+          <a href="algoritmos_em_acao.html">Quatro algoritmos</a>
           <a href="#bitcoin">Bitcoin Alpha</a>
         </nav>
         <button id="tema" class="tema" type="button" aria-label="Modo escuro" title="Alternar tema claro e escuro">
@@ -383,19 +382,36 @@
       </div>
       <div class="capa-meio limite">
         <div class="capa-texto">
-          <h1>Rotas<br>possíveis.</h1>
-          <p>Explore como algoritmos de grafos encontram caminhos em labirintos com chaves, portas e custos.</p>
+          <h1>Como um<br>grafo<br>procura.</h1>
+          <p>Quatro algoritmos, o mesmo labirinto. Acompanhe a exploração de cada um e compare os percursos encontrados.</p>
           <div class="capa-acoes">
-            <a class="chamada" href="#mesa-de-rotas">Comparar lado a lado <span aria-hidden="true">↓</span></a>
-            <a class="ligacao" href="#demonstracao">Explorar o labirinto</a>
+            <a class="chamada" href="algoritmos_em_acao.html">Ver os quatro em ação</a>
+            <a class="ligacao" href="#mesa-de-rotas">Comparar dois percursos</a>
           </div>
         </div>
+        <aside class="ficha-atlas" aria-labelledby="titulo-atlas">
+          <h2 id="titulo-atlas">O labirinto</h2>
+          <p>A posição, as chaves coletadas e os bônus consumidos definem o estado da busca.</p>
+          <dl>
+            <div><dt>Grade</dt><dd id="atlas-grade"></dd></div>
+            <div><dt>Passos (BFS)</dt><dd id="atlas-passos"></dd></div>
+            <div><dt>Custo (BFS)</dt><dd id="atlas-custo"></dd></div>
+          </dl>
+        </aside>
+        <figure class="capa-arte">
+          <canvas id="capa-mapa" role="img" aria-label="Planta de um labirinto do projeto com o percurso calculado pela BFS"></canvas>
+          <figcaption id="capa-legenda"></figcaption>
+        </figure>
       </div>
       <div class="capa-rodape limite">
         <span>Projeto de Teoria dos Grafos e Análise e Visualização de Dados</span>
         <span>CESAR School, turma 5B</span>
       </div>
     </header>
+    <section class="atlas-quatro limite" aria-labelledby="titulo-buscas">
+      <h2 id="titulo-buscas">Busca em grafos · BFS · DFS · Dijkstra · Bellman-Ford</h2>
+      <iframe src="algoritmos_em_acao.html?compacto=1&amp;mapa=m03_tres_chaves" title="Quatro algoritmos em ação"></iframe>
+    </section>
 
     <main class="limite">
       <section id="demonstracao" class="demonstracao" aria-labelledby="titulo-demonstracao">
@@ -547,6 +563,39 @@
         $("app").hidden = true;
         $("sem-dados").hidden = false;
         return;
+      }
+
+      // [IA] OpenAI Codex – planta da capa desenhada com o percurso real de um dos mapas.
+      const atlas = dados.mapas.m03_tres_chaves || dados.mapas[dados.mapa_inicial] || Object.values(dados.mapas)[0];
+      const telaAtlas = $("capa-mapa");
+      const ctxAtlas = telaAtlas.getContext("2d");
+      const passoAtlas = 48;
+      telaAtlas.width = atlas.grade[0].length * passoAtlas;
+      telaAtlas.height = atlas.grade.length * passoAtlas;
+      atlas.grade.forEach((linha, l) => [...linha].forEach((simbolo, c) => {
+        const x = c * passoAtlas, y = l * passoAtlas;
+        ctxAtlas.fillStyle = simbolo === "#" ? "#1041aa" : "#f7f3df";
+        ctxAtlas.fillRect(x, y, passoAtlas - 1, passoAtlas - 1);
+        if (/[A-Za-z]/.test(simbolo)) {
+          ctxAtlas.fillStyle = "#172450";
+          ctxAtlas.font = "bold 21px system-ui";
+          ctxAtlas.fillText(simbolo, x + 5, y + 20);
+        }
+      }));
+      const percursoAtlas = atlas.percursos.BFS;
+      $("atlas-grade").textContent = atlas.grade[0].length + " × " + atlas.grade.length;
+      $("atlas-passos").textContent = percursoAtlas?.passos ?? "—";
+      $("atlas-custo").textContent = percursoAtlas?.custo ?? "—";
+      if (percursoAtlas?.percurso.length) {
+        ctxAtlas.beginPath();
+        percursoAtlas.percurso.forEach(({linha, coluna}, i) => {
+          ctxAtlas[i ? "lineTo" : "moveTo"]((coluna + .5) * passoAtlas, (linha + .56) * passoAtlas);
+        });
+        ctxAtlas.lineWidth = 7;
+        ctxAtlas.lineJoin = "round";
+        ctxAtlas.strokeStyle = "#b72d20";
+        ctxAtlas.stroke();
+        $("capa-legenda").textContent = "Percurso real da BFS";
       }
 
       const SETAS = { ">": "▶", "<": "◀", "^": "▲", "v": "▼" };

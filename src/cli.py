@@ -112,6 +112,11 @@ def main(argv=None):
         viz.gerar_labirinto_interativo(dados_interativos(list(analises.values()), inicial),
                                        out / "labirinto_interativo.html")
         escritos.append(out / "labirinto_interativo.html")
+        # [IA] OpenAI Codex – exportação da página de comparação dos quatro algoritmos.
+        from .exploracao import dados_exploracao
+        pagina_algoritmos = out / "algoritmos_em_acao.html"
+        viz.gerar_pagina_algoritmos(dados_exploracao(analises.values(), inicial), pagina_algoritmos)
+        escritos.append(pagina_algoritmos)
 
     for arquivo in escritos:
         print(arquivo)

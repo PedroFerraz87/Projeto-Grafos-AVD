@@ -1,0 +1,253 @@
+<!doctype html>
+<!-- [IA] OpenAI Codex – interface de demonstração dos quatro algoritmos e registro de eventos do projeto. -->
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Compare a ordem de exploração de BFS, DFS, Dijkstra e Bellman-Ford no mesmo labirinto.">
+<title>Quatro algoritmos em ação | Grafos + AVD</title>
+<style>
+  :root { color-scheme: light; --ink:#202320; --paper:#f1eee6; --rule:#b9b7a9; --panel:#f9f7f0;
+    --blue:#223fa7; --sub:#505349; font-family:"Segoe UI",system-ui,sans-serif; color:var(--ink); background:var(--paper); }
+  * { box-sizing:border-box; }
+  body { margin:0; }
+  a { color:inherit; }
+  button,select,input { font:inherit; color:inherit; }
+  button,select,input[type=range] { cursor:pointer; }
+  :focus-visible { outline:2px solid var(--blue); outline-offset:4px; }
+  main, .top > div { width:min(100% - 7vw, 1320px); margin-inline:auto; }
+  .top { border-bottom:1px solid var(--rule); }
+  .top > div { min-height:60px; display:flex; justify-content:space-between; align-items:center; gap:1rem; }
+  .projeto { font-weight:780; text-decoration:none; font-size:1rem; }
+  .top a:last-child { font-size:.84rem; text-underline-offset:.2em; }
+  .intro { display:grid; grid-template-columns:1.4fr .6fr; align-items:end; gap:1.5rem; padding:2.5rem 0 1.9rem; }
+  h1,h2,p { margin:0; }
+  h1,h2 { font-family:"Bahnschrift","Segoe UI",system-ui,sans-serif; }
+  h1 { font-size:clamp(2.55rem,5.15vw,5.8rem); font-weight:730; line-height:.94; letter-spacing:-.065em; }
+  .intro p { font-size:.99rem; max-width:38ch; color:var(--sub); line-height:1.55; }
+  .controles { display:grid; grid-template-columns:minmax(9rem,1.35fr) auto auto minmax(6rem,2fr) auto;
+    background:#232620; color:#f9f7f0; align-items:end; gap:.85rem; padding:.85rem 1rem; }
+  .controles label { display:grid; gap:.28rem; font-size:.72rem; }
+  .controles select, .controles button {
+    min-height:2.5rem; border:1px solid #777c72; border-radius:0; background:#292d27; padding:.32rem .55rem;
+    color:inherit; font-size:.85rem;
+  }
+  #rodar { background:#d9e2a6; color:#24291b; border-color:#d9e2a6; font-weight:700; min-width:6.2rem; }
+  #reinicio { width:auto; }
+  .controles input { width:100%; height:2.5rem; margin:0; accent-color:#dce4b5; }
+  .controles :focus-visible { outline-color:#dce4b5; }
+  .paineis { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); border-left:1px solid var(--rule); }
+  article { min-width:0; background:var(--panel); border:1px solid var(--rule); border-width:0 1px 1px 0; }
+  article header { display:grid; grid-template-columns:1fr auto; align-items:start; padding:.85rem 1rem .62rem; gap:.3rem .7rem; }
+  article h2 { font-size:clamp(1.15rem,2vw,1.7rem); line-height:1.1; letter-spacing:-.03em; }
+  article h2::before { content:""; display:inline-block; width:.55rem; aspect-ratio:1; background:var(--tinta); margin:0 .48rem .16rem 0; }
+  .metodo,.fase { font-size:.77rem; color:var(--sub); }
+  .estado { padding:.16rem .36rem; border:1px solid var(--rule); font-size:.72rem; line-height:1.3; white-space:nowrap; }
+  .diagrama { background:#e7e4d9; margin:0 .72rem; border:1px solid #ccc8b8; }
+  canvas { width:100%; height:clamp(136px, 13vw, 176px); display:block; }
+  footer { display:flex; flex-wrap:wrap; justify-content:space-between; gap:.55rem; padding:.62rem 1rem .72rem; font-size:.78rem; }
+  .fase { font-variant-numeric:tabular-nums; }
+  .orientacao { max-width:86ch; color:var(--sub); font-size:.84rem; line-height:1.55; margin:1.15rem 0 2rem; }
+  .compacto main { width:100%; }
+  .compacto .top, .compacto .intro { display:none; }
+  .compacto .orientacao { margin:.65rem .75rem; }
+  @media(min-width:940px) {
+    .compacto article { display:grid; grid-template-columns:minmax(6.7rem,.9fr) minmax(0,1.45fr) minmax(5rem,.6fr); align-items:center; }
+    .compacto article header { display:flex; flex-direction:column; padding:.7rem; align-items:flex-start; }
+    .compacto article footer { display:grid; align-content:center; padding:.45rem .75rem .45rem .25rem; }
+    .compacto .diagrama { margin:.6rem .45rem; }
+    .compacto canvas { height:clamp(136px, 12vw, 172px); }
+    .compacto .estado { white-space:normal; }
+  }
+  @media(max-width:730px) {
+    .intro { grid-template-columns:1fr; gap:.9rem; padding:1.6rem 0 1.3rem; }
+    .controles { grid-template-columns:1fr auto auto; gap:.5rem; padding:.6rem; }
+    .tempo { grid-column:span 2; }
+    .paineis header { grid-template-columns:1fr; gap:.28rem; padding:.55rem; }
+    .estado { justify-self:start; white-space:normal; }
+    .diagrama { margin:0 .32rem; }
+    canvas { height:clamp(100px,26vw,169px); }
+    footer { padding:.42rem .55rem; }
+  }
+  @media(max-width:385px) { .controles { grid-template-columns:minmax(6rem,1fr) auto auto; } .controles button { padding-inline:.35rem; } }
+</style>
+</head>
+<body>
+<header class="top"><div><a class="projeto" href="labirinto_interativo.html">Grafos + AVD</a><a href="labirinto_interativo.html">Voltar ao laboratório</a></div></header>
+<main>
+  <div class="intro">
+    <h1>Quatro modos de buscar.</h1>
+    <p>Veja como quatro algoritmos exploram o mesmo labirinto. Pause para comparar o estado de cada busca.</p>
+  </div>
+  <section class="controles" aria-label="Controles da demonstração">
+    <label>Mapa<select id="mapa"></select></label>
+    <button id="rodar" type="button">Reproduzir</button>
+    <button id="reinicio" type="button">Reiniciar</button>
+    <label class="tempo">Evento compartilhado<input id="tempo" type="range" min="0" max="0" value="0"></label>
+    <label>Velocidade<select id="velocidade"><option value="4">4 ev/s</option><option value="16" selected>16 ev/s</option><option value="48">48 ev/s</option></select></label>
+  </section>
+  <div id="paineis" class="paineis"></div>
+  <p class="orientacao">Cada avanço mostra um evento de cada algoritmo. A sequência compara a ordem de exploração. As células podem se repetir quando o estado muda, por exemplo ao coletar uma chave. Bellman-Ford mostra o primeiro relaxamento de cada estado.</p>
+</main>
+<script id="dados" type="application/json">__DADOS__</script>
+<script>
+  const parametros = new URLSearchParams(location.search);
+  if (parametros.has("compacto")) document.body.classList.add("compacto");
+  const dados = JSON.parse(document.getElementById("dados").textContent);
+  const mapa = document.getElementById("mapa");
+  const tempo = document.getElementById("tempo");
+  const rodar = document.getElementById("rodar");
+  const velocidade = document.getElementById("velocidade");
+  const configuracoes = [
+    ["BFS", "BFS", "Descoberta por níveis", "#139fbe"],
+    ["DFS", "DFS", "Descoberta e finalização", "#8b55b5"],
+    ["DIJKSTRA", "Dijkstra", "Expansão por menor custo", "#c46b22"],
+    ["BELLMAN_FORD", "Bellman-Ford", "Primeiros relaxamentos", "#318154"],
+  ];
+  const status = { OK:"Percurso encontrado", RECUSA:"Peso negativo recusado", EXPLORACAO:"Classifica arcos",
+                   CICLO_NEGATIVO:"Ciclo negativo", SEM_SOLUCAO:"Sem solução" };
+  const nomes = {m01_terreno:"m01 · Terreno", m02_uma_chave:"m02 · Uma chave", m03_tres_chaves:"m03 · Três chaves",
+                 m04_esteiras:"m04 · Esteiras", m05_bonus:"m05 · Bônus", m06_fonte:"m06 · Fonte",
+                 m07_impossivel:"m07 · Sem saída", m08_grande:"m08 · Mapa grande"};
+  const paineis = configuracoes.map(([id,nome,metodo,cor]) => {
+    const artigo = document.createElement("article");
+    artigo.dataset.algoritmo = id;
+    artigo.style.setProperty("--tinta", cor);
+    artigo.innerHTML = '\n      <header><h2></h2><span class="estado"></span><p class="metodo"></p></header>\n      <div class="diagrama"><canvas role="img"></canvas></div>\n      <footer><span class="fase"></span><strong class="resultado"></strong></footer>';
+    artigo.querySelector("h2").textContent = nome;
+    artigo.querySelector(".metodo").textContent = metodo;
+    document.getElementById("paineis").append(artigo);
+    return {id,nome,cor,artigo,canvas:artigo.querySelector("canvas")};
+  });
+  let dadosMapa, intervalo, indice = 0;
+
+  function desenhar(painel) {
+    const {canvas, busca, cor} = painel;
+    const {width,height} = canvas.getBoundingClientRect();
+    if (!width || !height) return;
+    const ratio = Math.min(devicePixelRatio || 1, 2);
+    const largura = Math.round(width * ratio), altura = Math.round(height * ratio);
+    if (canvas.width !== largura || canvas.height !== altura) {
+      canvas.width = largura;
+      canvas.height = altura;
+    }
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(ratio,0,0,ratio,0,0);
+    ctx.clearRect(0,0,width,height);
+    const grade = dadosMapa.grade;
+    const colunas = grade[0].length;
+    const tamanho = Math.min((width-14)/colunas, (height-14)/grade.length, 26);
+    const x0 = (width - tamanho*colunas)/2, y0 = (height - tamanho*grade.length)/2;
+    const n = Math.min(indice,busca.eventos.length);
+    while (painel.aplicado < n) {
+      const [l,c,fase] = busca.eventos[painel.aplicado++];
+      painel.marcadas.set(l*colunas+c, fase);
+    }
+    const atual = busca.eventos[n-1];
+    const ciclo = n === busca.eventos.length && busca.ciclo;
+    const especiais = { S:"#dbe9c5", G:"#f8d596", "~":"#b8d6db", "*":"#ecd0b1", "+":"#d9e5c1", ",":"#d6c7ab" };
+    grade.forEach((linha,l) => [...linha].forEach((simbolo,c) => {
+      const x = x0+c*tamanho, y = y0+l*tamanho;
+      const marca = painel.marcadas.get(l*colunas+c);
+      ctx.fillStyle = simbolo === "#" ? "#1443a9" : especiais[simbolo] || "#f8f4e7";
+      ctx.fillRect(x,y,Math.max(tamanho-.6,1),Math.max(tamanho-.6,1));
+      if (marca !== undefined) {
+        ctx.fillStyle = cor;
+        ctx.globalAlpha = marca ? .23 : .55;
+        ctx.fillRect(x,y,tamanho-.55,tamanho-.55);
+        ctx.globalAlpha = 1;
+      }
+      if (tamanho > 11 && ![".", "#", ",", "~"].includes(simbolo)) {
+        ctx.fillStyle = "#202320";
+        ctx.font = "bold " + Math.max(8,tamanho*.55) + "px system-ui";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(simbolo,x+tamanho/2,y+tamanho/2);
+      }
+    }));
+    if (ciclo && ciclo.length) {
+      ctx.beginPath();
+      ciclo.forEach(([l,c],i) => ctx[i ? "lineTo" : "moveTo"](x0+(c+.5)*tamanho,y0+(l+.5)*tamanho));
+      ctx.closePath();
+      ctx.strokeStyle = "#ab220e";
+      ctx.lineWidth = Math.max(2,tamanho*.19);
+      ctx.stroke();
+    }
+    if (n === busca.eventos.length && busca.rota?.length) {
+      ctx.beginPath();
+      busca.rota.forEach(([l,c],i) => ctx[i ? "lineTo" : "moveTo"](x0+(c+.5)*tamanho,y0+(l+.5)*tamanho));
+      ctx.strokeStyle = cor;
+      ctx.lineWidth = Math.max(1.5,tamanho*.15);
+      ctx.lineJoin = "round";
+      ctx.stroke();
+    }
+    if (atual && n < busca.eventos.length) {
+      ctx.beginPath();
+      ctx.arc(x0+(atual[1]+.5)*tamanho,y0+(atual[0]+.5)*tamanho,Math.max(2,tamanho*.27),0,Math.PI*2);
+      ctx.fillStyle = cor; ctx.fill();
+      ctx.strokeStyle = "#fff"; ctx.lineWidth=1.4; ctx.stroke();
+    }
+  }
+
+  function mostrar(novo) {
+    if (novo < indice) paineis.forEach(p => { p.aplicado = 0; p.marcadas.clear(); });
+    indice = novo;
+    tempo.value = novo;
+    tempo.setAttribute("aria-valuetext", "Evento " + novo + " de " + tempo.max);
+    paineis.forEach(p => {
+      const n = Math.min(novo,p.busca.eventos.length);
+      const atual = p.busca.eventos[n-1];
+      const fase = p.id === "DFS" && atual ? (atual[2] ? "Finalizando" : "Descobrindo") : "Eventos";
+      p.artigo.querySelector(".fase").textContent = fase + " " + n + "/" + p.busca.eventos.length;
+      p.canvas.setAttribute("aria-label",p.nome + ", " + n + " eventos de " + p.busca.eventos.length);
+      desenhar(p);
+    });
+  }
+
+  function pausar() {
+    clearInterval(intervalo);
+    intervalo = undefined;
+    rodar.textContent = "Reproduzir";
+  }
+
+  function selecionar() {
+    pausar();
+    dadosMapa = dados.mapas[mapa.value];
+    paineis.forEach(p => {
+      p.busca = dadosMapa.buscas[p.id];
+      p.aplicado = 0;
+      p.marcadas = new Map();
+      p.artigo.querySelector(".estado").textContent = status[p.busca.status];
+      p.artigo.querySelector(".resultado").textContent = p.busca.passos == null ? "" :
+        p.busca.passos + " passos · custo " + p.busca.custo;
+    });
+    tempo.max = Math.max(...paineis.map(p => p.busca.eventos.length));
+    rodar.disabled = Number(tempo.max) === 0;
+    mostrar(0);
+  }
+
+  function reproduzir() {
+    if (intervalo) { pausar(); return; }
+    if (indice >= Number(tempo.max)) mostrar(0);
+    rodar.textContent = "Pausar";
+    intervalo = setInterval(() => {
+      mostrar(indice + 1);
+      if (indice >= Number(tempo.max)) pausar();
+    }, 1000/Number(velocidade.value));
+  }
+
+  Object.keys(dados.mapas).forEach(id => mapa.add(new Option(nomes[id] || id,id)));
+  const preferido = parametros.get("mapa") || dados.mapa_inicial;
+  mapa.value = Object.hasOwn(dados.mapas, preferido) ? preferido : mapa.options[0].value;
+  mapa.addEventListener("change",selecionar);
+  rodar.addEventListener("click",reproduzir);
+  tempo.addEventListener("input",() => { pausar(); mostrar(Number(tempo.value)); });
+  velocidade.addEventListener("change",() => { if (intervalo) { pausar(); reproduzir(); } });
+  document.getElementById("reinicio").addEventListener("click",() => { pausar(); mostrar(0); });
+  selecionar();
+  if (parametros.has("compacto")) mostrar(Math.min(38, Number(tempo.max)));
+  const observador = new ResizeObserver(() => paineis.forEach(desenhar));
+  paineis.forEach(p => observador.observe(p.canvas));
+</script>
+</body>
+</html>

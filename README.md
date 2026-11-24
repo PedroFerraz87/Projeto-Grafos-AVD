@@ -44,7 +44,7 @@ python -m src.analises --out $parte1
 python -c "from src.graphs.estados import exportar_todos; import sys; exportar_todos('.', sys.argv[1])" $parte1
 ```
 
-Abra [Rotas possíveis](out/parte1/labirinto_interativo.html) no navegador para comparar dois algoritmos em planta ou relevo. A CLI gera o HTML, os percursos, as soluções e os casos de armadilha. `src.analises` gera as métricas, a comparação de modelagens e as figuras da T30. `exportar_todos` exporta os CSVs de arestas.
+Abra [Rotas possíveis](out/parte1/labirinto_interativo.html) para comparar dois percursos em planta ou relevo. A página [Quatro algoritmos em ação](out/parte1/algoritmos_em_acao.html) mostra BFS, DFS, Dijkstra e Bellman-Ford com o mesmo controle de reprodução. A CLI gera as páginas, os percursos, as soluções e os casos de armadilha. `src.analises` gera as métricas, a comparação de modelagens e as figuras da T30. `exportar_todos` exporta os CSVs de arestas.
 
 ### Parte 2 — Bitcoin Alpha
 

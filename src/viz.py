@@ -1,4 +1,3 @@
-from base64 import b64encode
 import json
 from pathlib import Path
 
@@ -119,9 +118,16 @@ def gerar_labirinto_interativo(dados, caminho_saida):
     for marcador, nome in (("__MESA_ROTAS_HTML__", "mesa_rotas.html"), ("__MESA_ROTAS_JS__", "mesa_rotas.js")):
         if marcador in html:
             html = html.replace(marcador, MODELO.with_name(nome).read_text(encoding="utf-8"))
-    if "__HERO_IMAGE__" in html:
-        imagem = MODELO.with_name("rotas-hero.webp").read_bytes()
-        html = html.replace("__HERO_IMAGE__", b64encode(imagem).decode("ascii"))
+    return _gravar_html(html, dados, caminho_saida)
+
+
+# [IA] OpenAI Codex – exportação da página de exploração com dados locais.
+def gerar_pagina_algoritmos(dados, caminho_saida):
+    modelo = MODELO.with_name("algoritmos_em_acao.html")
+    return _gravar_html(modelo.read_text(encoding="utf-8"), dados, caminho_saida)
+
+
+def _gravar_html(html, dados, caminho_saida):
     texto = json.dumps(dados, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     caminho_saida = Path(caminho_saida)
     caminho_saida.parent.mkdir(parents=True, exist_ok=True)
