@@ -522,7 +522,7 @@ Todo resultado da Parte 2 indica o `recorte` usado: `10`, `50` ou `100` (percent
 avaliações). O critério de corte (ex.: primeiras N avaliações por `timestamp`) é decidido no
 leitor e registrado em `parte2_report.json` → `dataset.criterio_recorte`.
 
-### 4.2 
+### 4.2 `parte2_report.json`
 
 ```json
 {
@@ -561,11 +561,11 @@ leitor e registrado em `parte2_report.json` → `dataset.criterio_recorte`.
       "ciclo": [1, 2, 1], "custo_ciclo": -1 }
   ],
   "benchmark": {
-    "ambiente": { "python": "3.11.x", "so": "texto", "cpu": "texto", "ram_gb": 0 },
-    "execucoes": 5,
-    "arquivo_detalhado": "benchmark_parte2.csv",
+    "arquivo_csv": "out/parte2/benchmark.csv",
+    "total_medicoes": 180,
+    "unidade_tempo": "ms",
     "resumo": [
-      { "algoritmo": "BFS", "recorte": 100, "vertices": 3783, "arcos": 24186,
+      { "algoritmo": "BFS", "recorte": 100, "fonte": 1, "execucoes": 5,
         "tempo_medio_ms": 0.0, "tempo_desvio_ms": 0.0 }
     ]
   }
@@ -581,9 +581,11 @@ Regras:
   `com_ciclo_negativo`); `ciclo` é fechado (primeiro id repetido no fim).
 - Caminhos e ciclos são listas de ids `int`.
 
-### 4.3 
+O resumo do benchmark agrupa as medições por algoritmo, recorte e fonte. As dimensões de cada recorte constam em `dataset.recortes` e no CSV de medições. As informações da máquina de medição devem constar na seção de desempenho do relatório técnico.
 
-Uma linha por execução medida (5 execuções × algoritmos × 3 recortes).
+### 4.3 `benchmark.csv`
+
+Uma linha por execução medida (5 execuções × 4 algoritmos × 3 recortes × 3 fontes por recorte). As tabelas da T32 estão em `out/parte2/dados_comparacao_algoritmos/`.
 
 | Coluna | Tipo | Descrição |
 |---|---|---|
@@ -607,5 +609,5 @@ Uma linha por execução medida (5 execuções × algoritmos × 3 recortes).
 | `dfs_classificacao.csv` | P1/P2 (T12, T22) | P3 (métricas), relatório |
 | `metricas_global.json`, `camadas.json`, `graus_<mapa>.csv`, `multiplicidade_m08.csv` | P3 (T23) | P5 (T30, T31), relatório |
 | `comparacao_modelagem.csv` | P3 (T24) | relatório |
-| `parte2_report.json`, `benchmark_parte2.csv` | P4 (T26), P2 (T25) | P4/P5 (T32), relatório |
+| `parte2_report.json`, `benchmark.csv` | P4 (T26), P2 (T25) | P4/P5 (T32), relatório |
 

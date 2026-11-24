@@ -1,6 +1,6 @@
 # Tabelas de comparação para a T32
 
-O [relatório integrado](../../out/parte2/parte2_report.json) reúne os casos da T25 e o resumo de desempenho da T26. As medições individuais do Victor estão em [benchmark.csv](../../out/parte2/benchmark.csv). As [tabelas publicadas](../../out/parte2/tabelas_t32/) incluem resultados por algoritmo, comparação dos caminhos, medições individuais e resumo por algoritmo, recorte e fonte.
+O [relatório integrado](../../out/parte2/parte2_report.json) reúne os casos da T25 e o resumo de desempenho da T26. As medições individuais do Victor estão em [benchmark.csv](../../out/parte2/benchmark.csv). As [tabelas publicadas](../../out/parte2/dados_comparacao_algoritmos/) incluem resultados por algoritmo, comparação dos caminhos, medições individuais e resumo por algoritmo, recorte e fonte.
 
 Para reproduzir as tabelas sem alterar as saídas publicadas, rode os comandos abaixo na raiz do projeto. O primeiro comando reexecuta os casos da T25. O segundo usa os tempos já medidos na T26.
 
@@ -8,7 +8,7 @@ Para reproduzir as tabelas sem alterar as saídas publicadas, rode os comandos a
 $repro = Join-Path ([System.IO.Path]::GetTempPath()) ("grafos-t32-" + [guid]::NewGuid())
 $relatorio = Join-Path $repro "parte2_report.json"
 python -m src.parte2 --out $relatorio
-python -m src.avd.comparacao_algoritmos --relatorio $relatorio --benchmark out/parte2/benchmark.csv --out (Join-Path $repro "tabelas_t32")
+python -m src.avd.comparacao_algoritmos --relatorio $relatorio --benchmark out/parte2/benchmark.csv --out (Join-Path $repro "dados_comparacao_algoritmos")
 ```
 
 O resumo mantém `vertices` e `arcos` para relacionar cada medição ao tamanho real do grafo. Use `execucoes` para conferir a quantidade de repetições em cada combinação. O tempo médio e o desvio padrão amostral estão em milissegundos. Uma combinação com uma única execução tem o desvio vazio.

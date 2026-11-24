@@ -362,3 +362,17 @@ def test_cli_mapa_invalido_na_linha_de_comando_nao_mostra_traceback(tmp_path):
     assert r.returncode == 1 and r.stdout == ""
     assert "Traceback" not in r.stderr and r.stderr.startswith("erro: mapa mapa_ruim inv")
     assert len(r.stderr.strip().splitlines()) == 1
+
+
+# [IA] OpenAI Codex – teste de regressão para a leitura de mapas na CLI.
+def test_cli_mapa_com_codificacao_invalida(tmp_path, capsys):
+    mapa = tmp_path / "mapa_ruim.txt"
+    mapa.write_bytes(b"#####\n#S\xffG#\n#####\n")
+    saida = tmp_path / "saida"
+
+    with pytest.raises(SystemExit) as erro:
+        cli.main(["--mapa", str(mapa), "--out", str(saida)])
+
+    assert erro.value.code == 1
+    assert capsys.readouterr().err == "erro: mapa mapa_ruim inválido: o arquivo precisa estar em UTF-8\n"
+    assert not saida.exists()

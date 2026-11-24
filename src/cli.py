@@ -97,6 +97,11 @@ def main(argv=None):
         except MapaInvalido as erro:
             causa = str(erro).removeprefix(f"{c}: ")  # a mensagem do io.py começa pelo caminho do arquivo
             parser.exit(1, f"erro: mapa {c.stem} inválido: {causa}\n")
+        # [IA] OpenAI Codex – tratamento de falhas de leitura na interface da CLI.
+        except UnicodeDecodeError:
+            parser.exit(1, f"erro: mapa {c.stem} inválido: o arquivo precisa estar em UTF-8\n")
+        except OSError as erro:
+            parser.exit(1, f"erro: não foi possível ler o mapa {c.stem}: {erro.strerror or str(erro)}\n")
     escolhidas = [analises[selecionado]] if selecionado else list(analises.values())
 
     out.mkdir(parents=True, exist_ok=True)

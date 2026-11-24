@@ -9,14 +9,12 @@ O projeto reúne duas partes:
 1. Modelagem e análise de labirintos com chaves, portas e outros elementos por meio de grafos de estados.
 2. Comparação de algoritmos de grafos e análise de um dataset de maior dimensão.
 
-O projeto está em desenvolvimento. Os resultados e comandos serão atualizados conforme a integração e validação das entregas.
-
 ## Requisitos
 
 - Python 3.11 ou superior.
 - Dependências listadas em `requirements.txt`.
-- Os algoritmos BFS, DFS, Dijkstra e Bellman-Ford são implementados pelo grupo.
-- Bibliotecas de algoritmos prontos não devem ser utilizadas na aplicação.
+- Os algoritmos BFS, DFS, Dijkstra e Bellman-Ford ficam em `src/graphs/algorithms.py`. A implementação inicial assistida por IA e os ajustes do grupo estão identificados no código.
+- NetworkX é usado como oráculo de testes.
 
 ## Instalação
 
@@ -30,25 +28,42 @@ python -m pip install -r requirements.txt
 
 ## Execução
 
-Os comandos abaixo representam exemplos previstos para a execução do projeto. Devem ser conferidos após a integração e validação da CLI.
+Os resultados publicados estão em [Parte 1](out/parte1/) e [Parte 2](out/parte2/). Os comandos abaixo gravam novas execuções em uma pasta temporária.
+
+```powershell
+$repro = Join-Path ([System.IO.Path]::GetTempPath()) ("grafos-avd-" + [guid]::NewGuid())
+$parte1 = Join-Path $repro "parte1"
+$parte2 = Join-Path $repro "parte2"
+```
 
 ### Parte 1 — Labirintos
 
 ```powershell
-python -m src.cli --mapa .\data\mapas\m03_tres_chaves.txt --alg BFS --out .\out\parte1
+python -m src.cli --interactive --fonte-consumivel --out $parte1
+python -m src.analises --out $parte1
+python -c "from src.graphs.estados import exportar_todos; import sys; exportar_todos('.', sys.argv[1])" $parte1
 ```
+
+Abra [Rotas possíveis](out/parte1/labirinto_interativo.html) no navegador para comparar dois algoritmos em planta ou relevo. A CLI gera o HTML, os percursos, as soluções e os casos de armadilha. `src.analises` gera as métricas, a comparação de modelagens e as figuras da T30. `exportar_todos` exporta os CSVs de arestas.
+
+### Parte 2 — Bitcoin Alpha
+
+Os casos de algoritmos e as tabelas podem ser reproduzidos com as medições publicadas pelo grupo.
 
 ```powershell
-python -m src.cli --mapa .\data\mapas\m05_bonus.txt --alg BELLMAN_FORD --out .\out\parte1
+$relatorio = Join-Path $parte2 "parte2_report.json"
+python -m src.parte2 --out $relatorio
+Copy-Item -LiteralPath out/parte2/benchmark.csv -Destination (Join-Path $parte2 "benchmark.csv")
+python -m src.avd.comparacao_algoritmos --relatorio $relatorio --benchmark (Join-Path $parte2 "benchmark.csv") --out (Join-Path $parte2 "dados_comparacao_algoritmos")
 ```
 
-### Parte 2 — Dataset
+Para medir novamente no seu computador, passe à CLI o caminho do arquivo CSV. O benchmark pode levar vários minutos.
 
 ```powershell
-python -m src.cli --dataset .\data\dataset_parte2 --benchmark --out .\out\parte2
+python -m src.cli --dataset data/dataset_parte2/soc-sign-bitcoinalpha.csv --benchmark --out $parte2
 ```
 
-Os parâmetros e comandos definitivos serão documentados após a integração da CLI.
+O comando grava `benchmark.csv`. Para incorporar essas medições ao JSON local da T25, rode `python -c "from src.registrar_benchmark import registrar_benchmark; import sys; registrar_benchmark(*sys.argv[1:])" (Join-Path $parte2 "benchmark.csv") $relatorio`. As [figuras publicadas](out/parte2/avd/) incluem os gráficos exploratórios, explanatórios e os de comparação entre algoritmos.
 
 ## Testes
 

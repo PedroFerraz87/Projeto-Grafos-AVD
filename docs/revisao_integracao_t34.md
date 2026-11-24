@@ -1,13 +1,13 @@
 # Revisão da integração (T34)
 
-Parecer de Artur Antunes para Ricardo Machado. A primeira revisão foi feita em `f03c80c`. Os casos abaixo foram conferidos novamente em 23/11/2026 sobre a base `833729d`.
+Parecer de Artur Antunes para Ricardo Machado. A primeira revisão foi feita em `f03c80c`. Em 23/11/2026, os casos foram conferidos sobre `833729d`. Em 24/11, a integração foi revista sobre `ff83d6b`.
 
 ## Achados
 
-1. **Mapa inválido na CLI · encaminhado para a T34.** Um arquivo existente com a grade `##### / #SXG# / #####` (uma linha por trecho) gera `MapaInvalido` por causa do símbolo `X`. A CLI retorna 1 e exibe o traceback. O código atual trata a localização do arquivo. O tratamento da análise pode emitir uma mensagem curta com o nome do mapa e a causa, mantendo um código de saída de erro. A correção cabe à integração da CLI.
+1. **Mapa inválido na CLI · corrigido.** Ricardo tratou erros de validação da grade em `1a5f538`. A revisão de integração estendeu o tratamento às falhas de leitura e à codificação inválida. A CLI informa o nome do mapa e a causa, retorna código 1 e encerra antes de gravar as saídas.
 2. **Contagem de armadilhas no painel · corrigida na demonstração.** Na base `833729d`, o painel exibe o número de casas distintas da camada. Estados com o mesmo conjunto de chaves e diferentes bônus consumidos podem compartilhar uma casa. Com o painel revisto, um teste de navegador em mapa sintético confirmou oito estados-armadilha e seis casas realçadas. Desligar o realce remove as marcas da grade e preserva o total do contador.
 3. **Custo da fila da BFS · registrado para o benchmark.** `src/graphs/algorithms.py` usa `list.pop(0)`, que desloca os itens restantes da fila. As medições publicadas da T26 correspondem a essa implementação. Em uma revisão futura do algoritmo, uma fila com `collections.deque` permite remover o primeiro elemento em tempo constante.
-4. **Origem da implementação · marcação presente.** O commit `9c109bf` publicou a implementação inicial e os testes gerados com OpenAI Codex. O commit `bacad13` removeu a marcação dos algoritmos, que foi restaurada em `0e8586d`. O cabeçalho atual identifica o commit de origem e registra os ajustes posteriores do grupo.
+4. **Origem da implementação · marcação restaurada.** O commit `9c109bf` publicou a implementação inicial e os testes gerados com OpenAI Codex. A marcação foi removida em `bacad13`, restaurada em `0e8586d` e retirada novamente em `1a5f538`. Esta revisão repõe o cabeçalho com a origem da implementação e o registro dos ajustes do grupo.
 
 ## Verificações
 

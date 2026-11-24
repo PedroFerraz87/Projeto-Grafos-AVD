@@ -83,5 +83,5 @@ Com Python 3.11.15, a suíte na base `833729d` passou com 565 testes. Os testes 
 | T02 | Casos de referência e suíte correspondente. Ricardo publicou a implementação de `Graph` e o módulo `test_graph.py` | `b508b46`, `fd18430`, `d101546`, `19cc433` |
 | T11–T15 | Publicação e integração inicial dos algoritmos e testes gerados com OpenAI Codex, com ajustes posteriores do grupo | `9c109bf`, `bacad13`, `0e8586d` |
 | T25 | Experimentos de algoritmos no Bitcoin Alpha, testes e relatório de resultados | `d9310ad` |
-| T32 | Apoio ao Victor na preparação das tabelas de tempo e caminhos | `0e8586d`, [tabelas publicadas](../out/parte2/tabelas_t32/) |
+| T32 | Apoio ao Victor na preparação das tabelas de tempo e caminhos | `0e8586d`, [tabelas publicadas](../out/parte2/dados_comparacao_algoritmos/) |
 | T34 e T36 | Parecer de integração e seção P2 do relatório técnico | `0e8586d`, [parecer atualizado](revisao_integracao_t34.md) |

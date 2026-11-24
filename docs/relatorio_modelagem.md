@@ -79,7 +79,7 @@ Os arcos da tabela não incluem os arcos até `ALVO`. Cada causa tem um exemplo 
 A direção é o que permite os resultados da Parte 1:
 
 1. **Ciclo negativo.** Em um grafo não dirigido, qualquer aresta negativa já formaria o ciclo `u → v → u` de custo negativo. Em `G_est`, o bônus vale −4 só uma vez, então o m05 não tem ciclo negativo. Em `G_pos`, com o bônus fixo em −4, tem. No m06, a fonte forma um ciclo dirigido real: `(3,6)|-|{}` → `(3,5)|-|{}` custa −2 e a volta custa 1, para um custo de ciclo de −1.
-2. **Armadilhas.** Um estado-armadilha é alcançável a partir de `S`, mas não alcança `ALVO`. Achá-los exige a busca reversa no grafo transposto (`Graph.transposto`), que só existe como operação em grafo dirigido: o m04 tem 4 e o m07 tem 16, todos os seus estados.
+2. **Armadilhas.** Um estado-armadilha é alcançável a partir de `S`, mas não alcança `ALVO`. A busca reversa no grafo transposto (`Graph.transposto`) identifica os estados que alcançam a saída. No grafo dirigido, o transposto inverte o sentido dos arcos. O m04 tem 4 estados-armadilha e o m07 tem 16, todos os seus estados.
 3. **DFS.** Um arco de retorno indica ciclo dirigido; a classificação dos arcos depende do sentido de cada um.
 
 A Parte 2 também é dirigida (um usuário avalia outro), como descrito na seção 3.3 do relatório.
@@ -147,11 +147,12 @@ O m2 tem um corredor de `S` até `G` e um ramal que desce até uma faixa de 6 es
 
 ## 5. Reprodução
 
-```
+```powershell
+$repro = Join-Path ([System.IO.Path]::GetTempPath()) ("grafos-modelagem-" + [guid]::NewGuid())
 python -m pytest -q tests/test_io.py tests/test_estados.py tests/test_mapas_grupo.py
-python -m src.cli --mapa m1 --out out/verificacao
-python -m src.cli --mapa m2 --out out/verificacao
-python -m src.graphs.estados
+python -m src.cli --mapa m1 --out (Join-Path $repro "m1")
+python -m src.cli --mapa m2 --out (Join-Path $repro "m2")
+python -c "from src.graphs.estados import exportar_todos; import sys; exportar_todos('.', sys.argv[1])" (Join-Path $repro "arestas")
 ```
 
-Os dois `src.cli` geram `percurso_m1.json`, `percurso_m2.json` e as linhas do mapa em `solucoes.csv` e `dfs_classificacao.csv` na pasta `out/verificacao`; os arquivos entregues em `out/parte1/` vêm de `python -m src.cli` sem `--mapa`. A pasta separada é necessária porque `--mapa` regrava o `solucoes.csv` só com o mapa escolhido. O último comando gera os `arestas_<mapa>.csv`.
+Cada execução da CLI grava o percurso, `solucoes.csv` e `dfs_classificacao.csv` na pasta do próprio mapa. As saídas publicadas em `out/parte1/` reúnem os mapas da execução sem `--mapa`. O último comando gera os `arestas_<mapa>.csv` em uma pasta separada.

@@ -180,10 +180,11 @@ def grafico_boxplot_notas(df, pasta_saida):
 
     plt.boxplot(
         [negativas, positivas],
-        tick_labels=["Negativas", "Positivas"],
         patch_artist=True,
         showmeans=True
     )
+    # [IA] OpenAI Codex – compatibilidade com o Matplotlib 3.7 de requirements.txt.
+    plt.xticks([1, 2], ["Negativas", "Positivas"])
 
     plt.title("Distribuição das notas positivas e negativas")
     plt.xlabel("Tipo de avaliação")
