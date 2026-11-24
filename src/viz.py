@@ -1,5 +1,3 @@
-# [IA] GitHub Copilot no VS Code - geração das figuras da T28.
-# [IA] Claude (Anthropic) - HTML interativo anterior.
 from base64 import b64encode
 import json
 from pathlib import Path
@@ -21,7 +19,6 @@ CORES_CAMADAS = {"-": "#b8c5d1", "a": "#4c78a8", "ab": "#f2cf5b",
 
 
 def gerar_percurso_png(analise, caminho_saida, algoritmo=None):
-    """Desenha a grade e marca o percurso mínimo selecionado pelo algoritmo disponível."""
     algoritmo = algoritmo or ("DIJKSTRA" if "DIJKSTRA" in analise["execucoes"] else "BFS")
     percurso = montar_percurso(analise, algoritmo)
     grade = analise["grade"]
@@ -61,7 +58,6 @@ def gerar_percurso_png(analise, caminho_saida, algoritmo=None):
 
 
 def gerar_arvore_bfs_png(analise, caminho_saida):
-    """Desenha a árvore BFS de m02 pela primeira posição alcançada de cada estado."""
     resultado = bfs(analise["g"], analise["inicio"])
     pais = resultado.pais()
 
@@ -106,7 +102,6 @@ def gerar_arvore_bfs_png(analise, caminho_saida):
 
 
 def gerar_figuras_t28(raiz, pasta_saida):
-    """Gera percurso_m03.png, percurso_m08.png e a árvore BFS de m02."""
     raiz, pasta_saida = Path(raiz), Path(pasta_saida)
     gerados = []
     for nome, algoritmo in (("m03_tres_chaves", "DIJKSTRA"), ("m08_grande", "DIJKSTRA")):
@@ -118,18 +113,15 @@ def gerar_figuras_t28(raiz, pasta_saida):
 
 
 def gerar_labirinto_interativo(dados, caminho_saida):
-    """Grava o HTML autocontido: o modelo com o dicionário `dados` embutido (docs/contratos.md, seção 3.13)."""
     html = MODELO.read_text(encoding="utf-8")
     if html.count(MARCADOR) != 1:
         raise ValueError(f"o modelo {MODELO.name} deve ter exatamente um marcador {MARCADOR}")
-    # [IA] OpenAI Codex – incorporação dos recursos locais para a demonstração funcionar offline.
     for marcador, nome in (("__MESA_ROTAS_HTML__", "mesa_rotas.html"), ("__MESA_ROTAS_JS__", "mesa_rotas.js")):
         if marcador in html:
             html = html.replace(marcador, MODELO.with_name(nome).read_text(encoding="utf-8"))
     if "__HERO_IMAGE__" in html:
         imagem = MODELO.with_name("rotas-hero.webp").read_bytes()
         html = html.replace("__HERO_IMAGE__", b64encode(imagem).decode("ascii"))
-    # "</" vira "<\/" para um texto do dicionário nunca fechar a tag <script>
     texto = json.dumps(dados, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     caminho_saida = Path(caminho_saida)
     caminho_saida.parent.mkdir(parents=True, exist_ok=True)
