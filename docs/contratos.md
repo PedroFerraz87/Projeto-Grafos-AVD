@@ -393,6 +393,7 @@ densidade dos dois, além do teto teórico e da taxa de ocupação). `ALVO` e se
 | `becos` | estados com grau de saída 0 que não estão em `G` (ex.: esteira apontando para a parede) |
 | `multiplicidade` | estados de `G_est` por casa: máximo, quantas casas o atingem e média |
 | `camadas` / `arcos_entre_camadas` | quantidade de conjuntos de chaves distintos e arcos cuja camada muda |
+| `rankings` | *extra (T23):* os 5 primeiros de cada ranking: `grau_saida` e `grau_entrada` (listas de `{estado, grau}`, maior primeiro, empate pela ordem de leitura) e `multiplicidade` (lista de `{linha, coluna, estados}`, maior primeiro, empate por linha e coluna) |
 
 ### 3.8 `camadas.json`
 
@@ -450,15 +451,18 @@ BFS em passos de `S` até `G` nas três modelagens, para `m02`, `m03` e `m04`.
 | `observacao` | str | texto curto (ex.: "atravessa porta trancada", "não alcança G") |
 
 O ciclo negativo do m05 em `G_pos` (bônus −4 fixo) e a ausência dele em `G_est` vão no
-relatório; se o grupo quiser um arquivo, usar `ciclo_negativo_m05_pos.json` com a mesma
-estrutura da seção 3.4.
+relatório e em `ciclo_negativo_m05_pos.json`, com a mesma estrutura da seção 3.4
+(`modelagem: "G_pos"`, rótulos `(l,c)`). `afeta_alvo` diz se o ciclo alcança alguma casa `G`.
+*Extra:* a chave `g_est` resume o mesmo mapa no `G_est` (`ciclo_encontrado`, `status`, `passos`,
+`custo_minimo`), para mostrar que lá o ciclo some.
 
 ### 3.12 Arquivos não tabulares
 
 | Arquivo | Produtor | Lê |
 |---|---|---|
 | `percurso_m03.png`, `percurso_m08.png` | P5 (T28) | `percurso_<mapa>.json` |
-| figura da árvore BFS do m02, figura de `G_est` em camadas, heatmap do m08 | P5/P3 (T28, T30) | `arestas_m02.csv`, `camadas.json`, `multiplicidade_m08.csv` |
+| `arvore_bfs_m02.png` | P5 (T28) | `G_est` do m02 |
+| `g_est_camadas_m02.png`, `heatmap_multiplicidade_m08.png` | P3 (T30, `python -m src.analises`) | `G_est` do m02 e do m08 (os mesmos dados de `camadas.json` e `multiplicidade_m08.csv`) |
 | `labirinto_interativo.html` | P5 (T20, T31) | `percurso_<mapa>.json`, `armadilhas_<mapa>.csv`, `metricas_global.json` (dados embutidos no HTML pelo Python) |
 
 ### 3.13 Dados do labirinto interativo (`--interactive`)
