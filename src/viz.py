@@ -94,6 +94,7 @@ def gerar_arvore_bfs_png(analise, caminho_saida):
     eixo.axis("off")
     eixo.legend(loc="lower left")
 
+
     caminho_saida = Path(caminho_saida)
     caminho_saida.parent.mkdir(parents=True, exist_ok=True)
     fig.tight_layout()
@@ -163,8 +164,8 @@ def gerar_pagina_bitcoin(pasta_resultados, caminho_saida):
             "comparacao_algoritmos/comparacao_custos_caminhos.png": "Custo dos caminhos por par",
         },
         "Explanatórios": {
-            "visualizacoes_explanatorias/proporcao_confianca_por_ano.png": "Sinal das avaliações por ano",
-            "visualizacoes_explanatorias/conectividade_desconfianca.png": "Avaliações recebidas por grupo",
+            "visualizacoes_explanatorias/intensidade_confianca_desconfianca.png": "Intensidade da confiança e desconfiança",
+            "visualizacoes_explanatorias/conectividade_desconfianca.png": "Presença de negativas por volume recebido",
         },
     }
     dados["figuras"] = []

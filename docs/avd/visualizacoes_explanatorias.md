@@ -1,61 +1,25 @@
 # Visualizações explanatórias — Bitcoin Alpha
+Pergunta de pesquisa
+Como os usuários do Bitcoin Alpha expressam confiança e desconfiança, e de que maneira a presença de avaliações negativas está associada ao volume de avaliações recebidas?
+Pensar como designer
+A identidade visual reutiliza estilo_graficos.py: azul para avaliações positivas ou ausência de negativas, vermelho para presença de negativas, fundo discreto e títulos orientados às descobertas. Similaridade agrupa categorias; proximidade associa rótulos aos dados; continuidade organiza intensidades e faixas; figura e fundo destacam as evidências. Valores escritos, sinais e legendas reduzem a dependência da cor.
 
-## Pergunta da pesquisa
+## Visualização 1 — Intensidade das notas
 
-Como padrões de confiança e desconfiança influenciam a conectividade, a formação de caminhos e os ciclos de avaliações negativas na rede Bitcoin Alpha?
+Barras agrupadas por intensidade absoluta, com percentuais calculados separadamente por sinal. Entre as 22.650 positivas, 60,75% são +1; entre as 1.536 negativas, 52,86% são −10 e 27,93% são −1. A confiança concentra-se em baixa intensidade; a desconfiança tem concentração no extremo máximo, mas também no mínimo.
 
-## Contextualização
+## Visualização 2 — Presença de negativas por volume recebido
 
-O Bitcoin Alpha é uma rede de avaliações entre usuários, representada por um grafo direcionado e ponderado. Cada avaliação corresponde a uma relação entre dois usuários, com uma nota que expressa confiança ou desconfiança.
+Barras empilhadas de 100%, com usuários agrupados por total recebido. A proporção com pelo menos uma negativa é 11,85% (1–10), 48,04% (11–25), 53,64% (26–50), 48,98% (51–100) e 59,09% (>100). Os grupos maiores têm poucos usuários. Entre os 3.754 usuários avaliados, os 630 com negativas recebem em média 15,63 avaliações, contra 4,59 dos 3.124 sem negativas. Maior exposição também aumenta a oportunidade de receber uma negativa.
 
-As visualizações explanatórias buscam apresentar padrões observados nessas relações, destacando a evolução temporal das avaliações e sua associação com a conectividade da rede.
+## Big Idea
 
-## Visualização 1 — Proporção de confiança e desconfiança por ano
+No Bitcoin Alpha, a confiança concentra-se em notas de baixa intensidade, enquanto a desconfiança frequentemente aparece no extremo da escala e é mais comum no histórico dos usuários mais avaliados.
 
-**Tipo de gráfico:** barras empilhadas em porcentagem.
+## Storytelling — 3-Minute Story
 
-**Objetivo:** entender como a participação das avaliações positivas e negativas se modificou ao longo dos anos.
-
-**Análise:**
-
-O gráfico demonstra que as avaliações positivas predominam durante todo o período analisado, de 2010 a 2016. Entretanto, a proporção de avaliações negativas apresenta variações ao longo do tempo.
-
-Em 2011, observa-se uma participação relativamente pequena de avaliações negativas, enquanto em 2014 essa participação atinge o maior percentual visualizado da amostra.
-
-Esses resultados indicam que, apesar da predominância da confiança, o nível de desconfiança não foi constante ao longo dos anos.
-
-*O gráfico apresenta proporções, não quantidades absolutas de avaliações.
-
-## Visualização 2 — Conectividade de entrada e avaliações negativas
-
-**Tipo de gráfico:** barras comparativas.
-
-**Objetivo:** analisar a associação entre a presença de avaliações negativas recebidas e a conectividade de entrada dos usuários.
-
-**Análise:**
-
-Os usuários que não receberam avaliações negativas apresentam média de 4,59 avaliações recebidas, enquanto aqueles que receberam pelo menos uma avaliação negativa apresentam média de 15,63.
-
-A diferença corresponde a aproximadamente 3,4 vezes mais avaliações recebidas no segundo grupo.
-
-Esse resultado evidencia uma associação entre maior volume de avaliações recebidas e presença de avaliações negativas.
-
-Entretanto, não é possível estabelecer uma relação causal, pois usuários mais avaliados também possuem mais oportunidades de receber avaliações negativas.
-
-## Storytelling — Da predominância da confiança à presença da desconfiança
-
-A análise começa com uma característica geral da rede Bitcoin Alpha: a predominância de avaliações positivas ao longo dos anos.
-
-Apesar desse cenário, a primeira visualização mostra que a proporção de avaliações negativas varia com o tempo, indicando que a desconfiança permanece presente na rede em diferentes intensidades relativas.
-
-A segunda visualização aprofunda essa investigação ao comparar usuários conforme a presença de avaliações negativas recebidas. Os resultados mostram que o grupo com avaliações negativas possui uma média consideravelmente maior de avaliações recebidas.
-
-Assim, os gráficos apresentam duas perspectivas complementares: a evolução temporal das relações de confiança e desconfiança e a associação entre avaliações negativas e conectividade de entrada.
-
-Esses padrões ajudam a contextualizar a investigação sobre caminhos e ciclos negativos realizada com os algoritmos de grafos. Contudo, as visualizações apresentadas não demonstram diretamente como as avaliações negativas alteram os caminhos ou provocam a formação de ciclos.
+Será que confiança e desconfiança são expressas da mesma maneira? A nota +1 predomina entre as positivas, enquanto −10 predomina entre as negativas. Ao agrupar usuários pelo volume recebido, observamos que a presença de negativas passa de cerca de 12% na faixa de 1 a 10 avaliações para 48% na faixa de 11 a 25. Nas demais faixas, permanece acima da primeira, sem crescimento contínuo. Assim, a intensidade das notas e a presença de negativas revelam padrões distintos de avaliação.
 
 ## Conclusão
 
-As visualizações mostram que a confiança predomina nas avaliações do Bitcoin Alpha, mas a desconfiança apresenta variações temporais e está associada a usuários com maior volume de avaliações recebidas.
-
-Esses resultados contribuem para compreender a distribuição das relações de confiança e desconfiança na rede e fornecem contexto para as análises estruturais realizadas na Parte 2 do projeto.
+Os resultados são descritivos, não causais. Mais avaliações aumentam as oportunidades de receber uma negativa; receber uma negativa não comprova comportamento inadequado. Os experimentos de caminhos e ciclos permanecem como análises complementares de grafos.

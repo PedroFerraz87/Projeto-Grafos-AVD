@@ -85,6 +85,8 @@ python -m src.avd.visualizacoes_algoritmos
 python -m src.avd.visualizacoes_explanatorias
 ```
 
+As duas figuras explanatórias investigam intensidade das notas e presença de negativas por volume recebido. Regenere a interface com `python -m src.cli --interactive` após gerar as figuras.
+
 ## Testes
 
 Para executar os testes automatizados:

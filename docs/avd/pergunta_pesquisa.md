@@ -1,8 +1,6 @@
 ## Pergunta de Pesquisa
 
-##### "Como padrões de confiança ou desconfiança entre os usuários da Bitcoin Alpha podem influenciar a formação de caminhos entre usuários e a ocorrência de ciclos de avaliações negativas?"
+##### Como os usuários do Bitcoin Alpha expressam confiança e desconfiança, e de que maneira a presença de avaliações negativas está associada ao volume de avaliações recebidas?
 
-
-
-\*A ideia é analisar as avaliações com os algoritmos de grafos para observar se existem caminhos comuns e identificar ciclos cuja soma das avaliações seja negativa. Assim, poderemos concluir se existem usuários "marcados" negativamente.
+Investigar intensidade das notas, presença de negativas por volume recebido. Os algoritmos de grafos permanecem como análise complementar.
 
