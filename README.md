@@ -136,7 +136,7 @@ O projeto é desenvolvido por:
 - Artur Antunes
 - Victor Uen
 
-As responsabilidades, revisões e contribuições individuais estão no relatório técnico para revisão do G1. [PDF](docs/RELATORIO_TECNICO.pdf) · [Versão editável](docs/RELATORIO_TECNICO.md)
+As responsabilidades, revisões e contribuições individuais estão no relatório final. [PDF](docs/Relatorio_Final.pdf) 
 
 ## Uso de IA
 
