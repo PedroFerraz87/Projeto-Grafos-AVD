@@ -3,7 +3,7 @@
   "modelagem": "G_est",
   "algoritmo": "BELLMAN_FORD",
   "opcoes": {
-    "fonte_consumivel": false
+    "fonte_consumivel": true
   },
   "fonte": "(1,1)|-|{}",
   "ciclo_encontrado": true,
@@ -29,8 +29,8 @@
   "custo_ciclo": -1,
   "afeta_alvo": true,
   "correcao": {
-    "aplicada": false,
-    "descricao": null,
-    "custo_minimo_apos_correcao": null
+    "aplicada": true,
+    "descricao": "a fonte vale -2 só na primeira vez em que o estado entra nela; depois custa 1",
+    "custo_minimo_apos_correcao": 10
   }
 }
