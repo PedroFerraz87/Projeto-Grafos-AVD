@@ -1,4 +1,4 @@
-# [IA] Claude (Anthropic) - testes da T23, T24 e T30 gerados a pedido do Luca; revisar e declarar.
+# [IA] Claude Pro (Anthropic) – sugestão de casos de teste das saídas da T23, T24 e T30 (uso nº 24 da declaração)
 import csv
 import json
 from pathlib import Path

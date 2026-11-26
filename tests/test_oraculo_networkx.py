@@ -1,3 +1,4 @@
+# [IA] Claude Pro (Anthropic) – sugestão de casos de teste: oráculo networkx para BFS, Dijkstra e Bellman-Ford (T16, uso nº 19 da declaração)
 import random
 from math import inf
 from pathlib import Path

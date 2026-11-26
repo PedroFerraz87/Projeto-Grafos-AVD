@@ -1,3 +1,4 @@
+# [IA] Claude Pro (Anthropic) – sugestão de casos de teste das métricas em grafos pequenos (T17 e T23, uso nº 21 da declaração)
 from pathlib import Path
 
 import pytest
@@ -187,7 +188,7 @@ def test_ordem_e_tamanho_do_g_pos_do_m01():
 
 
 # ---------- rankings (T23) ----------
-# [IA] Claude (Anthropic) - testes dos rankings da T23 gerados a pedido do Luca; revisar e declarar.
+# [IA] Claude Pro (Anthropic) – sugestão de casos de teste dos rankings (T23, uso nº 21 da declaração)
 
 def test_ranking_graus_maior_primeiro_e_empate_pela_leitura(mini):
     assert metricas.ranking_graus(metricas.graus_saida(mini), 4) == [
